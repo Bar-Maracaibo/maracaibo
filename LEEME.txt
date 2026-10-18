@@ -1,79 +1,126 @@
 BAR MARACAIBO · PROYECTO WEB
+Página publicada: https://bar-maracaibo.github.io/maracaibo/   Carta: .../maracaibo/menu.html
 
 QUÉ ES CADA ARCHIVO
-- index.html, experiencia.css, experiencia.js: página principal.
-- menu.html, carta.css, carta.js: carta digital (carta continua con pestañas fijas y búsqueda con o sin tildes).
-- menu-datos.js: LA CARTA (43 opciones en 8 apartados). Es la única fuente de platos y precios:
-  la usan la página principal, la carta digital y el generador del PDF. Para cambiar un precio, se cambia solo aquí
-  y después se regenera el PDF.
-- menu-impreso.pdf: carta para imprimir, 4 páginas A4 con portada y código QR de WhatsApp. Imprimir al 100 %, tamaño real.
-- fuentes/: tipografías Instrument Serif y Archivo (licencia libre OFL) incluidas en el proyecto; no depende de Google Fonts.
-- herramientas/generar-menu.py: regenera el PDF desde menu-datos.js.
-  Desde esta carpeta: python herramientas/generar-menu.py  (requiere Python 3, reportlab y Pillow).
-- logo-maracaibo.png (original, usado en el PDF), logo-maracaibo-web.png (ícono para la pantalla de inicio del iPhone)
-  y logo-maracaibo-icono.png (el logo sin el fondo blanco, para la navegación y la pestaña del navegador).
-- Fotografías (.jpg).
+Datos (lo único que hay que tocar para cambiar contenido)
+- config.js: datos del negocio. WhatsApp, teléfono, dirección, horario, nota de precios, Facebook, Instagram,
+  calificación de Google, enlace de la hoja de Google y partidos. Lo que quede vacío no se muestra en la página.
+- menu-datos.js: LA CARTA (12 apartados, 95 platos: la carta de La Gallera más los taquitos mexicanos).
+  La usan la página principal, la carta digital, el PDF y los datos para Google.
 
-PUBLICAR EN GITHUB PAGES
-Subí todo el contenido de esta carpeta (no el ZIP) a la raíz del repositorio y activá Pages en la rama principal.
-Todas las rutas son relativas, así que funciona tanto en usuario.github.io como en usuario.github.io/repositorio/.
-El archivo .nojekyll ya está incluido.
+Páginas
+- index.html + experiencia.css + experiencia.js: página principal.
+- menu.html + carta.css + carta.js: carta digital (búsqueda con o sin tildes, filtros, Mi pedido).
+- comun.js: funciones compartidas (precios, horario abierto/cerrado, apariencia, hoja de Google).
+- tokens.css: colores, letras, espacios y radios de las dos páginas (claro y oscuro).
+- sw.js y manifest.webmanifest: la carta funciona sin señal y la página se puede instalar en el celular.
 
-IDENTIDAD (distinta a la de La Gallera)
-Bar de noche, premium y sobrio, con un solo color de marca: el verde musgo que sale del rótulo del bar.
-- Verde musgo solo en detalles: botones principales, la palabra en cursiva de cada titular y pequeños acentos.
-  Oscuro: fondo #0c0d0a, texto #f2f0e7, musgo #a9bd7f. Claro: fondo #f3f1e9, texto #171913, musgo #4c5f2e.
-- Apariencia clara y oscura: sigue la del celular o la computadora. El bombillo de la barra de arriba la cambia
-  (encendido = clara, apagado = oscura) y en el pie de página se puede volver a «Automática».
-  La elección se recuerda en ese navegador. La carta digital sigue siendo oscura.
-- Se siente como app en el celular: sin destello gris al tocar, botones que se encogen al presionarlos,
-  los + / − no hacen zoom al tocarlos rápido y los efectos de mouse no se quedan pegados.
-- Letra: Instrument Serif para titulares, con cursiva para el énfasis («Nos vemos en Maracaibo.»);
-  la fuente del sistema para leer (en iPhone y Mac es la de Apple).
-- Un solo efecto animado: la declaración de «El bar» se enciende palabra por palabra al leer.
-- La Gallera usa morado, dorado, letra condensada en mayúsculas y cursiva manuscrita: no usar nada de eso aquí.
-Accesibilidad: contrastes de texto de 5,4:1 o más en las dos apariencias, controles de 44 px, foco visible
-con teclado, y respeta «reducir movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
+Imágenes y archivos generados (no editar a mano: se regeneran con los scripts de herramientas/)
+- img/: fotos optimizadas (AVIF, WebP y JPG de 480/800/1200 px) e img/imagenes.js.
+- og-maracaibo.jpg (imagen al compartir el enlace), icono-192.png, icono-512.png, favicon.png.
+- menu-impreso.pdf (imprimir en casa) y menu-imprenta.pdf (imprenta).
+- Los datos para Google (JSON-LD) dentro de index.html y menu.html.
+- logo-mono.png: el logo de un solo color (la página lo pinta hueso en oscuro y musgo en claro).
+- logo-maracaibo.png: logo a color (portada del PDF); logo-maracaibo-web.png: ícono del iPhone.
+- Las fotos .jpg de la raíz son las originales: el PDF las usa a resolución completa.
+- fuentes/: Instrument Serif (titulares de la web), con licencia libre OFL.
 
-PÁGINA PRINCIPAL
-1. Portada con la surtida y el indicador en vivo: punto verde «Abierto ahora · hasta las 12 a.m.» o rojo
-   «Cerrado ahora · abre hoy/mañana a las 11 a.m.», con la hora de Costa Rica (avisa cuando faltan menos de 60 min).
-2. «El bar»: la declaración y «Lo que más se pide», un carrusel de platos con su precio (sale de menu-datos.js)
-   que abre la carta en ese apartado.
-3. «La ronda»: calculadora para el grupo. Se suman cervezas, chiliguaros (con la promo 2 por ₡1.500), bocas y
-   surtidas, se divide entre cuántos van y se manda al grupo por WhatsApp (o con el botón de compartir del celular).
-   Para cambiar qué platos aparecen: lista RONDA en experiencia.js (los nombres deben ser iguales a los de la carta).
-4. Índice de los 8 apartados de la carta.  5. Reservas por WhatsApp.
-6. «Cómo llegar»: dirección, la foto del rótulo («Buscá este rótulo»), código 2V53+FCP, mapa, Google Maps y Waze.
-En el celular hay menú y una barra flotante con Carta, Llegar y Reservar.
+CAMBIAR DATOS DEL NEGOCIO (config.js)
+Abrí config.js y cambiá el valor entre comillas. Ejemplos:
+  "telefono": "6082-1465"            "whatsapp": "50660821465"   (con el 506 adelante, sin espacios)
+  "horario": {"abre": 11, "cierra": 24}   (horas de 0 a 24; 24 = medianoche)
+  "instagram": "https://instagram.com/..."   (vacío "" = no aparece)
+  "googleRating": {"valor": 4.6, "resenas": 120, "url": "https://..."}   (null = no aparece)
+  "partidos": [{"fecha": "2026-10-25", "hora": "19:00", "equipos": "Saprissa vs. Alajuelense", "torneo": "Primera División"}]
+La sección «Partidos de la semana» solo aparece si hay partidos en los próximos 7 días.
+Después de cambiar config.js o menu-datos.js, regenerar el PDF y los datos para Google (ver abajo).
 
-HORARIO
-Todos los días de 11 a.m. a 12 a.m. Si cambia: en experiencia.js, editar ABRE y CIERRA (al inicio del archivo),
-y el texto «Todos los días, 11 a.m. – 12 a.m.» en index.html (menú del celular y pie de página).
+CAMBIAR LA CARTA (menu-datos.js)
+Cada plato: {"n": "Nombre", "d": "Descripción corta", "p": 3500}
+- Precio por confirmar: "p": null  → la página y el PDF dicen «Consultar».
+- Tamaños o variantes: "sizes": [{"l": "Pequeño", "p": 2000}, {"l": "Grande", "p": 3500}]
+- Etiquetas: "tags": ["popular"] (Lo más pedido) y/o ["compartir"] (filtro Para compartir).
+- Promoción: "promo": {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos).
+- Bebidas: "g": "Cervezas nacionales" agrupa por subgrupo.
+- "review": true = descripción escrita sin el dueño; borrarlo cuando la confirme.
+Los títulos con cantidades («Doce apartados, noventa y cinco antojos») se calculan solos.
+Ojo: «La ronda» (lista RONDA en experiencia.js) y el carrusel (data-item en index.html) usan nombres de platos;
+si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa si alguno no existe).
 
-UBICACIÓN
-Bar Maracaibo en Google Maps: https://maps.app.goo.gl/iqMi91LyRhNMNFzu8 (10.0087064, -84.1464181).
-El mapa se ve al publicar la página o abrirla desde un servidor; algunos navegadores no lo muestran
-si se abre el archivo directamente desde la computadora.
+HOJA DE GOOGLE (opcional, para cambiar precios y partidos sin tocar archivos)
+1. Crear una hoja de cálculo de Google con dos pestañas, con estos nombres exactos:
+   carta     columnas: plato | tamaño | precio
+             (plato igual que en menu-datos.js; tamaño solo si el plato tiene tamaños, p. ej. «Grande»)
+   partidos  columnas: fecha | hora | equipos | torneo   (fecha AAAA-MM-DD, hora HH:MM en 24 h)
+2. Compartir → «Cualquier persona con el enlace» → Lector.
+3. Copiar el enlace y pegarlo en config.js: "sheetUrl": "https://docs.google.com/spreadsheets/d/.../edit"
+La hoja solo cambia precios de platos que ya existen y la lista de partidos; los platos nuevos van en menu-datos.js.
+Si la hoja falla o tarda más de 2 segundos, la página usa menu-datos.js y config.js. El PDF siempre usa los archivos.
 
-CARTA DIGITAL
-Una sola carta continua, como en la mesa: pestañas fijas arriba que siguen el apartado que se está leyendo,
-una foto por apartado y los precios alineados. El buscador filtra sin importar tildes y resalta la coincidencia.
-Se puede enlazar directo a un apartado: menu.html#boquitas, menu.html#bebidas, etc.
+REGENERAR IMÁGENES, PDF Y DATOS PARA GOOGLE
+Desde esta carpeta, con Python 3 y Pillow 11 o más nuevo (y reportlab para el PDF):
+  python herramientas/optimizar-imagenes.py   → img/ (después de agregar o cambiar fotos .jpg)
+  python herramientas/generar-menu.py          → menu-impreso.pdf y menu-imprenta.pdf
+  python herramientas/generar-seo.py           → og-maracaibo.jpg, íconos y JSON-LD en las dos páginas
+Instalar lo necesario una vez:  pip install pillow reportlab
 
 MENÚ IMPRESO
-Portada con la surtida y el nombre en Instrument Serif sobre negro; páginas en papel blanco con títulos en
-verde, una foto panorámica por página y, al final, un código QR que abre WhatsApp con la reserva lista.
+Dos hojas A4 a doble cara (4 caras), 2 columnas: platos a 12 pt, descripciones a 9,5 pt, precios en negrita.
+Se probó también una sola hoja a 3 columnas (python herramientas/generar-menu.py A): con 95 platos solo entra
+a 10,5 pt y con muy poco aire, así que se dejó la de dos hojas por ser más legible.
+- menu-impreso.pdf: para imprimir en casa, al 100 % (tamaño real), doble cara por el borde largo.
+- menu-imprenta.pdf: 216 × 303 mm (A4 + 3 mm de sangrado por lado) con marcas de corte, para la imprenta.
+La última cara tiene dos QR: la carta digital y la reserva por WhatsApp.
+
+CARTA DIGITAL: MI PEDIDO Y MESAS
+Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se puede mostrar al salonero
+(pantalla grande) o mandar por WhatsApp. Para QR en las mesas, usar el enlace con el número de mesa:
+  https://bar-maracaibo.github.io/maracaibo/menu.html?mesa=5   → el mensaje dice «Mesa 5».
+
+SIN SEÑAL (service worker)
+La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
+subir el número de VERSION al inicio de sw.js (maracaibo-v1 → maracaibo-v2) para que los celulares actualicen.
+
+PUBLICAR EN GITHUB PAGES
+Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).
+Todas las rutas son relativas. El archivo .nojekyll ya está incluido.
+Dominio propio (TODO-DUEÑO, opcional): crear en la raíz un archivo llamado CNAME (sin extensión) con una sola línea,
+por ejemplo
+  www.barmaracaibo.com
+y en el proveedor del dominio un registro CNAME de www apuntando a bar-maracaibo.github.io.
+Si se usa dominio propio, cambiar también "sitio" en config.js y volver a correr generar-seo.py.
+
+IDENTIDAD (distinta a la de La Gallera)
+Bar de noche, premium y sobrio, con un solo color de marca: el verde musgo del rótulo del bar.
+- Musgo solo en detalles: botones principales, la palabra en cursiva de cada titular, filtros activos y etiquetas.
+  Oscuro: fondo #0c0d0a, texto #f2f0e7, musgo #a9bd7f. Claro: fondo #f3f1e9, texto #171913, musgo #4c5f2e.
+- Apariencia clara y oscura: sigue la del sistema; el bombillo de arriba la cambia (encendido = clara) y en el pie
+  de la portada se puede volver a «Automática». Vale para la portada y la carta.
+- Letra: Instrument Serif para titulares (con cursiva para el énfasis) y la fuente del sistema para leer.
+- Un solo efecto grande: la declaración de «El bar» se enciende palabra por palabra al leer.
+- La Gallera usa morado, dorado, letra condensada en mayúsculas y cursiva manuscrita: no usar nada de eso aquí.
+Accesibilidad: texto con contraste de 5,4:1 o más (palabras sin encender y botones deshabilitados, 3:1 o más),
+controles de 44 px, foco visible con teclado, nombres claros para lectores de pantalla, y respeta «reducir
+movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
+Lighthouse en celular (última medición): portada 97/100/100/100, carta 91/100/100/100.
+
+PÁGINA PRINCIPAL
+1. Portada: la surtida y el indicador en vivo (abierto/cerrado con la hora de Costa Rica).
+2. El bar: la declaración y «Lo que más se pide» (carrusel con precios de la carta).
+3. Partidos de la semana (solo si hay datos): «Reservar para este partido» deja lista la reserva.
+4. La ronda: calculadora para el grupo con atajos; se divide entre cuántos van y se manda al grupo.
+5. Índice de la carta.   6. Reservas: personas, día, hora, nombre y partido; se envía por WhatsApp.
+7. Cómo llegar: dirección, foto del rótulo, código 2V53+FCP, Facebook, mapa (se carga al tocarlo), Google Maps y Waze.
 
 FOTOGRAFÍAS
-- Página principal: portada_surtida (portada), chicharrones_reales, imperial_real, fb_alitas, impreso_ceviche,
-  impreso_fajitas (carrusel) y fachada (Cómo llegar).
-- Carta digital: bistec_encebollado, arroz_camarones, chifrijo, patacones_frijol, sopa_pollo, ceviche, surtida_real, imperial_real.
-- Menú impreso: portada_surtida, impreso_fajitas, chicharrones_reales, impreso_ceviche.
-Las fotos del local (fachada, interior, barra) vienen de Facebook; barra e interior ya no se usan porque
-no combinan con el resto. La fachada es de baja resolución y se muestra
-pequeña a propósito. Cuando haya fotos nuevas del local de noche (rótulo encendido, barra con gente, cervezas en la
-mesa, la pantalla con el partido), tomadas en horizontal y con buena luz, se pueden poner en el carrusel o en la portada.
+- Página principal: portada_surtida, chicharrones_reales, imperial_real, fb_alitas, impreso_ceviche, impreso_fajitas
+  y fachada (pequeña, en Cómo llegar).
+- Carta digital: chifrijo, patacones_frijol, arroz_camarones, impreso_fajitas, sopa_pollo, fb_alitas, ceviche,
+  bistec_encebollado, chicharrones_reales, imperial_real (Almuerzos y Especiales todavía sin foto).
+- Menú impreso: portada_surtida.
+barra.jpg e interior.jpg (de Facebook) ya no se usan porque no combinan con el resto. Cuando haya fotos nuevas del
+local de noche (rótulo encendido, barra con gente, cervezas en la mesa, el partido), tomadas en horizontal y con buena
+luz, se agregan a la raíz y se corre optimizar-imagenes.py.
 
 CONTACTO
 WhatsApp y celular: +506 6082-1465. Horario: todos los días, 11 a.m. – 12 a.m.

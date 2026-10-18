@@ -1,3 +1,8 @@
-generar-menu.py: genera ../menu-impreso.pdf (4 páginas A4: portada con el rótulo, 3 páginas de carta y QR de WhatsApp) a partir de ../menu-datos.js (misma fuente que la web).
-fuentes-pdf/: instancias estáticas de Archivo (OFL) usadas en el PDF.
-prompts-imagenes.json y prompts-retoque.json: documentación de cómo se crearon o retocaron las fotos de comida.
+Herramientas (correr desde la carpeta del proyecto; ver ../LEEME.txt):
+- optimizar-imagenes.py: genera ../img/ (AVIF, WebP y JPG de 480/800/1200 px) y ../img/imagenes.js; achica logo-maracaibo.png.
+- generar-menu.py: genera ../menu-impreso.pdf (casa) y ../menu-imprenta.pdf (sangrado y marcas de corte) desde
+  ../menu-datos.js y ../config.js. Opción B (predeterminada): 2 hojas a doble cara; opción A: 1 hoja, 3 columnas.
+- generar-seo.py: genera ../og-maracaibo.jpg, ../icono-192.png, ../icono-512.png y los datos JSON-LD de index.html y menu.html.
+- tokens.json: colores del sistema de diseño (los mismos de ../tokens.css) para el PDF y la imagen para compartir.
+- fuentes-pdf/: instancias estáticas de Archivo e Instrument Serif (OFL) usadas en el PDF y la imagen para compartir.
+- prompts-imagenes.json y prompts-retoque.json: documentación de cómo se crearon o retocaron las fotos de comida.
