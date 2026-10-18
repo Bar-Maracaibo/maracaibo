@@ -66,11 +66,12 @@ Portada con la surtida y el nombre en Instrument Serif sobre negro; páginas en 
 verde, una foto panorámica por página y, al final, un código QR que abre WhatsApp con la reserva lista.
 
 FOTOGRAFÍAS
-- Página principal: portada_surtida (portada), chicharrones_reales, barra, fb_alitas, impreso_ceviche,
+- Página principal: portada_surtida (portada), chicharrones_reales, imperial_real, fb_alitas, impreso_ceviche,
   impreso_fajitas (carrusel) y fachada (Cómo llegar).
 - Carta digital: bistec_encebollado, arroz_camarones, chifrijo, patacones_frijol, sopa_pollo, ceviche, surtida_real, imperial_real.
 - Menú impreso: portada_surtida, impreso_fajitas, chicharrones_reales, impreso_ceviche.
-Las fotos del local (fachada, interior, barra) vienen de Facebook y son de baja resolución: la fachada se muestra
+Las fotos del local (fachada, interior, barra) vienen de Facebook; barra e interior ya no se usan porque
+no combinan con el resto. La fachada es de baja resolución y se muestra
 pequeña a propósito. Cuando haya fotos nuevas del local de noche (rótulo encendido, barra con gente, cervezas en la
 mesa, la pantalla con el partido), tomadas en horizontal y con buena luz, se pueden poner en el carrusel o en la portada.
 
