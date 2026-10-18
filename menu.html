@@ -47,6 +47,7 @@
       <div>
         <p class="kicker">Bar Maracaibo · San Lorenzo</p>
         <h1 id="titulo" class="display">La carta</h1>
+        <p class="price-note" data-cfg="notaPrecios"></p>
       </div>
       <div class="intro-side">
         <p class="lede"><em>Algo para vos,</em> algo para toda la mesa. <span id="conteo">Ocho apartados</span>, de la primera boca a la última fría.</p>
@@ -56,6 +57,7 @@
           <input id="search" type="search" placeholder="Buscar un plato o bebida" autocomplete="off" enterkeyhint="search">
           <button id="clearSearch" type="button" hidden aria-label="Borrar búsqueda"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
         </div>
+        <div class="filters" id="filters" role="group" aria-label="Filtros rápidos"></div>
       </div>
     </div>
   </section>
@@ -69,7 +71,7 @@
     <div id="sections"></div>
     <div class="empty frame" id="empty" hidden>
       <p class="display">Nada con ese nombre.</p>
-      <p>Probá con otra palabra, por ejemplo «arroz» o «ceviche». <button type="button" class="link" id="resetAll">Ver toda la carta</button></p>
+      <p>Probá con otra palabra, por ejemplo «arroz» o «ceviche», o quitá el filtro. <button type="button" class="link" id="resetAll">Ver toda la carta</button></p>
     </div>
     <noscript><p class="frame status">Consultá todos los platos y precios en la <a href="menu-impreso.pdf">carta en PDF</a>.</p></noscript>
   </div>
@@ -91,5 +93,35 @@
     <a href="index.html">Volver al inicio</a>
   </div>
 </footer>
+
+<!-- Mi pedido: barra inferior, hoja y vista para el salonero -->
+<div class="order-bar" id="orderBar" hidden>
+  <button type="button" id="orderOpen" aria-haspopup="dialog">
+    <span class="ob-label">Mi pedido</span><span class="ob-count" id="orderCount"></span><span class="ob-total" id="orderTotal"></span>
+  </button>
+</div>
+<dialog class="order-sheet" id="orderSheet" aria-labelledby="sheetTitle">
+  <div class="os-head">
+    <div><h2 id="sheetTitle" class="display">Mi pedido</h2><p class="os-mesa" id="sheetMesa" hidden></p></div>
+    <button type="button" class="os-close" id="sheetClose" aria-label="Cerrar"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+  </div>
+  <ul class="os-list" id="orderList"></ul>
+  <div class="os-foot">
+    <p class="os-total"><span>Total</span><strong id="sheetTotal">₡0</strong></p>
+    <p class="os-note"><span data-cfg="notaPrecios"></span> · Es una lista para vos: el pedido se hace con el salonero o por WhatsApp.</p>
+    <div class="os-actions" id="sheetActions">
+      <button type="button" class="btn btn-main" id="orderShow">Mostrar al salonero</button>
+      <button type="button" class="btn btn-line" id="orderWa">Enviar por WhatsApp</button>
+      <button type="button" class="btn btn-quiet" id="orderClear">Vaciar pedido</button>
+    </div>
+  </div>
+</dialog>
+<dialog class="waiter" id="waiter" aria-labelledby="waiterMesa">
+  <p class="waiter-mesa display" id="waiterMesa"></p>
+  <ul class="waiter-list" id="waiterList"></ul>
+  <p class="waiter-total" id="waiterTotal"></p>
+  <button type="button" class="btn btn-line" id="waiterClose">Volver al pedido</button>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

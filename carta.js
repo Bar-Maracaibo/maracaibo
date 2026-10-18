@@ -1,8 +1,13 @@
-/* Bar Maracaibo · carta digital. Datos en menu-datos.js (fuente única compartida con la página principal y el PDF). */
-(() => {
-  const { MENU, money, esc, normalize, reduce, catFrom, priceText, sizesText } = window.MCB;
+/* Bar Maracaibo · carta digital. Datos en menu-datos.js; funciones compartidas en comun.js (window.MCB). */
+/* Espera la hoja de Google (máx. 2 s) para que los precios sean los últimos */
+window.MCB.ready.then(() => {
+  const { MENU, money, esc, normalize, reduce, catFrom, priceText, cost, wa, say, words, totalItems } = window.MCB;
   const $ = id => document.getElementById(id);
   const count = n => `${n} ${n === 1 ? 'opción' : 'opciones'}`;
+  const cap = t => t[0].toUpperCase() + t.slice(1);
+  const PLUS = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg>';
+  const MINUS = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg>';
+  if ($('conteo')) $('conteo').textContent = `${cap(words(MENU.length))} apartados y ${words(totalItems)} antojos`;
 
   /* Resalta la coincidencia conservando las tildes del texto original */
   const highlight = (text, q) => {
@@ -11,23 +16,53 @@
     return esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length));
   };
 
-  const cap = t => t[0].toUpperCase() + t.slice(1);
-  if ($('conteo')) $('conteo').textContent = `${cap(window.MCB.words(MENU.length))} apartados y ${window.MCB.words(window.MCB.totalItems)} antojos`;
+  /* ---------- Mi pedido: se guarda en este navegador ---------- */
+  const KEY = 'maracaibo-pedido';
+  const mesa = (new URLSearchParams(location.search).get('mesa') || '').replace(/[^\w-]/g, '').slice(0, 6);
+  let order = {};
+  try { order = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { order = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(order)); } catch (e) { /* sin almacenamiento: el pedido vive mientras la página esté abierta */ } };
+  // clave «apartado|plato|tamaño»
+  const resolve = key => {
+    const [c, i, s] = String(key).split('|'); const cat = MENU.find(x => x.id === c); const it = cat && cat.items[+i];
+    if (!it) return null;
+    const size = s !== '' && s != null && it.sizes ? it.sizes[+s] : null;
+    if (it.sizes && !size) return null;
+    const p = size ? size.p : it.p;
+    if (p == null) return null;
+    return { key, it, name: size ? `${it.n} (${size.l.toLowerCase()})` : it.n, p, promo: it.promo || null };
+  };
+  const lines = () => Object.keys(order).map(k => { const r = resolve(k); return r && { ...r, q: order[k] }; }).filter(l => l && l.q > 0);
+  const orderTotal = () => lines().reduce((t, l) => t + cost(l.p, l.q, l.promo), 0);
+  const orderCount = () => lines().reduce((t, l) => t + l.q, 0);
+  Object.keys(order).forEach(k => { if (!resolve(k) || !(order[k] > 0)) delete order[k]; });
 
   /* ---------- Carta completa y pestañas ---------- */
   const sections = $('sections'), track = $('tabsTrack'), search = $('search');
+  const addBtn = (key, label) => `<button type="button" class="add" data-key="${key}" data-label="${esc(label)}" aria-label="Agregar ${esc(label)} a mi pedido">${PLUS}<span class="add-n"></span></button>`;
+  const dish = (cat, it, i) => {
+    const tags = it.tags || [];
+    const badge = tags.includes('popular') ? '<span class="badge">Lo más pedido</span>' : '';
+    const sizes = it.sizes ? `<div class="sizes">${it.sizes.map((s, k) => s.p == null
+      ? `<span class="size">${esc(s.l)} · Consultar</span>`
+      : `<button type="button" class="size add" data-key="${cat.id}|${i}|${k}" data-label="${esc(`${it.n} (${s.l.toLowerCase()})`)}" aria-label="Agregar ${esc(it.n)} ${esc(s.l.toLowerCase())}, ${money(s.p)}, a mi pedido"><span class="size-text">${esc(s.l)} <b>${money(s.p)}</b></span>${PLUS}<span class="add-n"></span></button>`).join('')}</div>` : '';
+    return `<li class="dish${it.sizes ? ' has-sizes' : ''}" data-i="${i}">
+      <span class="dish-name"><span class="dn">${esc(it.n)}</span>${badge}</span>
+      ${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>${it.p != null ? addBtn(`${cat.id}|${i}|`, it.n) : '<span></span>'}`}
+      ${it.d ? `<small>${esc(it.d)}</small>` : ''}${sizes}</li>`;
+  };
   sections.innerHTML = MENU.map(cat => {
     const min = catFrom(cat);
     return `<section class="cat" id="${cat.id}" aria-labelledby="t-${cat.id}">
-      <div class="frame cat-grid">
-        ${cat.img ? `<figure class="cat-photo"><img src="${cat.img}" alt="" loading="lazy"></figure>` : '<div class="cat-photo cat-nophoto" aria-hidden="true"></div>'}
+      <div class="frame cat-grid${cat.img ? '' : ' no-photo'}">
+        ${cat.img ? `<figure class="cat-photo"><img src="${cat.img}" alt="" loading="lazy"></figure>` : ''}
         <div>
           <header class="cat-head">
             <p class="kicker">${count(cat.items.length)}${min != null ? ` · desde ${money(min)}` : ''}</p>
             <h2 class="display" id="t-${cat.id}">${esc(cat.title)}</h2>
             ${cat.note ? `<p class="cat-note">${esc(cat.note)}</p>` : ''}
           </header>
-          <ul class="dishes">${cat.items.map((it, i) => (it.g && it.g !== (cat.items[i - 1] || {}).g ? `<li class="dish-group" data-g="${esc(it.g)}">${esc(it.g)}</li>` : '') + `<li class="dish" data-i="${i}"><span class="dish-name">${esc(it.n)}</span>${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>`}${it.d ? `<small>${esc(it.d)}</small>` : ''}${it.sizes ? `<span class="dish-sizes">${sizesText(it)}</span>` : ''}</li>`).join('')}</ul>
+          <ul class="dishes">${cat.items.map((it, i) => (it.g && it.g !== (cat.items[i - 1] || {}).g ? `<li class="dish-group">${esc(it.g)}</li>` : '') + dish(cat, it, i)).join('')}</ul>
         </div>
       </div>
     </section>`;
@@ -58,9 +93,25 @@
   addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(spy); } }, { passive: true });
   addEventListener('resize', spy);
 
-  /* ---------- Búsqueda ---------- */
+  /* ---------- Búsqueda y filtros rápidos (se combinan) ---------- */
+  const FILTERS = {
+    popular: { label: 'Lo más pedido', test: it => (it.tags || []).includes('popular') },
+    compartir: { label: 'Para compartir', test: it => (it.tags || []).includes('compartir') },
+    mariscos: { label: 'Mariscos', test: (it, cat) => cat.id === 'mariscos' },
+    bebidas: { label: 'Bebidas', test: (it, cat) => cat.id === 'bebidas' }
+  };
+  let filter = null;
+  const chips = $('filters');
+  chips.innerHTML = Object.entries(FILTERS).map(([k, f]) => `<button type="button" class="chip" data-filter="${k}" aria-pressed="false">${f.label}</button>`).join('');
+  chips.addEventListener('click', e => {
+    const b = e.target.closest('[data-filter]'); if (!b) return;
+    filter = filter === b.dataset.filter ? null : b.dataset.filter;
+    chips.querySelectorAll('[data-filter]').forEach(c => c.setAttribute('aria-pressed', String(c.dataset.filter === filter)));
+    render();
+  });
+
   function render() {
-    const q = normalize(search.value);
+    const q = normalize(search.value), f = filter && FILTERS[filter];
     let total = 0;
     MENU.forEach((cat, k) => {
       const sec = cats[k];
@@ -68,26 +119,95 @@
       let shown = 0;
       sec.querySelectorAll('.dish').forEach(li => {
         const it = cat.items[li.dataset.i];
-        const hit = !q || whole || normalize(it.n + ' ' + (it.d || '')).includes(q);
+        const text = [it.n, it.d, it.g, ...(it.sizes || []).map(s => s.l)].filter(Boolean).join(' ');
+        const hit = (!q || whole || normalize(text).includes(q)) && (!f || f.test(it, cat));
         li.hidden = !hit;
-        if (hit) { shown++; li.querySelector('.dish-name').innerHTML = highlight(it.n, whole ? '' : q); }
+        if (hit) { shown++; li.querySelector('.dn').innerHTML = highlight(it.n, whole ? '' : q); }
+      });
+      sec.querySelectorAll('.dish-group').forEach(g => {
+        let n = g.nextElementSibling, any = false;
+        while (n && !n.classList.contains('dish-group')) { if (!n.hidden) any = true; n = n.nextElementSibling; }
+        g.hidden = !any;
       });
       sec.hidden = shown === 0;
       tabs[k].hidden = shown === 0;
-      total += q ? shown : 0;
+      total += shown;
     });
+    const active = q || f;
     $('clearSearch').hidden = !q;
-    $('empty').hidden = !q || total > 0;
-    $('status').textContent = q && total ? `${total} resultado${total === 1 ? '' : 's'} para «${search.value.trim()}»` : '';
+    $('empty').hidden = !active || total > 0;
+    const what = [q && `«${search.value.trim()}»`, f && f.label.toLowerCase()].filter(Boolean).join(' en ');
+    $('status').textContent = active && total ? `${total} resultado${total === 1 ? '' : 's'} para ${what}` : '';
     spy();
   }
   search.addEventListener('input', render);
-  const reset = () => { search.value = ''; render(); search.focus(); };
-  $('clearSearch').addEventListener('click', reset);
+  const reset = () => { search.value = ''; filter = null; chips.querySelectorAll('[data-filter]').forEach(c => c.setAttribute('aria-pressed', 'false')); render(); search.focus(); };
+  $('clearSearch').addEventListener('click', () => { search.value = ''; render(); search.focus(); });
   $('resetAll').addEventListener('click', reset);
-  search.addEventListener('keydown', e => { if (e.key === 'Escape' && search.value) { e.preventDefault(); reset(); } });
+  search.addEventListener('keydown', e => { if (e.key === 'Escape' && search.value) { e.preventDefault(); search.value = ''; render(); } });
+
+  /* ---------- Mi pedido: botones +, barra inferior y hoja ---------- */
+  const bar = $('orderBar'), dlg = $('orderSheet'), list = $('orderList'), waiter = $('waiter');
+  const paintAdds = () => document.querySelectorAll('.add[data-key]').forEach(b => {
+    const q = order[b.dataset.key] || 0;
+    b.classList.toggle('in', q > 0);
+    b.querySelector('.add-n').textContent = q || '';
+    b.setAttribute('aria-label', `Agregar ${b.dataset.label} a mi pedido${q ? ` (llevás ${q})` : ''}`);
+  });
+  const paintBar = () => {
+    const n = orderCount();
+    bar.hidden = n === 0;
+    $('orderCount').textContent = `${n} ${n === 1 ? 'cosa' : 'cosas'}`;
+    $('orderTotal').textContent = money(orderTotal());
+    document.body.classList.toggle('has-order', n > 0);
+  };
+  const paintList = () => {
+    const ls = lines();
+    list.innerHTML = ls.length ? ls.map(l => `<li class="ol" data-key="${l.key}">
+        <div class="ol-text"><span class="ol-name">${esc(l.name)}</span><span class="ol-price">${money(cost(l.p, l.q, l.promo))}</span></div>
+        <div class="stepper" role="group" aria-label="${esc(l.name)}">
+          <button type="button" data-d="-1" aria-label="${l.q === 1 ? 'Quitar' : 'Una menos de'} ${esc(l.name)}">${MINUS}</button>
+          <output>${l.q}</output>
+          <button type="button" data-d="1" aria-label="Una más de ${esc(l.name)}">${PLUS}</button>
+        </div></li>`).join('')
+      : '<li class="ol-empty">Tu pedido está vacío. Tocá + en cualquier plato para agregarlo.</li>';
+    $('sheetTotal').textContent = money(orderTotal());
+    $('sheetActions').hidden = !ls.length;
+  };
+  const paint = () => { save(); paintAdds(); paintBar(); if (dlg.open) paintList(); };
+  const change = (key, d) => { order[key] = Math.max(0, Math.min(99, (order[key] || 0) + d)); if (!order[key]) delete order[key]; paint(); };
+
+  sections.addEventListener('click', e => {
+    const b = e.target.closest('.add[data-key]'); if (!b) return;
+    change(b.dataset.key, 1);
+    say(`Agregado: ${b.dataset.label}`);
+  });
+  list.addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (b) change(b.closest('.ol').dataset.key, +b.dataset.d); });
+
+  const mesaTxt = mesa ? `Mesa ${mesa}` : '';
+  $('sheetMesa').textContent = mesaTxt; $('sheetMesa').hidden = !mesa;
+  const openSheet = () => { paintList(); dlg.showModal(); };
+  $('orderOpen').addEventListener('click', openSheet);
+  $('sheetClose').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });   // tocar fuera de la hoja la cierra
+  $('orderClear').addEventListener('click', () => { order = {}; paint(); paintList(); say('Pedido vacío'); });
+  $('orderWa').addEventListener('click', () => {
+    const ls = lines(); if (!ls.length) return;
+    const msg = `Hola, quiero pedir${mesa ? ` (Mesa ${mesa})` : ''}:\n${ls.map(l => `• ${l.q} × ${l.name} — ${money(cost(l.p, l.q, l.promo))}`).join('\n')}\nTotal ${money(orderTotal())}`;
+    open(wa(msg), '_blank', 'noopener');
+  });
+  // Mostrar al salonero: letra grande, una línea por plato
+  $('orderShow').addEventListener('click', () => {
+    const ls = lines(); if (!ls.length) return;
+    $('waiterMesa').textContent = mesaTxt || 'Mi pedido';
+    $('waiterList').innerHTML = ls.map(l => `<li><b>${l.q}</b><span>${esc(l.name)}</span></li>`).join('');
+    $('waiterTotal').textContent = `Total ${money(orderTotal())}`;
+    dlg.close(); waiter.showModal();
+  });
+  $('waiterClose').addEventListener('click', () => { waiter.close(); openSheet(); });
 
   render();
+  paint();
   /* Llegar desde la página principal a un apartado (menu.html#boquitas) */
   if (location.hash) { const t = document.querySelector(location.hash); if (t) requestAnimationFrame(() => { t.scrollIntoView(); spy(); }); }
-})();
+});
