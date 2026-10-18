@@ -4,16 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Bar Maracaibo · San Lorenzo, San José</title>
-<meta name="description" content="Bar de pueblo en San Lorenzo, San José. Bocas, cerveza nacional, partidos y buena compañía hasta la medianoche. Mirá la carta y reservá por WhatsApp.">
-<meta name="theme-color" content="#0c0b09">
+<meta name="description" content="Bar de pueblo en San Lorenzo, San José. Bocas, cerveza nacional, partidos y buena compañía hasta la medianoche. Mirá la carta, armá la ronda y reservá por WhatsApp.">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0c0d0a" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f3f1e9" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="es_CR">
+<meta property="og:url" content="https://bar-maracaibo.github.io/maracaibo/">
 <meta property="og:title" content="Bar Maracaibo · San Lorenzo">
 <meta property="og:description" content="Bocas, cerveza nacional y buena compañía hasta la medianoche.">
-<meta property="og:image" content="fachada.jpg">
+<meta property="og:image" content="https://bar-maracaibo.github.io/maracaibo/portada_surtida.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="logo-maracaibo-icono.png">
 <link rel="apple-touch-icon" href="logo-maracaibo-web.png">
 <link rel="preload" href="fuentes/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fachada.jpg" as="image">
+<link rel="preload" href="portada_surtida.jpg" as="image">
+<script>/* apariencia elegida antes de pintar, para que no parpadee */try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="experiencia.css">
 <script src="menu-datos.js" defer></script>
 <script src="experiencia.js" defer></script>
@@ -29,6 +35,7 @@
     </a>
     <nav class="nav-links" aria-label="Secciones">
       <a href="#el-bar">El bar</a>
+      <a href="#ronda">La ronda</a>
       <a href="#carta">La carta</a>
       <a href="#llegar">Cómo llegar</a>
     </nav>
@@ -42,6 +49,7 @@
 <div class="sheet" id="sheet" hidden>
   <nav aria-label="Menú">
     <a href="#el-bar">El bar</a>
+    <a href="#ronda">La ronda</a>
     <a href="menu.html">La carta</a>
     <a href="#reservar">Reservar</a>
     <a href="#llegar">Cómo llegar</a>
@@ -55,7 +63,7 @@
   <!-- 1 · Portada -->
   <section class="hero" id="inicio" aria-labelledby="hero-title">
     <figure class="hero-photo">
-      <img id="heroImg" src="fachada.jpg" alt="El rótulo de Maracaibo's Bar encendido frente al local, al atardecer" width="476" height="1020" fetchpriority="high">
+      <img id="heroImg" src="portada_surtida.jpg" alt="Surtida para compartir con chicharrón, chorizo, alitas, yuca y papas gajo, sobre una mesa de madera" width="1024" height="1536" fetchpriority="high">
     </figure>
     <div class="hero-inner frame">
       <div class="hero-copy">
@@ -64,61 +72,80 @@
         <h1 id="hero-title" class="display hero-title">Nos vemos<br>en <em>Maracaibo.</em></h1>
         <p class="hero-lede">Bocas para compartir, cerveza nacional bien fría y el partido en pantalla. Hasta la medianoche.</p>
         <div class="actions">
-          <a class="btn btn-light" href="#reservar">Reservar mesa</a>
+          <a class="btn btn-main" href="#reservar">Reservar mesa</a>
           <a class="btn btn-line" href="menu.html">Ver la carta</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2 · El bar: declaración y adentro -->
+  <!-- 2 · El bar: declaración y lo que más se pide -->
   <section class="statement" id="el-bar" aria-labelledby="statement-label">
     <div class="frame">
       <p class="kicker" id="statement-label">El bar</p>
       <p class="display statement-text" id="statement">Un bar de pueblo, <em>como tiene que ser.</em> Bocas para compartir, cerveza nacional bien fría y el partido en la pantalla. <span class="soft">Buena compañía, sin apuro, hasta la medianoche.</span></p>
+    </div>
 
-      <div class="inside">
-        <figure class="inside-photo">
-          <img src="interior.jpg" alt="Clientes conversando en la barra y las mesas de Bar Maracaibo, con el televisor encendido" width="1360" height="765" loading="lazy">
-        </figure>
-        <ul class="inside-notes" aria-label="Adentro del bar">
-          <li><h3 class="display">La barra</h3><p>Para la primera fría y una boca mientras llegan los demás.</p></li>
-          <li><h3 class="display">Las mesas</h3><p>Para el grupo completo, con surtidas para compartir.</p></li>
-          <li><h3 class="display">La pantalla</h3><p>Para el partido, con la cerveza a la mano.</p></li>
-        </ul>
+    <div class="favs">
+      <div class="frame favs-head">
+        <h2 class="display h3" id="favs-title">Lo que más <em>se pide.</em></h2>
+        <div class="rail-nav" aria-hidden="true">
+          <button type="button" class="round" id="railPrev" tabindex="-1"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5"/></svg></button>
+          <button type="button" class="round" id="railNext" tabindex="-1"><svg viewBox="0 0 16 16"><path d="m6 3 5 5-5 5"/></svg></button>
+        </div>
+      </div>
+      <ul class="rail" id="rail" aria-labelledby="favs-title">
+        <li><a class="fav" href="menu.html#boquitas" data-item="Chicharrones">
+          <figure><img src="chicharrones_reales.jpg" alt="Chicharrones con yuca y limón" width="1024" height="1536" loading="lazy"></figure>
+          <span class="fav-name">Chicharrones</span><span class="fav-meta">Boquitas</span></a></li>
+        <li><a class="fav" href="menu.html#bebidas" data-item="Cerveza nacional">
+          <figure><img src="barra.jpg" alt="Una Imperial en la barra, con el partido en el televisor" width="765" height="1020" loading="lazy"></figure>
+          <span class="fav-name">La primera, bien fría</span><span class="fav-meta">Cerveza nacional</span></a></li>
+        <li><a class="fav" href="menu.html#boquitas" data-item="Alitas de pollo">
+          <figure><img src="fb_alitas.jpg" alt="Alitas de pollo con papas gajo" width="1024" height="1536" loading="lazy"></figure>
+          <span class="fav-name">Alitas de pollo</span><span class="fav-meta">Boquitas</span></a></li>
+        <li><a class="fav" href="menu.html#mariscos" data-item="Ceviche grande">
+          <figure><img src="impreso_ceviche.jpg" alt="Ceviche de pescado con galletas y limón" width="1024" height="1536" loading="lazy"></figure>
+          <span class="fav-name">Ceviche</span><span class="fav-meta">Mariscos</span></a></li>
+        <li><a class="fav" href="menu.html#fuertes" data-item="Fajitas de pollo">
+          <figure><img src="impreso_fajitas.jpg" alt="Fajitas de pollo con chile dulce y cebolla" width="1024" height="1536" loading="lazy"></figure>
+          <span class="fav-name">Fajitas</span><span class="fav-meta">Platos fuertes</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 · La ronda: calculadora para el grupo -->
+  <section class="ronda" id="ronda" aria-labelledby="ronda-title">
+    <div class="frame split">
+      <div class="ronda-copy">
+        <p class="kicker">La ronda</p>
+        <h2 id="ronda-title" class="display h2">¿Cuánto sale <em>la salida?</em></h2>
+        <p class="body">Armá la ronda con precios de la carta, dividila entre todos y mandásela al grupo antes de salir.</p>
+        <p class="caption">El chiliguaro ya va con la promo de 2 por ₡1.500.</p>
+      </div>
+      <div class="card ronda-card">
+        <div id="rondaList" class="ronda-list"><noscript><p class="caption">Activá JavaScript para usar la calculadora, o mirá los precios en <a class="link" href="menu.html">la carta</a>.</p></noscript></div>
+        <div class="row">
+          <span class="row-label" id="splitLabel">Entre cuántos</span>
+          <div class="stepper" role="group" aria-labelledby="splitLabel">
+            <button type="button" id="splitMinus" aria-label="Una persona menos"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
+            <output id="split">4</output>
+            <button type="button" id="splitPlus" aria-label="Una persona más"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg></button>
+          </div>
+        </div>
+        <div class="tally" aria-live="polite">
+          <div><span class="caption">Total</span><strong id="total">₡0</strong></div>
+          <div><span class="caption">Por cabeza</span><strong id="each" class="each">₡0</strong></div>
+        </div>
+        <div class="ronda-actions">
+          <button type="button" class="btn btn-main" id="shareRonda" disabled>Mandar al grupo</button>
+          <button type="button" class="btn btn-quiet" id="resetRonda" disabled>Empezar de nuevo</button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 4 · La casa -->
-  <section class="house" aria-labelledby="house-title">
-    <div class="frame">
-      <header class="head">
-        <p class="kicker">La casa</p>
-        <h2 id="house-title" class="display h2">Para empezar <em>la noche.</em></h2>
-      </header>
-      <div class="pair">
-        <article class="pick">
-          <figure class="pick-photo"><img src="barra.jpg" alt="Una cerveza Imperial en la barra, con un partido en el televisor al fondo" width="765" height="1020" loading="lazy"></figure>
-          <h3 class="display pick-title">La primera, bien fría.</h3>
-          <dl class="prices">
-            <div><dt>Cerveza nacional</dt><dd>₡1.300</dd></div>
-            <div><dt>Chiliguaro <small>2 por ₡1.500</small></dt><dd>₡800</dd></div>
-          </dl>
-        </article>
-        <article class="pick pick-low">
-          <figure class="pick-photo"><img src="fb_alitas.jpg" alt="Alitas de pollo con papas gajo y salsa" width="1024" height="1536" loading="lazy"></figure>
-          <h3 class="display pick-title">Para toda la mesa.</h3>
-          <dl class="prices">
-            <div><dt>Alitas de pollo</dt><dd>₡3.000</dd></div>
-            <div><dt>Surtida para compartir</dt><dd>desde ₡3.000</dd></div>
-          </dl>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 · La carta -->
+  <!-- 4 · La carta -->
   <section class="carta" id="carta" aria-labelledby="carta-title">
     <div class="frame">
       <header class="head head-row">
@@ -127,7 +154,7 @@
           <h2 id="carta-title" class="display h2">Ocho apartados,<br><em>cuarenta y tres antojos.</em></h2>
         </div>
         <div class="actions">
-          <a class="btn btn-light" href="menu.html">Abrir la carta</a>
+          <a class="btn btn-main" href="menu.html">Abrir la carta</a>
           <a class="link" href="menu-impreso.pdf" target="_blank" rel="noopener">Versión para imprimir <span aria-hidden="true">↗</span></a>
         </div>
       </header>
@@ -137,7 +164,7 @@
     </div>
   </section>
 
-  <!-- 6 · Reservar -->
+  <!-- 5 · Reservar -->
   <section class="reserve" id="reservar" aria-labelledby="reserve-title">
     <div class="frame split">
       <div class="reserve-copy">
@@ -171,21 +198,24 @@
           <span class="caption">Así se envía</span>
           <p class="bubble" id="bubble">Hola, quiero reservar una mesa para 2 personas hoy en Bar Maracaibo.</p>
         </div>
-        <a class="btn btn-light btn-block" id="send" href="https://wa.me/50660821465?text=Hola%2C%20quiero%20reservar%20una%20mesa%20para%202%20personas%20hoy%20en%20Bar%20Maracaibo." target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <a class="btn btn-main btn-block" id="send" href="https://wa.me/50660821465?text=Hola%2C%20quiero%20reservar%20una%20mesa%20para%202%20personas%20hoy%20en%20Bar%20Maracaibo." target="_blank" rel="noopener">Enviar por WhatsApp</a>
       </form>
     </div>
   </section>
 
-  <!-- 7 · Cómo llegar -->
+  <!-- 6 · Cómo llegar -->
   <section class="visit" id="llegar" aria-labelledby="visit-title">
     <div class="frame visit-grid">
       <div class="visit-copy">
         <p class="kicker">Cómo llegar</p>
         <h2 id="visit-title" class="display visit-title">San Lorenzo, <em>San José.</em></h2>
-        <p class="body">Buscá el rótulo encendido frente al local. Abrí la ruta en tu app de mapas y llegás directo.</p>
+        <figure class="landmark">
+          <img src="fachada.jpg" alt="El rótulo verde y amarillo de Maracaibo's Bar, encendido al atardecer" width="476" height="1020" loading="lazy">
+          <figcaption><strong>Buscá este rótulo.</strong> Verde y amarillo, encendido frente al local.</figcaption>
+        </figure>
         <p class="plus">Código de ubicación <strong>2V53+FCP</strong></p>
         <div class="actions">
-          <a class="btn btn-light" href="https://maps.app.goo.gl/iqMi91LyRhNMNFzu8" target="_blank" rel="noopener">Abrir en Google Maps</a>
+          <a class="btn btn-main" href="https://maps.app.goo.gl/iqMi91LyRhNMNFzu8" target="_blank" rel="noopener">Abrir en Google Maps</a>
           <a class="btn btn-line" href="https://waze.com/ul?ll=10.0087064%2C-84.1464181&amp;navigate=yes" target="_blank" rel="noopener">Abrir en Waze</a>
         </div>
       </div>
@@ -202,9 +232,18 @@
     <nav aria-label="Pie de página">
       <a href="menu.html">La carta</a>
       <a href="menu-impreso.pdf" target="_blank" rel="noopener">Carta para imprimir</a>
+      <a href="#ronda">La ronda</a>
       <a href="#reservar">Reservar</a>
       <a href="#llegar">Cómo llegar</a>
     </nav>
+    <div class="look">
+      <span id="lookLabel">Apariencia</span>
+      <div class="look-seg" role="radiogroup" aria-labelledby="lookLabel" id="look">
+        <button type="button" role="radio" aria-checked="true" data-look="auto">Automática</button>
+        <button type="button" role="radio" aria-checked="false" data-look="light">Clara</button>
+        <button type="button" role="radio" aria-checked="false" data-look="dark">Oscura</button>
+      </div>
+    </div>
     <p>Bar Maracaibo · San Lorenzo, San José, Costa Rica · Todos los días, 11 a.m. – 12 a.m. · 6082-1465</p>
   </div>
 </footer>

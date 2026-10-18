@@ -111,7 +111,7 @@
       if (!e.isIntersecting) return;
       links.forEach(l => l.hash === '#' + e.target.id ? l.setAttribute('aria-current', 'true') : l.removeAttribute('aria-current'));
     }), { rootMargin: '-45% 0px -50% 0px' });
-    ['inicio', 'el-bar', 'carta', 'reservar', 'llegar'].forEach(id => $(id) && io.observe($(id)));
+    ['inicio', 'el-bar', 'ronda', 'carta', 'reservar', 'llegar'].forEach(id => $(id) && io.observe($(id)));
   }
 
   /* ---------- La carta: índice con enlace directo a cada apartado ---------- */
@@ -167,11 +167,121 @@
   if ('ResizeObserver' in window) new ResizeObserver(place).observe(seg);
   place(); compose();
 
-  /* ---------- Copiar número ---------- */
+  /* ---------- Aviso breve ---------- */
   const toast = $('toast'); let tt;
   const say = t => { toast.textContent = t; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2600); };
-  $('copy')?.addEventListener('click', e => {
-    const v = e.currentTarget.dataset.copy, fallback = () => say('Número: 6082-1465');
-    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(v).then(() => say('Número copiado'), fallback); else fallback();
+
+  /* ---------- Precios desde la carta ---------- */
+  const ITEMS = {};
+  MENU.forEach(cat => cat.items.forEach(it => { ITEMS[it.n] = { ...it, cat: cat.id }; }));
+
+  /* ---------- Lo que más se pide: precio en cada tarjeta y flechas ---------- */
+  document.querySelectorAll('.fav[data-item]').forEach(a => {
+    const it = ITEMS[a.dataset.item], meta = a.querySelector('.fav-meta');
+    if (it && meta) meta.innerHTML = `${esc(meta.textContent)} · <b>${money(it.p)}</b>`;
   });
+  const rail = $('rail'), prev = $('railPrev'), next = $('railNext');
+  if (rail && prev && next) {
+    const step = () => (rail.querySelector('li')?.offsetWidth || 300) + 20;
+    const ends = () => {
+      prev.disabled = rail.scrollLeft < 8;
+      next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8;
+    };
+    const go = d => rail.scrollBy({ left: d * step(), behavior: reduce.matches ? 'auto' : 'smooth' });
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    rail.addEventListener('scroll', ends, { passive: true });
+    addEventListener('resize', ends); ends();
+  }
+
+  /* ---------- La ronda: total y cuánto pone cada uno ---------- */
+  const RONDA = [
+    ['Para tomar', ['Cerveza nacional', 'Chiliguaro']],
+    ['Para picar', ['Alitas de pollo', 'Chicharrones', 'Nachos', 'Chifrijo', 'Ceviche grande', 'Papas fritas']],
+    ['Para compartir', ['Surtida 2 personas', 'Surtida 4 personas']]
+  ];
+  // promo de la carta: chiliguaro a ₡800, o 2 por ₡1.500
+  const cost = (name, q) => name === 'Chiliguaro' ? Math.floor(q / 2) * 1500 + (q % 2) * 800 : ITEMS[name].p * q;
+  const list = $('rondaList');
+  if (list && MENU.length) {
+    const qty = {}; let split = 4;
+    const minus = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg>';
+    const plus = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg>';
+    list.innerHTML = RONDA.map(([group, names]) => `<p class="ronda-group">${group}</p>` + names.filter(n => ITEMS[n]).map(n => {
+      qty[n] = 0;
+      const price = n === 'Chiliguaro' ? `${money(800)} · 2 por ${money(1500)}` : money(ITEMS[n].p);
+      return `<div class="item" data-n="${esc(n)}">
+        <div class="item-text"><span class="item-name">${esc(n)}</span><span class="item-price">${price}</span></div>
+        <div class="stepper" role="group" aria-label="${esc(n)}">
+          <button type="button" data-d="-1" aria-label="Una menos de ${esc(n)}" disabled>${minus}</button>
+          <output class="zero">0</output>
+          <button type="button" data-d="1" aria-label="Una más de ${esc(n)}">${plus}</button>
+        </div></div>`;
+    }).join('')).join('');
+
+    const total = () => Object.keys(qty).reduce((t, n) => t + cost(n, qty[n]), 0);
+    const each = () => Math.ceil(total() / split / 100) * 100;
+    const tally = () => {
+      const t = total();
+      $('total').textContent = money(t);
+      $('each').textContent = money(each());
+      $('split').textContent = split;
+      $('splitMinus').disabled = split <= 1; $('splitPlus').disabled = split >= 30;
+      $('shareRonda').disabled = $('resetRonda').disabled = t === 0;
+    };
+    const setRow = (row, q) => {
+      const out = row.querySelector('output');
+      out.textContent = q; out.classList.toggle('zero', !q);
+      row.classList.toggle('on', q > 0);
+      row.querySelector('[data-d="-1"]').disabled = !q;
+    };
+    list.addEventListener('click', e => {
+      const b = e.target.closest('button[data-d]'); if (!b) return;
+      const row = b.closest('.item'), n = row.dataset.n;
+      qty[n] = Math.min(99, Math.max(0, qty[n] + +b.dataset.d));
+      setRow(row, qty[n]); tally();
+    });
+    $('splitMinus').addEventListener('click', () => { split = Math.max(1, split - 1); tally(); });
+    $('splitPlus').addEventListener('click', () => { split = Math.min(30, split + 1); tally(); });
+    $('resetRonda').addEventListener('click', () => {
+      Object.keys(qty).forEach(n => { qty[n] = 0; });
+      list.querySelectorAll('.item').forEach(row => setRow(row, 0));
+      tally(); list.querySelector('[data-d="1"]').focus();
+    });
+    $('shareRonda').addEventListener('click', async () => {
+      const lines = Object.keys(qty).filter(n => qty[n]).map(n => `• ${qty[n]} × ${n}`);
+      const who = split === 1 ? '' : ` · ${money(each())} cada uno (entre ${split})`;
+      const text = `¿Vamos a Maracaibo?\n\nLa ronda:\n${lines.join('\n')}\n\nTotal ${money(total())}${who}\nBar Maracaibo, San Lorenzo`;
+      const url = 'https://bar-maracaibo.github.io/maracaibo/';
+      if (navigator.share) {
+        try { await navigator.share({ text, url }); } catch (err) { /* cancelado */ }
+      } else {
+        open('https://wa.me/?text=' + encodeURIComponent(text + '\n' + url), '_blank', 'noopener');
+        say('Abriendo WhatsApp');
+      }
+    });
+    tally();
+  }
+
+  /* ---------- Apariencia: automática (la del sistema), clara u oscura ---------- */
+  const look = $('look');
+  if (look) {
+    const KEY = 'maracaibo-apariencia';
+    const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
+    const base = metas.map(m => m.content);
+    const looks = [...look.querySelectorAll('[role=radio]')];
+    const apply = (v, save) => {
+      if (v === 'auto') delete root.dataset.theme; else root.dataset.theme = v;
+      metas.forEach((m, i) => { m.content = v === 'auto' ? base[i] : (v === 'dark' ? '#0c0d0a' : '#f3f1e9'); });
+      looks.forEach(o => { const on = o.dataset.look === v; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; });
+      if (save) { try { v === 'auto' ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, v); } catch (e) { /* sin almacenamiento */ } }
+    };
+    apply(root.dataset.theme || 'auto', false);
+    looks.forEach(o => o.addEventListener('click', () => apply(o.dataset.look, true)));
+    look.addEventListener('keydown', e => {
+      const i = looks.indexOf(document.activeElement); if (i < 0) return;
+      const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+      if (d) { e.preventDefault(); const o = looks[(i + d + looks.length) % looks.length]; apply(o.dataset.look, true); o.focus(); }
+    });
+  }
 })();

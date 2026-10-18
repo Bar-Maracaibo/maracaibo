@@ -20,25 +20,28 @@ Todas las rutas son relativas, así que funciona tanto en usuario.github.io como
 El archivo .nojekyll ya está incluido.
 
 IDENTIDAD (distinta a la de La Gallera)
-Bar de noche, premium y sobrio.
-- Colores: negro cálido #0c0b09, superficies #151411 y texto hueso #f3efe6. Sin color de acento:
-  el color lo ponen las fotos. Botón principal hueso con letra negra; secundario con borde fino.
+Bar de noche, premium y sobrio, con un solo color de marca: el verde musgo que sale del rótulo del bar.
+- Verde musgo solo en detalles: botones principales, la palabra en cursiva de cada titular y pequeños acentos.
+  Oscuro: fondo #0c0d0a, texto #f2f0e7, musgo #a9bd7f. Claro: fondo #f3f1e9, texto #171913, musgo #4c5f2e.
+- Apariencia clara y oscura: sigue la del celular o la computadora; en el pie de página se puede fijar
+  «Clara» u «Oscura» (se recuerda en ese navegador). La carta digital sigue siendo oscura.
 - Letra: Instrument Serif para titulares, con cursiva para el énfasis («Nos vemos en Maracaibo.»);
-  la fuente del sistema para leer (en iPhone y Mac es la de Apple). Las dos fuentes están en fuentes/.
-- Fotos a todo color y sin filtros, con esquinas suaves.
+  la fuente del sistema para leer (en iPhone y Mac es la de Apple).
 - Un solo efecto animado: la declaración de «El bar» se enciende palabra por palabra al leer.
 - La Gallera usa morado, dorado, letra condensada en mayúsculas y cursiva manuscrita: no usar nada de eso aquí.
-Accesibilidad: contrastes de texto de 5,5:1 o más, controles de 44 px, foco visible con teclado,
-y respeta «reducir movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
+Accesibilidad: contrastes de texto de 5,4:1 o más en las dos apariencias, controles de 44 px, foco visible
+con teclado, y respeta «reducir movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
 
 PÁGINA PRINCIPAL
-Portada con la foto del rótulo al atardecer (a la derecha en la computadora, a pantalla completa en el celular)
-y un indicador en vivo: punto verde «Abierto ahora · hasta las 12 a.m.» o rojo «Cerrado ahora · abre hoy/mañana a las 11 a.m.»,
-calculado con la hora de Costa Rica (avisa también cuando faltan menos de 60 minutos para abrir o cerrar).
-Después: «El bar» (la declaración y la foto de adentro con la barra, las mesas y la pantalla), «La casa» con dos
-recomendaciones y sus precios, el índice de los 8 apartados (cada uno abre la carta directo en ese apartado),
-el formulario que arma el mensaje de reserva para WhatsApp y «Cómo llegar» con la dirección, el código de
-ubicación 2V53+FCP, el mapa de Google y los botones de Google Maps y Waze.
+1. Portada con la surtida y el indicador en vivo: punto verde «Abierto ahora · hasta las 12 a.m.» o rojo
+   «Cerrado ahora · abre hoy/mañana a las 11 a.m.», con la hora de Costa Rica (avisa cuando faltan menos de 60 min).
+2. «El bar»: la declaración y «Lo que más se pide», un carrusel de platos con su precio (sale de menu-datos.js)
+   que abre la carta en ese apartado.
+3. «La ronda»: calculadora para el grupo. Se suman cervezas, chiliguaros (con la promo 2 por ₡1.500), bocas y
+   surtidas, se divide entre cuántos van y se manda al grupo por WhatsApp (o con el botón de compartir del celular).
+   Para cambiar qué platos aparecen: lista RONDA en experiencia.js (los nombres deben ser iguales a los de la carta).
+4. Índice de los 8 apartados de la carta.  5. Reservas por WhatsApp.
+6. «Cómo llegar»: dirección, la foto del rótulo («Buscá este rótulo»), código 2V53+FCP, mapa, Google Maps y Waze.
 En el celular hay menú y una barra flotante con Carta, Llegar y Reservar.
 
 HORARIO
@@ -59,11 +62,14 @@ MENÚ IMPRESO
 Portada con la surtida y el nombre en Instrument Serif sobre negro; páginas en papel blanco con títulos en
 verde, una foto panorámica por página y, al final, un código QR que abre WhatsApp con la reserva lista.
 
-FOTOGRAFÍAS (sin repetir entre formatos)
-- Página principal: fachada.jpg (portada), interior.jpg, barra.jpg, fb_alitas.jpg.
+FOTOGRAFÍAS
+- Página principal: portada_surtida (portada), chicharrones_reales, barra, fb_alitas, impreso_ceviche,
+  impreso_fajitas (carrusel) y fachada (Cómo llegar).
 - Carta digital: bistec_encebollado, arroz_camarones, chifrijo, patacones_frijol, sopa_pollo, ceviche, surtida_real, imperial_real.
 - Menú impreso: portada_surtida, impreso_fajitas, chicharrones_reales, impreso_ceviche.
-Las fotos del local (fachada, interior, barra) son las originales sin modificar.
+Las fotos del local (fachada, interior, barra) vienen de Facebook y son de baja resolución: la fachada se muestra
+pequeña a propósito. Cuando haya fotos nuevas del local de noche (rótulo encendido, barra con gente, cervezas en la
+mesa, la pantalla con el partido), tomadas en horizontal y con buena luz, se pueden poner en el carrusel o en la portada.
 
 CONTACTO
 WhatsApp y celular: +506 6082-1465. Horario: todos los días, 11 a.m. – 12 a.m.
