@@ -23,8 +23,11 @@ IDENTIDAD (distinta a la de La Gallera)
 Bar de noche, premium y sobrio, con un solo color de marca: el verde musgo que sale del rótulo del bar.
 - Verde musgo solo en detalles: botones principales, la palabra en cursiva de cada titular y pequeños acentos.
   Oscuro: fondo #0c0d0a, texto #f2f0e7, musgo #a9bd7f. Claro: fondo #f3f1e9, texto #171913, musgo #4c5f2e.
-- Apariencia clara y oscura: sigue la del celular o la computadora; en el pie de página se puede fijar
-  «Clara» u «Oscura» (se recuerda en ese navegador). La carta digital sigue siendo oscura.
+- Apariencia clara y oscura: sigue la del celular o la computadora. El bombillo de la barra de arriba la cambia
+  (encendido = clara, apagado = oscura) y en el pie de página se puede volver a «Automática».
+  La elección se recuerda en ese navegador. La carta digital sigue siendo oscura.
+- Se siente como app en el celular: sin destello gris al tocar, botones que se encogen al presionarlos,
+  los + / − no hacen zoom al tocarlos rápido y los efectos de mouse no se quedan pegados.
 - Letra: Instrument Serif para titulares, con cursiva para el énfasis («Nos vemos en Maracaibo.»);
   la fuente del sistema para leer (en iPhone y Mac es la de Apple).
 - Un solo efecto animado: la declaración de «El bar» se enciende palabra por palabra al leer.

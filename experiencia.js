@@ -221,10 +221,16 @@
 
     const total = () => Object.keys(qty).reduce((t, n) => t + cost(n, qty[n]), 0);
     const each = () => Math.ceil(total() / split / 100) * 100;
+    // el monto que cambia se asienta con un leve desenfoque (180 ms), así se nota que se actualizó
+    const setNum = (el, v) => {
+      if (el.textContent === v) return;
+      el.textContent = v;
+      if (!reduce.matches && el.animate) el.animate([{ opacity: .35, filter: 'blur(3px)', transform: 'translateY(3px)' }, { opacity: 1, filter: 'blur(0)', transform: 'none' }], { duration: 180, easing: 'cubic-bezier(.23,1,.32,1)' });
+    };
     const tally = () => {
       const t = total();
-      $('total').textContent = money(t);
-      $('each').textContent = money(each());
+      setNum($('total'), money(t));
+      setNum($('each'), money(each()));
       $('split').textContent = split;
       $('splitMinus').disabled = split <= 1; $('splitPlus').disabled = split >= 30;
       $('shareRonda').disabled = $('resetRonda').disabled = t === 0;
@@ -263,25 +269,36 @@
     tally();
   }
 
-  /* ---------- Apariencia: automática (la del sistema), clara u oscura ---------- */
-  const look = $('look');
-  if (look) {
-    const KEY = 'maracaibo-apariencia';
-    const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
-    const base = metas.map(m => m.content);
-    const looks = [...look.querySelectorAll('[role=radio]')];
-    const apply = (v, save) => {
-      if (v === 'auto') delete root.dataset.theme; else root.dataset.theme = v;
-      metas.forEach((m, i) => { m.content = v === 'auto' ? base[i] : (v === 'dark' ? '#0c0d0a' : '#f3f1e9'); });
-      looks.forEach(o => { const on = o.dataset.look === v; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; });
-      if (save) { try { v === 'auto' ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, v); } catch (e) { /* sin almacenamiento */ } }
-    };
-    apply(root.dataset.theme || 'auto', false);
-    looks.forEach(o => o.addEventListener('click', () => apply(o.dataset.look, true)));
-    look.addEventListener('keydown', e => {
-      const i = looks.indexOf(document.activeElement); if (i < 0) return;
-      const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-      if (d) { e.preventDefault(); const o = looks[(i + d + looks.length) % looks.length]; apply(o.dataset.look, true); o.focus(); }
-    });
-  }
+  /* ---------- Apariencia: automática (la del sistema), clara u oscura ----------
+     El bombillo de la barra cambia entre clara y oscura; el pie permite volver a «Automática». */
+  const KEY = 'maracaibo-apariencia';
+  const sysDark = matchMedia('(prefers-color-scheme: dark)');
+  const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
+  const base = metas.map(m => m.content);
+  const look = $('look'), bulb = $('bulb');
+  const looks = look ? [...look.querySelectorAll('[role=radio]')] : [];
+  const current = () => root.dataset.theme || (sysDark.matches ? 'dark' : 'light');
+  const paintBulb = () => {
+    if (!bulb) return;
+    const lit = current() === 'light';
+    bulb.classList.toggle('on', lit);
+    bulb.setAttribute('aria-label', lit ? 'Apagar la luz: cambiar a apariencia oscura' : 'Encender la luz: cambiar a apariencia clara');
+    bulb.title = lit ? 'Apariencia oscura' : 'Apariencia clara';
+  };
+  const apply = (v, save) => {
+    if (v === 'auto') delete root.dataset.theme; else root.dataset.theme = v;
+    metas.forEach((m, i) => { m.content = v === 'auto' ? base[i] : (v === 'dark' ? '#0c0d0a' : '#f3f1e9'); });
+    looks.forEach(o => { const on = o.dataset.look === v; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; });
+    paintBulb();
+    if (save) { try { v === 'auto' ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, v); } catch (e) { /* sin almacenamiento */ } }
+  };
+  apply(root.dataset.theme || 'auto', false);
+  sysDark.addEventListener?.('change', paintBulb);
+  bulb?.addEventListener('click', () => apply(current() === 'light' ? 'dark' : 'light', true));
+  looks.forEach(o => o.addEventListener('click', () => apply(o.dataset.look, true)));
+  look?.addEventListener('keydown', e => {
+    const i = looks.indexOf(document.activeElement); if (i < 0) return;
+    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (d) { e.preventDefault(); const o = looks[(i + d + looks.length) % looks.length]; apply(o.dataset.look, true); o.focus(); }
+  });
 })();
