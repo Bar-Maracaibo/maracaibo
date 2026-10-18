@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Bar Maracaibo · tokens del sistema de diseño
+   Una sola fuente para colores, letras, espacios, radios y curvas de la
+   página principal (experiencia.css) y la carta (carta.css). Los mismos
+   colores están en herramientas/tokens.json para el PDF.
+   Oscura por defecto; clara según el sistema o con data-theme="light".
+   ========================================================================== */
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(fuentes/instrument-serif-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(fuentes/instrument-serif-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:swap;src:url(fuentes/instrument-serif-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:swap;src:url(fuentes/instrument-serif-italic-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+
+
+/* ---------- Colores: oscura (predeterminada) ----------
+   Contrastes medidos sobre --fondo. */
+:root{
+  --fondo:#0c0d0a;          /* noche, negro con un dejo verde */
+  --sup:#151712;            /* superficie elevada */
+  --ctrl:#20231c;           /* controles */
+  --ctrl-2:#2b2f26;         /* controles al pasar */
+  --tinta:#f2f0e7;          /* texto · 17:1 */
+  --gris:#a8a99b;           /* texto secundario · 8.2:1 */
+  --gris-2:#8f9083;         /* texto terciario · 6.0:1 */
+  --apagado:#34372f;        /* palabras sin encender */
+  --linea:rgba(242,240,231,.13);
+  --linea-2:rgba(242,240,231,.07);
+  --musgo:#a9bd7f;          /* verde del rótulo, aclarado · 9.5:1 */
+  --sobre-musgo:#0c0d0a;    /* texto sobre el botón musgo · 9.5:1 */
+  --musgo-hover:#bccd96;
+  --abierto:#30d158;
+  --cerrado:#ff453a;
+  --sombra:rgba(0,0,0,.55);
+  --mapa:invert(.9) hue-rotate(180deg) saturate(.45) brightness(.95) contrast(.92);
+  --luz:#f7c948;--luz-borde:#7a5600;--luz-rayo:#b57c00;--luz-brillo:rgba(247,201,72,.75); /* bombillo encendido */
+  --logo:var(--tinta);      /* logo monocromo: hueso en oscuro */
+  --off-tinta:#7d7f72;      /* texto de controles deshabilitados · 3.6:1 sobre --ctrl */
+  color-scheme:dark;
+}
+/* ---------- Colores: clara ---------- */
+@media (prefers-color-scheme:light){
+  :root:not([data-theme=dark]){
+    --fondo:#f3f1e9;--sup:#e9e7dd;--ctrl:#dddbd0;--ctrl-2:#d1cfc3;
+    --tinta:#171913;          /* 15.7:1 */
+    --gris:#5a5c50;           /* 6.0:1 */
+    --gris-2:#616357;         /* 5.4:1 */
+    --apagado:#cfcdc2;
+    --linea:rgba(23,25,19,.16);--linea-2:rgba(23,25,19,.08);
+    --musgo:#4c5f2e;          /* 6.2:1 */
+    --sobre-musgo:#ffffff;    /* 7.0:1 */
+    --musgo-hover:#3f5025;
+    --abierto:#248a3d;--cerrado:#d70015;
+    --sombra:rgba(40,38,30,.18);
+    --mapa:saturate(.6) contrast(.95);
+    --logo:var(--musgo);
+    --off-tinta:#6f7165;
+    color-scheme:light;
+  }
+}
+:root[data-theme=light]{
+  --fondo:#f3f1e9;--sup:#e9e7dd;--ctrl:#dddbd0;--ctrl-2:#d1cfc3;
+  --tinta:#171913;--gris:#5a5c50;--gris-2:#616357;--apagado:#cfcdc2;
+  --linea:rgba(23,25,19,.16);--linea-2:rgba(23,25,19,.08);
+  --musgo:#4c5f2e;--sobre-musgo:#ffffff;--musgo-hover:#3f5025;
+  --abierto:#248a3d;--cerrado:#d70015;
+  --sombra:rgba(40,38,30,.18);
+  --mapa:saturate(.6) contrast(.95);
+  --logo:var(--musgo);--off-tinta:#6f7165;
+  color-scheme:light;
+}
+
+:root{
+  --serif:'Instrument Serif','Iowan Old Style','Palatino Linotype',Georgia,serif;
+  --texto:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --frame:1200px;
+  --gutter:clamp(20px,4vw,48px);
+  --ease:cubic-bezier(.25,.1,.25,1);      /* cambios de color */
+  --ease-out:cubic-bezier(.23,1,.32,1);   /* entradas y respuesta al toque */
+  --ease-drawer:cubic-bezier(.32,.72,0,1);/* barras que entran y salen, como en iOS */
+  /* espacios: el aire entre secciones */
+  --sec:clamp(84px,10vw,126px);
+  --sec-sm:clamp(56px,7vw,88px);
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;
+  /* radios */
+  --r-sm:12px;--r:20px;--r-lg:24px;--r-pill:999px;
+}
