@@ -134,7 +134,53 @@
     toast.textContent = t; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2600);
   };
 
-  window.MCB = { CONFIG, MENU, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
+  /* ---------- Hoja de Google (CMS liviano) ----------
+     CONFIG.sheetUrl = el enlace normal de la hoja (compartida como «cualquier persona con el enlace»).
+     Pestaña «carta»: plato | tamaño | precio   → actualiza precios de platos que ya existen.
+     Pestaña «partidos»: fecha (AAAA-MM-DD) | hora (HH:MM) | equipos | torneo.
+     Si falla o tarda más de 2 s se usan menu-datos.js y config.js. */
+  const parseCSV = text => {
+    const rows = []; let row = [], cell = '', q = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (q) { if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; } else if (c === '"') q = false; else cell += c; }
+      else if (c === '"') q = true;
+      else if (c === ',') { row.push(cell); cell = ''; }
+      else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+      else cell += c;
+    }
+    if (cell || row.length) { row.push(cell); rows.push(row); }
+    const head = (rows.shift() || []).map(h => normalize(h));
+    return rows.filter(r => r.some(x => x.trim())).map(r => Object.fromEntries(head.map((h, i) => [h, (r[i] || '').trim()])));
+  };
+  const sheetCsv = (url, tab) => {
+    const id = (url.match(/\/spreadsheets\/d\/([\w-]{20,})/) || [])[1];
+    return id ? `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}` : null;
+  };
+  const applySheet = ({ carta, partidos }) => {
+    (carta || []).forEach(r => {
+      const p = parseInt(String(r.precio).replace(/[^\d]/g, ''), 10);
+      const f = find(`${r.plato} ${r.tamano || ''}`) || find(r.plato);
+      if (!f || !Number.isFinite(p)) return;
+      if (f.size) f.size.p = p; else f.it.p = p;
+    });
+    const ps = (partidos || []).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(r.fecha) && r.equipos)
+      .map(r => ({ fecha: r.fecha, hora: r.hora, equipos: r.equipos, torneo: r.torneo }));
+    if (ps.length) CONFIG.partidos = ps;
+  };
+  const ready = (() => {
+    const url = CONFIG.sheetUrl;
+    if (!url || !window.fetch) return Promise.resolve(false);
+    const get = tab => { const u = sheetCsv(url, tab); return u ? fetch(u).then(r => r.ok ? r.text() : Promise.reject(r.status)).then(parseCSV) : Promise.reject('enlace'); };
+    const load = Promise.allSettled([get('carta'), get('partidos')]).then(([c, m]) => {
+      applySheet({ carta: c.value, partidos: m.value });
+      return c.status === 'fulfilled' || m.status === 'fulfilled';
+    });
+    const timeout = new Promise(r => setTimeout(() => r(false), 2000));
+    return Promise.race([load, timeout]).catch(() => false);
+  })();
+
+  window.MCB = { ready, parseCSV, CONFIG, MENU, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
 
   fill();
   initTheme();

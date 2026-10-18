@@ -8,6 +8,7 @@
    enciende al leer.
    ========================================================================== */
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 /* los controles responden al instante (sin la espera del doble toque) y no se seleccionan al mantener el dedo */
 a,button,label,[role=radio]{touch-action:manipulation}
@@ -60,6 +61,8 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
   .link:hover{color:var(--musgo)}
   .round:hover:not(:disabled),.stepper button:hover:not(:disabled){background:var(--ctrl-2)}
   .fav:hover img{transform:scale(1.04)}
+  .chip:hover{background:var(--ctrl-2)}
+  .social-link:hover,.rating:hover{color:var(--musgo)}
 }
 
 /* ---------- Navegación ---------- */
@@ -174,6 +177,9 @@ label.row{cursor:pointer}
 .ronda .card{background:var(--fondo)}
 .ronda-copy{display:grid;gap:22px;align-self:start;position:sticky;top:120px}
 .ronda-list{display:grid}
+.presets{display:flex;flex-wrap:wrap;gap:8px;padding:16px 0 4px}
+.chip{min-height:44px;padding:0 16px;border-radius:var(--r-pill);background:var(--ctrl);font-size:.875rem;font-weight:500;color:var(--tinta);-webkit-user-select:none;user-select:none;transition:background-color .2s,transform .12s var(--ease-out)}
+.chip:active{transform:scale(.96)}
 .ronda-group{padding-top:18px;font-size:.8125rem;font-weight:500;letter-spacing:.04em;color:var(--gris)}
 .item{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:8px 0;border-bottom:1px solid var(--linea-2)}
 .item-text{display:grid;min-width:0}
@@ -188,6 +194,16 @@ label.row{cursor:pointer}
 .tally .each{color:var(--musgo)}
 .ronda-actions{display:flex;flex-wrap:wrap;gap:8px 12px}
 .ronda-actions .btn-main{flex:1}
+
+/* ---------- Partidos de la semana ---------- */
+.matches{padding-block:var(--sec)}
+.matches[hidden]{display:none}
+.match-list{display:grid;border-top:1px solid var(--linea)}
+.match{display:grid;grid-template-columns:72px minmax(0,1fr) auto;align-items:center;gap:16px 28px;padding:22px 0;border-bottom:1px solid var(--linea)}
+.match-date{display:grid;justify-items:center;padding:8px 0;border-radius:var(--r-sm);background:var(--sup);font-size:.75rem;font-weight:600;letter-spacing:.04em;color:var(--gris);line-height:1.2}
+.match-date strong{font-family:var(--serif);font-weight:400;font-size:2rem;line-height:1;color:var(--musgo);letter-spacing:0}
+.match-info{display:grid;gap:4px;min-width:0}
+.match-teams{font-size:clamp(1.625rem,2.6vw,2.25rem)}
 
 /* ---------- 4 · La carta ---------- */
 .carta{padding-block:var(--sec)}
@@ -219,7 +235,26 @@ label.row{cursor:pointer}
 .switch input:checked+span::after{transform:translateX(20px)}
 .switch input:focus-visible+span{outline:2px solid var(--tinta);outline-offset:3px}
 .preview{display:grid;gap:10px;padding:20px 0 24px}
+.seg-days{grid-auto-columns:minmax(0,1fr)}
+.seg-days button{padding:0 12px}
+.select{position:relative}
+.select::after{content:'';position:absolute;right:16px;top:50%;width:7px;height:7px;border-right:1.5px solid var(--gris);border-bottom:1.5px solid var(--gris);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.select select{min-height:44px;min-width:150px;padding:0 40px 0 16px;border:0;border-radius:var(--r-sm);background:var(--ctrl);color:var(--tinta);font:inherit;font-size:1rem;font-weight:600;font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none;cursor:pointer}
+.row-field{flex-wrap:wrap}
+.row-field input{flex:1 1 200px;min-height:44px;padding:0 16px;border:1px solid var(--linea);border-radius:var(--r-sm);background:transparent;color:var(--tinta);font:inherit;font-size:1rem}
+.row-field input::placeholder{color:var(--gris-2)}
+.row-field input:focus{outline:none;border-color:var(--musgo);box-shadow:0 0 0 3px color-mix(in srgb,var(--musgo) 25%,transparent)}
+.opt{font-weight:400;color:var(--gris)}
 .bubble{padding:14px 18px;border-radius:20px 20px 20px 6px;background:var(--ctrl);line-height:1.45}
+
+/* ---------- Redes y calificación (solo si están en config.js) ---------- */
+.social{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px}
+.social:not(:has(a:not([hidden]))){display:none}
+.social-link,.rating{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:.9375rem;font-weight:500;color:var(--tinta);text-decoration:none}
+.social-link svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round}
+.social-link svg path{fill:currentColor;stroke:none}
+.rating span{color:var(--musgo)}
+.rating small{font-size:inherit;color:var(--gris);font-weight:400}
 
 /* ---------- 6 · Cómo llegar ---------- */
 .visit{padding-block:var(--sec)}
@@ -236,6 +271,21 @@ label.row{cursor:pointer}
 .map{position:relative;aspect-ratio:4/3;border-radius:24px;overflow:hidden;background:var(--sup);box-shadow:0 0 0 1px var(--linea),0 40px 80px -40px var(--sombra)}
 /* en oscuro, el mapa se invierte y se devuelve el tono, así el pin sigue siendo rojo */
 .map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:var(--mapa)}
+.map-still{position:absolute;inset:0;background:
+  linear-gradient(28deg,transparent 47%,var(--linea) 47.4%,var(--linea) 49.6%,transparent 50%),
+  linear-gradient(-62deg,transparent 30%,var(--linea-2) 30.3%,var(--linea-2) 31.6%,transparent 32%),
+  linear-gradient(-62deg,transparent 68%,var(--linea-2) 68.3%,var(--linea-2) 69.6%,transparent 70%),
+  linear-gradient(8deg,transparent 78%,var(--linea-2) 78.3%,var(--linea-2) 79.4%,transparent 79.8%),
+  repeating-linear-gradient(90deg,transparent 0 46px,color-mix(in srgb,var(--tinta) 3%,transparent) 46px 47px),
+  repeating-linear-gradient(0deg,transparent 0 46px,color-mix(in srgb,var(--tinta) 3%,transparent) 46px 47px),
+  var(--sup)}
+.map-pin{position:absolute;left:50%;top:44%;width:36px;height:45px;transform:translate(-50%,-100%);filter:drop-shadow(0 6px 10px var(--sombra))}
+.map-pin path{fill:var(--musgo)}
+.map-pin circle{fill:var(--fondo)}
+.map-btn{position:absolute;left:50%;top:58%;transform:translateX(-50%);background:var(--fondo)}
+.map-btn:active{transform:translateX(-50%) scale(.97)}
+.map-note{position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:.8125rem;color:var(--gris)}
+.map.live .map-still{display:none}
 
 /* ---------- Pie ---------- */
 .footer{border-top:1px solid var(--linea-2);padding-block:48px calc(40px + env(safe-area-inset-bottom,0px))}
@@ -296,6 +346,11 @@ label.row{cursor:pointer}
   .index-meta{font-size:.8125rem;max-width:12ch}
   .seg{width:100%}
   .seg button{padding:0 8px}
+  .seg-days button{padding:0 4px;font-size:.875rem}
+  .matches{padding-block:68px}
+  .match{grid-template-columns:60px minmax(0,1fr);gap:12px 16px;padding:18px 0}
+  .match .btn{grid-column:1/-1}
+  .match-teams{font-size:1.5rem}
   .visit-title{font-size:3.5rem}
   .visit .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
   .visit .btn{padding:0 10px;font-size:.9375rem}

@@ -94,7 +94,8 @@
   <section class="statement" id="el-bar" aria-labelledby="statement-label">
     <div class="frame">
       <p class="kicker" id="statement-label">El bar</p>
-      <p class="display statement-text" id="statement">Un bar de pueblo, <em>como tiene que ser.</em> Bocas para compartir, cerveza nacional bien fría y el partido en la pantalla. <span class="soft">Buena compañía, sin apuro, hasta la medianoche.</span></p>
+      <!-- TODO-DUEÑO: confirmar este texto (punto de encuentro del barrio, partidos, atención). -->
+      <p class="display statement-text" id="statement">El punto de encuentro de San Lorenzo. <em>Acá se grita el gol,</em> se celebra el cumpleaños y siempre aparece una silla más para el que llega tarde. <span class="soft">Te atendemos como en casa.</span></p>
     </div>
 
     <div class="favs">
@@ -125,7 +126,21 @@
     </div>
   </section>
 
-  <!-- 3 · La ronda: calculadora para el grupo -->
+  <!-- 3 · Partidos de la semana: CONFIG.partidos o la hoja de Google; oculto si no hay -->
+  <section class="matches" id="partidos" aria-labelledby="matches-title" hidden>
+    <div class="frame">
+      <header class="head head-row">
+        <div>
+          <p class="kicker">En la pantalla</p>
+          <h2 id="matches-title" class="display h2">Partidos de <em>la semana.</em></h2>
+        </div>
+        <p class="body">Llegá temprano o apartá la mesa para el partido.</p>
+      </header>
+      <ul class="match-list" id="matchList"></ul>
+    </div>
+  </section>
+
+  <!-- 4 · La ronda: calculadora para el grupo -->
   <section class="ronda" id="ronda" aria-labelledby="ronda-title">
     <div class="frame split">
       <div class="ronda-copy">
@@ -135,6 +150,11 @@
         <p class="caption">Los precios salen de la carta y se actualizan con ella.</p>
       </div>
       <div class="card ronda-card">
+        <div class="presets" role="group" aria-label="Atajos">
+          <button type="button" class="chip" data-preset="dos">Ronda para 2</button>
+          <button type="button" class="chip" data-preset="cuatro">Ronda para 4</button>
+          <button type="button" class="chip" data-preset="partido">Partido con amigos</button>
+        </div>
         <div id="rondaList" class="ronda-list"><noscript><p class="caption">Activá JavaScript para usar la calculadora, o mirá los precios en <a class="link" href="menu.html">la carta</a>.</p></noscript></div>
         <div class="row">
           <span class="row-label" id="splitLabel">Entre cuántos</span>
@@ -194,15 +214,19 @@
           </div>
         </div>
         <div class="row row-stack">
-          <span class="row-label" id="whenLabel">Cuándo</span>
-          <div class="seg" role="radiogroup" aria-labelledby="whenLabel" id="when">
-            <button type="button" role="radio" aria-checked="true" data-when="hoy">Hoy</button>
-            <button type="button" role="radio" aria-checked="false" data-when="mañana">Mañana</button>
-            <button type="button" role="radio" aria-checked="false" data-when="este fin de semana">Fin de semana</button>
-          </div>
+          <span class="row-label" id="whenLabel">Día</span>
+          <div class="seg seg-days" role="radiogroup" aria-labelledby="whenLabel" id="when"></div>
+        </div>
+        <div class="row">
+          <label class="row-label" for="hora">Hora</label>
+          <div class="select"><select id="hora"></select></div>
+        </div>
+        <div class="row row-field">
+          <label class="row-label" for="nombre">Nombre <span class="opt">(opcional)</span></label>
+          <input id="nombre" type="text" autocomplete="given-name" autocapitalize="words" enterkeyhint="done" maxlength="40" placeholder="¿A nombre de quién?">
         </div>
         <label class="row" for="match">
-          <span class="row-label">Venimos a ver el partido</span>
+          <span class="row-label" id="matchLabel">Venimos a ver el partido</span>
           <span class="switch"><input type="checkbox" id="match" role="switch"><span aria-hidden="true"></span></span>
         </label>
         <div class="preview">
@@ -225,13 +249,18 @@
           <figcaption><strong>Buscá este rótulo.</strong> Verde y amarillo, encendido frente al local.</figcaption>
         </figure>
         <p class="plus">Código de ubicación <strong data-cfg="codigoUbicacion"></strong></p>
+        <p class="social"><a class="social-link" data-cfg-href="facebook" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11.2 18v-6.6h2.3l.4-2.7h-2.7V7c0-.8.3-1.3 1.4-1.3H14V3.3c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v2H6.3v2.7h2.3V18"/></svg>Facebook</a><a class="social-link" data-cfg-href="instagram" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="4"/><circle cx="10" cy="10" r="3.2"/><circle cx="14.3" cy="5.7" r=".6"/></svg>Instagram</a><a class="rating" data-rating target="_blank" rel="noopener" hidden></a></p>
         <div class="actions">
           <a class="btn btn-main" href="https://maps.app.goo.gl/iqMi91LyRhNMNFzu8" target="_blank" rel="noopener">Abrir en Google Maps</a>
           <a class="btn btn-line" href="https://waze.com/ul?ll=10.0087064%2C-84.1464181&amp;navigate=yes" target="_blank" rel="noopener">Abrir en Waze</a>
         </div>
       </div>
-      <div class="map">
-        <iframe title="Mapa con la ubicación de Bar Maracaibo" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1200!2d-84.1464181!3d10.0087064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0fa60f5cc3085%3A0x789d5083611dd5b0!2sBar%20Maracaibo!5e0!3m2!1ses!2scr!4v1760800000000!5m2!1ses!2scr" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      <div class="map" id="map" data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1200!2d-84.1464181!3d10.0087064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0fa60f5cc3085%3A0x789d5083611dd5b0!2sBar%20Maracaibo!5e0!3m2!1ses!2scr!4v1760800000000!5m2!1ses!2scr">
+        <div class="map-still" aria-hidden="true">
+          <svg class="map-pin" viewBox="0 0 32 40"><path d="M16 39s13-12.2 13-23A13 13 0 0 0 3 16c0 10.8 13 23 13 23Z"/><circle cx="16" cy="16" r="5"/></svg>
+        </div>
+        <button type="button" class="btn btn-line map-btn" id="mapBtn">Ver mapa</button>
+        <p class="map-note">El mapa de Google se carga al tocar el botón.</p>
       </div>
     </div>
   </section>
@@ -247,6 +276,7 @@
       <a href="#reservar">Reservar</a>
       <a href="#llegar">Cómo llegar</a>
     </nav>
+    <p class="social"><a class="social-link" data-cfg-href="facebook" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11.2 18v-6.6h2.3l.4-2.7h-2.7V7c0-.8.3-1.3 1.4-1.3H14V3.3c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5v2H6.3v2.7h2.3V18"/></svg>Facebook</a><a class="social-link" data-cfg-href="instagram" target="_blank" rel="noopener"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="4"/><circle cx="10" cy="10" r="3.2"/><circle cx="14.3" cy="5.7" r=".6"/></svg>Instagram</a><a class="rating" data-rating target="_blank" rel="noopener" hidden></a></p>
     <div class="look">
       <span id="lookLabel">Apariencia</span>
       <div class="look-seg" role="radiogroup" aria-labelledby="lookLabel" id="look">
