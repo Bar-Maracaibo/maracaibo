@@ -5,6 +5,10 @@
   root.classList.add('js');
   const CONFIG = window.CONFIG || {};
   const MENU = window.MENU || [];
+  // «Adicionales» no es un apartado con foto: va como nota al final de la carta
+  const EXTRA = 'adicionales';
+  const SECCIONES = MENU.filter(c => c.id !== EXTRA);
+  const ADICIONALES = MENU.find(c => c.id === EXTRA) || null;
   const H = CONFIG.horario || { abre: 11, cierra: 24 };
 
   const money = n => '₡' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -35,17 +39,20 @@
   const catFrom = cat => { const l = cat.items.map(fromPrice).filter(p => p != null); return l.length ? Math.min(...l) : null; };
   const priceText = p => p == null ? 'Consultar' : money(p);
   const sizesText = it => it.sizes.map(s => `${s.l} ${priceText(s.p)}`).join(' · ');
+  // «Adicional para cualquier plato ₡500 · Adicional de guacamole ₡1.000»
+  const extrasText = () => ADICIONALES ? ADICIONALES.items.map(it => `${it.n}${it.d ? ' ' + it.d[0].toLowerCase() + it.d.slice(1) : ''} ${priceText(it.p)}`).join(' · ') : '';
   // Costo de q unidades de un precio, aplicando la promo («2 por ₡1.500»)
   const cost = (p, q, promo) => promo ? Math.floor(q / promo.n) * promo.p + (q % promo.n) * p : p * q;
-  // Busca por nombre, con o sin tamaño: «Ceviche grande» → Ceviche, tamaño Grande
+  // Busca por nombre, con o sin un tamaño concreto: «Ceviche (grande)», «Alitas (6 unid.)» o «Ceviche grande»
+  const key = s => normalize(s).replace(/[().]/g, ' ').replace(/\s+/g, ' ').trim();
   const index = {};
-  MENU.forEach(cat => cat.items.forEach(it => {
-    index[normalize(it.n)] = { it, cat, size: null };
-    (it.sizes || []).forEach(s => { index[normalize(`${it.n} ${s.l}`)] = { it, cat, size: s }; });
+  SECCIONES.forEach(cat => cat.items.forEach(it => {
+    index[key(it.n)] = { it, cat, size: null };
+    (it.sizes || []).forEach(s => { index[key(`${it.n} ${s.l}`)] = { it, cat, size: s }; });
   }));
   const find = name => {
-    const r = index[normalize(name)]; if (!r) return null;
-    return { ...r, name: r.size ? `${r.it.n} ${r.size.l.toLowerCase()}` : r.it.n, p: r.size ? r.size.p : r.it.p, promo: r.it.promo || null };
+    const r = index[key(name)]; if (!r) return null;
+    return { ...r, name: r.size ? `${r.it.n} (${r.size.l.toLowerCase()})` : r.it.n, p: r.size ? r.size.p : r.it.p, promo: r.it.promo || null };
   };
 
   /* ---------- Números en palabras (1 a 99), para «ocho apartados» ---------- */
@@ -54,7 +61,7 @@
   const D = ['', '', '', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
   // delante de un sustantivo masculino: «veintiún antojos», «treinta y un antojos»
   const words = n => (n < 30 ? U[n] : D[Math.floor(n / 10)] + (n % 10 ? ' y ' + U[n % 10] : '')).replace(/uno$/, 'un').replace(/veintiun$/, 'veintiún');
-  const totalItems = MENU.reduce((t, c) => t + c.items.length, 0);
+  const totalItems = SECCIONES.reduce((t, c) => t + c.items.length, 0);
 
   /* ---------- Datos de config en la página ----------
      data-cfg="telefono|horario|direccion|notaPrecios|codigoUbicacion" pone el texto;
@@ -62,7 +69,7 @@
      Los elementos con data-cfg-href se ocultan si ese dato está vacío. */
   const wa = (text = '') => `https://wa.me/${CONFIG.whatsapp}${text ? '?text=' + encodeURIComponent(text) : ''}`;
   const fill = (scope = document) => {
-    const txt = { telefono: CONFIG.telefono, horario: horarioTexto, direccion: CONFIG.direccion, notaPrecios: CONFIG.notaPrecios, codigoUbicacion: CONFIG.codigoUbicacion };
+    const txt = { facebookNombre: CONFIG.facebook && CONFIG.facebookNombre, telefono: CONFIG.telefono, horario: horarioTexto, direccion: CONFIG.direccion, notaPrecios: CONFIG.notaPrecios, codigoUbicacion: CONFIG.codigoUbicacion };
     scope.querySelectorAll('[data-cfg]').forEach(el => { const v = txt[el.dataset.cfg]; if (v) el.textContent = v; else el.hidden = true; });
     scope.querySelectorAll('[data-wa]').forEach(el => { el.href = wa(el.dataset.wa); });
     scope.querySelectorAll('[data-tel]').forEach(el => { el.href = 'tel:+' + CONFIG.whatsapp; });
@@ -189,7 +196,7 @@
     return `<picture>${m.avif ? `<source type="image/avif" srcset="${set('avif')}" sizes="${sizes}">` : ''}<source type="image/webp" srcset="${set('webp')}" sizes="${sizes}"><img src="${fb}" srcset="${set('jpg')}" sizes="${sizes}" alt="${esc(alt)}"${extra}></picture>`;
   };
 
-  window.MCB = { pic, ready, parseCSV, CONFIG, MENU, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
+  window.MCB = { pic, ready, parseCSV, CONFIG, MENU, SECCIONES, ADICIONALES, extrasText, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
 
   /* ---------- Sin señal: service worker (sw.js) ---------- */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)))

@@ -1,7 +1,7 @@
 Herramientas (correr desde la carpeta del proyecto; ver ../LEEME.txt):
 - optimizar-imagenes.py: genera ../img/ (AVIF, WebP y JPG de 480/800/1200 px) y ../img/imagenes.js; achica logo-maracaibo.png.
 - generar-menu.py: genera ../menu-impreso.pdf (casa) y ../menu-imprenta.pdf (sangrado y marcas de corte) desde
-  ../menu-datos.js y ../config.js. Opción B (predeterminada): 2 hojas a doble cara; opción A: 1 hoja, 3 columnas.
+  ../menu-datos.js y ../config.js. Opción A (predeterminada): 1 hoja a doble cara, 3 columnas; opción B: 2 hojas, 2 columnas.
 - generar-seo.py: genera ../og-maracaibo.jpg, ../icono-192.png, ../icono-512.png y los datos JSON-LD de index.html y menu.html.
 - tokens.json: colores del sistema de diseño (los mismos de ../tokens.css) para el PDF y la imagen para compartir.
 - fuentes-pdf/: instancias estáticas de Archivo e Instrument Serif (OFL) usadas en el PDF y la imagen para compartir.

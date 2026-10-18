@@ -1,7 +1,8 @@
 """Genera la carta impresa desde menu-datos.js y config.js (las mismas fuentes que usa la web).
-Uso, desde la carpeta del proyecto:  python herramientas/generar-menu.py [B|A]
-  B (predeterminada): dos hojas A4 a doble cara (4 caras), 2 columnas, platos a 12 pt y descripciones a 9,5 pt.
-  A: una hoja A4 a doble cara, 3 columnas; con la carta de 95 platos solo entra a 10,5 pt y con muy poco aire.
+Uso, desde la carpeta del proyecto:  python herramientas/generar-menu.py [A|B]
+  A (predeterminada): una hoja A4 a doble cara, 3 columnas, platos a 12 pt y descripciones a 9,5 pt.
+     Si la carta crece y no entra, baja sola hasta 10,5 pt como mínimo; si ni así entra, usar B.
+  B: dos hojas A4 a doble cara (4 caras), 2 columnas, platos a 12 pt y descripciones a 9,5 pt.
 Salidas:
   menu-impreso.pdf   para imprimir en casa (A4, sin marcas)
   menu-imprenta.pdf  para la imprenta: 3 mm de sangrado por lado (216 × 303 mm) y marcas de corte
@@ -36,6 +37,9 @@ def load(file, var):
     body = re.search(r'window\.' + var + r'\s*=\s*(.*);\s*$', src, re.S).group(1)
     return json.loads('\n'.join(l for l in body.splitlines() if not l.strip().startswith('//')))
 MENU = load('menu-datos.js', 'MENU')
+# «Adicionales» va como nota compacta al final, no como apartado
+SECCIONES = [c for c in MENU if c['id'] != 'adicionales']
+ADIC = next((c for c in MENU if c['id'] == 'adicionales'), None)
 CFG = load('config.js', 'CONFIG')
 T = {k: HexColor(v) for k, v in json.loads((here / 'tokens.json').read_text(encoding='utf-8')).items() if k[0] != '_'}
 
@@ -91,8 +95,8 @@ LOGO, (LW, LH) = logo_transparente()
 
 # ---------- opciones de diseño ----------
 OPCIONES = {
-    'A': dict(faces=2, cols=3, name=11, desc=8.5, size=9, title=17, margin=8 * mm, gap=5 * mm, pad=1.3 * mm, space=3 * mm,
-              band=28 * mm, photo=20 * mm, strip=36 * mm),
+    'A': dict(faces=2, cols=3, name=12, desc=9.5, size=10, title=20, margin=10 * mm, gap=7 * mm, pad=2 * mm, space=4 * mm,
+              band=34 * mm, photo=40 * mm, strip=40 * mm),
     'B': dict(faces=4, cols=2, name=12, desc=9.5, size=10, title=24, margin=14 * mm, gap=10 * mm, pad=2.2 * mm, space=4.5 * mm,
               band=52 * mm, photo=58 * mm, strip=52 * mm),
 }
@@ -172,14 +176,18 @@ def layout_item(it, w, o):
             y += o['desc'] * 1.28; ops.append(('t', l, 0, y, 'Regular', o['desc'], 'gris', 'l'))
     if it.get('sizes'):
         parts = [f"{s['l']} {price_text(s['p'])}" for s in it['sizes']]
+        fs, sep = o['size'], '  ·  '               # los tamaños van en una sola línea: hasta 1 pt menos y separador más corto
+        while sw(sep.join(parts), 'SemiBold', fs) > w and fs > o['size'] - 1: fs -= .5
+        if sw(sep.join(parts), 'SemiBold', fs) > w: sep = ' · '
+        if sw(sep.join(parts), 'SemiBold', fs) > w: fs, sep = o['size'], '  ·  '   # ni así entra (Surtido a 3 columnas): una línea por tamaño
         row, rows = '', []
         for ptxt in parts:
-            t = (row + '  ·  ' + ptxt) if row else ptxt
-            if sw(t, 'SemiBold', o['size']) <= w or not row: row = t
+            t = (row + sep + ptxt) if row else ptxt
+            if sw(t, 'SemiBold', fs) <= w or not row: row = t
             else: rows.append(row); row = ptxt
         rows.append(row)
         for r_ in rows:
-            y += o['size'] * 1.42; ops.append(('t', r_, 0, y, 'SemiBold', o['size'], 'tinta', 'l'))
+            y += o['size'] * 1.42; ops.append(('t', r_, 0, y, 'SemiBold', fs, 'tinta', 'l'))
     y += o['desc'] * .75
     return ops, y
 
@@ -199,7 +207,7 @@ def draw_ops(d, ops, x, top):
 def blocks(o, w):
     """Cada apartado se vuelve una lista de bloques: título, subgrupo o plato, con su alto."""
     out = []
-    for cat in MENU:
+    for cat in SECCIONES:
         out.append(('title', cat, o['title'] * 1.05 + 3.4 * mm))
         prev_g = None
         for it in cat['items']:
@@ -208,6 +216,9 @@ def blocks(o, w):
             ops, h = layout_item(it, w, o)
             out.append(('item', (ops, cat), h + o['pad']))
         out.append(('space', None, o['space']))
+    if ADIC:                                       # nota de adicionales: «Adicional para cualquier plato ₡500 · …»
+        lines = [l for it in ADIC['items'] for l in wrap(f"{it['n']}{' ' + it['d'][0].lower() + it['d'][1:] if it.get('d') else ''} {price_text(it.get('p'))}", 'Regular', o['desc'], w)]
+        out.append(('extras', lines, o['desc'] * 2.1 + len(lines) * o['desc'] * 1.3 + 1.5 * mm))
     return out
 
 def flow(o, areas):
@@ -252,7 +263,8 @@ def build(path, key, bleed):
     band, photo_h, strip = o['band'], o['photo'], o['strip']
     last = o['faces'] - 1
     # si no entra: media letra menos (nunca menos de 10,5 pt), menos aire entre platos y foto más baja
-    tries = [(o['name'], o['pad'], photo_h)] + ([(10.5, o['pad'], photo_h), (10.5, 1.0 * mm, 16 * mm), (10.5, .8 * mm, 12 * mm)] if key == 'A' else [])
+    tries = [(o['name'], o['pad'], photo_h)] + ([(o['name'], o['pad'], 28 * mm), (11, 1.6 * mm, 28 * mm), (11, 1.3 * mm, 20 * mm),
+                                                  (10.5, 1.0 * mm, 16 * mm), (10.5, .8 * mm, 12 * mm)] if key == 'A' else [])
     for size, pad, ph in tries:
         o['name'], o['pad'], photo_h = size, pad, ph
         areas = areas_for(o, {0: band + photo_h + 6 * mm + o['margin']}, {last: strip + 8 * mm})
@@ -291,6 +303,11 @@ def build(path, key, bleed):
                 d.line(x, y - o['title'] * 1.05, x + cw, y - o['title'] * 1.05, T['musgo'], .6)
             elif kind == 'group':
                 d.txt(data.upper(), x, y - o['desc'] * 1.45, 'SemiBold', o['desc'] * .82, T['gris'], track=.5)
+            elif kind == 'extras':
+                d.line(x, y, x + cw, y, T['linea'], .4)
+                d.txt('ADICIONALES', x, y - o['desc'] * 1.5, 'SemiBold', o['desc'] * .82, T['musgo'], track=.5)
+                for j, l in enumerate(data):
+                    d.txt(l, x, y - o['desc'] * 1.5 - (j + 1) * o['desc'] * 1.3, 'Regular', o['desc'], T['tinta'])
             elif kind == 'item':
                 draw_ops(d, data[0], x, y - 1.2 * mm)
                 d.line(x, y - h + .6 * mm, x + cw, y - h + .6 * mm, T['linea'], .4)
@@ -316,8 +333,8 @@ def build(path, key, bleed):
     return o
 
 if __name__ == '__main__':
-    # B es la predeterminada: comparadas las dos, se lee mejor (12 pt contra 10,5 pt, más aire y foto grande)
-    key = (sys.argv[1] if len(sys.argv) > 1 else 'B').upper()
+    # A es la predeterminada: con la carta real (75 platos) entra en una sola hoja a 12 pt, igual de legible que B y con la mitad de papel
+    key = (sys.argv[1] if len(sys.argv) > 1 else 'A').upper()
     out = Path(sys.argv[2]) if len(sys.argv) > 2 else root
     build(out / 'menu-impreso.pdf', key, bleed=False)
     build(out / 'menu-imprenta.pdf', key, bleed=True)

@@ -254,6 +254,8 @@ label.row{cursor:pointer}
 .social-link,.rating{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:.9375rem;font-weight:500;color:var(--tinta);text-decoration:none}
 .social-link svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linejoin:round}
 .social-link svg path{fill:currentColor;stroke:none}
+.social-name{color:var(--gris);font-weight:400}
+.social-name::before{content:'· '}
 .rating span{color:var(--musgo)}
 .rating small{font-size:inherit;color:var(--gris);font-weight:400}
 

@@ -1,13 +1,13 @@
 /* Bar Maracaibo · carta digital. Datos en menu-datos.js; funciones compartidas en comun.js (window.MCB). */
 /* Espera la hoja de Google (máx. 2 s) para que los precios sean los últimos */
 window.MCB.ready.then(() => {
-  const { MENU, money, esc, normalize, reduce, catFrom, priceText, cost, wa, say, words, totalItems } = window.MCB;
+  const { MENU, SECCIONES, extrasText, money, esc, normalize, reduce, catFrom, priceText, cost, wa, say, words, totalItems } = window.MCB;
   const $ = id => document.getElementById(id);
   const count = n => `${n} ${n === 1 ? 'opción' : 'opciones'}`;
   const cap = t => t[0].toUpperCase() + t.slice(1);
   const PLUS = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg>';
   const MINUS = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg>';
-  if ($('conteo')) $('conteo').textContent = `${cap(words(MENU.length))} apartados y ${words(totalItems)} antojos`;
+  if ($('conteo')) $('conteo').textContent = `${cap(words(SECCIONES.length))} apartados y ${words(totalItems)} antojos`;
 
   /* Resalta la coincidencia conservando las tildes del texto original */
   const highlight = (text, q) => {
@@ -51,7 +51,7 @@ window.MCB.ready.then(() => {
       ${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>${it.p != null ? addBtn(`${cat.id}|${i}|`, it.n) : '<span></span>'}`}
       ${it.d ? `<small>${esc(it.d)}</small>` : ''}${sizes}</li>`;
   };
-  sections.innerHTML = MENU.map(cat => {
+  sections.innerHTML = SECCIONES.map(cat => {
     const min = catFrom(cat);
     return `<section class="cat" id="${cat.id}" aria-labelledby="t-${cat.id}">
       <div class="frame cat-grid${cat.img ? '' : ' no-photo'}">
@@ -67,9 +67,11 @@ window.MCB.ready.then(() => {
       </div>
     </section>`;
   }).join('');
-  track.innerHTML = MENU.map(cat => `<a class="tab" href="#${cat.id}" data-tab="${cat.id}">${esc(cat.label)}</a>`).join('');
+  track.innerHTML = SECCIONES.map(cat => `<a class="tab" href="#${cat.id}" data-tab="${cat.id}">${esc(cat.label)}</a>`).join('');
   const tabs = [...track.querySelectorAll('.tab')];
   const cats = [...sections.querySelectorAll('.cat')];
+  const extras = $('extras'), extrasTxt = extrasText();
+  if (extrasTxt) extras.innerHTML = `<b>Adicionales</b> ${esc(extrasTxt)}`;
 
   const setActive = id => tabs.forEach(t => {
     const on = t.dataset.tab === id;
@@ -102,7 +104,8 @@ window.MCB.ready.then(() => {
   };
   let filter = null;
   const chips = $('filters');
-  chips.innerHTML = Object.entries(FILTERS).map(([k, f]) => `<button type="button" class="chip" data-filter="${k}" aria-pressed="false">${f.label}</button>`).join('');
+  // solo los filtros que tienen algún plato (p. ej. «Lo más pedido» aparece cuando haya platos con tags "popular")
+  chips.innerHTML = Object.entries(FILTERS).filter(([, f]) => SECCIONES.some(cat => cat.items.some(it => f.test(it, cat)))).map(([k, f]) => `<button type="button" class="chip" data-filter="${k}" aria-pressed="false">${f.label}</button>`).join('');
   chips.addEventListener('click', e => {
     const b = e.target.closest('[data-filter]'); if (!b) return;
     filter = filter === b.dataset.filter ? null : b.dataset.filter;
@@ -113,7 +116,7 @@ window.MCB.ready.then(() => {
   function render() {
     const q = normalize(search.value), f = filter && FILTERS[filter];
     let total = 0;
-    MENU.forEach((cat, k) => {
+    SECCIONES.forEach((cat, k) => {
       const sec = cats[k];
       const whole = q && normalize(cat.label + ' ' + cat.title).includes(q);
       let shown = 0;
@@ -134,6 +137,7 @@ window.MCB.ready.then(() => {
       total += shown;
     });
     const active = q || f;
+    extras.hidden = !extrasTxt || !!active;
     $('clearSearch').hidden = !q;
     $('empty').hidden = !active || total > 0;
     const what = [q && `«${search.value.trim()}»`, f && f.label.toLowerCase()].filter(Boolean).join(' en ');

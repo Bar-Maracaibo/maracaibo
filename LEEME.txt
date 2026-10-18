@@ -5,8 +5,9 @@ QUÉ ES CADA ARCHIVO
 Datos (lo único que hay que tocar para cambiar contenido)
 - config.js: datos del negocio. WhatsApp, teléfono, dirección, horario, nota de precios, Facebook, Instagram,
   calificación de Google, enlace de la hoja de Google y partidos. Lo que quede vacío no se muestra en la página.
-- menu-datos.js: LA CARTA (12 apartados, 95 platos: la carta de La Gallera más los taquitos mexicanos).
-  La usan la página principal, la carta digital, el PDF y los datos para Google.
+- menu-datos.js: LA CARTA, transcrita de la carta física del bar: 11 apartados con 75 platos, más «Adicionales»,
+  que se muestra como una nota al final (web y PDF). La usan la página principal, la carta digital, el PDF y los
+  datos para Google.
 
 Páginas
 - index.html + experiencia.css + experiencia.js: página principal.
@@ -30,6 +31,7 @@ Abrí config.js y cambiá el valor entre comillas. Ejemplos:
   "telefono": "6082-1465"            "whatsapp": "50660821465"   (con el 506 adelante, sin espacios)
   "horario": {"abre": 11, "cierra": 24}   (horas de 0 a 24; 24 = medianoche)
   "instagram": "https://instagram.com/..."   (vacío "" = no aparece)
+  "facebookNombre": "Maracaibo's Bar"        (el nombre en redes; se muestra en el pie junto a Facebook)
   "googleRating": {"valor": 4.6, "resenas": 120, "url": "https://..."}   (null = no aparece)
   "partidos": [{"fecha": "2026-10-25", "hora": "19:00", "equipos": "Saprissa vs. Alajuelense", "torneo": "Primera División"}]
 La sección «Partidos de la semana» solo aparece si hay partidos en los próximos 7 días.
@@ -37,15 +39,17 @@ Después de cambiar config.js o menu-datos.js, regenerar el PDF y los datos para
 
 CAMBIAR LA CARTA (menu-datos.js)
 Cada plato: {"n": "Nombre", "d": "Descripción corta", "p": 3500}
-- Precio por confirmar: "p": null  → la página y el PDF dicen «Consultar».
-- Tamaños o variantes: "sizes": [{"l": "Pequeño", "p": 2000}, {"l": "Grande", "p": 3500}]
-- Etiquetas: "tags": ["popular"] (Lo más pedido) y/o ["compartir"] (filtro Para compartir).
-- Promoción: "promo": {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos).
-- Bebidas: "g": "Cervezas nacionales" agrupa por subgrupo.
-- "review": true = descripción escrita sin el dueño; borrarlo cuando la confirme.
-Los títulos con cantidades («Doce apartados, noventa y cinco antojos») se calculan solos.
+- Precio por confirmar: "p": null  → la página y el PDF dicen «Consultar» (y no cuenta para «desde ₡X»).
+- Tamaños o cantidades: "sizes": [{"l": "Pequeño", "p": 2000}, {"l": "Grande", "p": 3500}]  (van en una sola línea)
+- "verificar": true = precio dudoso en la foto de la carta; no se ve en la página. Borrarlo cuando la dueña lo confirme.
+- Etiquetas: "tags": ["popular"] (Lo más pedido) y/o ["compartir"] (filtro Para compartir). Los filtros sin
+  platos no aparecen: por ahora ningún plato tiene etiquetas, así que solo se ven Mariscos y Bebidas.
+- Promoción: "promo": {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos; está en el chiliguaro).
+- Apartado sin "img" = sin foto. El apartado con "id": "adicionales" va como nota al final, no como apartado.
+Los títulos con cantidades («Once apartados, setenta y cinco antojos») se calculan solos (sin contar Adicionales).
 Ojo: «La ronda» (lista RONDA en experiencia.js) y el carrusel (data-item en index.html) usan nombres de platos;
-si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa si alguno no existe).
+los que tienen tamaños llevan uno concreto entre paréntesis, igual que en "sizes": «Alitas (6 unid.)», «Ceviche (grande)».
+Si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa si alguno no existe).
 
 HOJA DE GOOGLE (opcional, para cambiar precios y partidos sin tocar archivos)
 1. Crear una hoja de cálculo de Google con dos pestañas, con estos nombres exactos:
@@ -65,9 +69,10 @@ Desde esta carpeta, con Python 3 y Pillow 11 o más nuevo (y reportlab para el P
 Instalar lo necesario una vez:  pip install pillow reportlab
 
 MENÚ IMPRESO
-Dos hojas A4 a doble cara (4 caras), 2 columnas: platos a 12 pt, descripciones a 9,5 pt, precios en negrita.
-Se probó también una sola hoja a 3 columnas (python herramientas/generar-menu.py A): con 95 platos solo entra
-a 10,5 pt y con muy poco aire, así que se dejó la de dos hojas por ser más legible.
+Una hoja A4 a doble cara (2 caras), 3 columnas: platos a 12 pt, descripciones a 9,5 pt, precios en negrita.
+Con la carta real (75 platos) entra sin achicar nada. Si la carta crece, el generador baja solo hasta 10,5 pt
+como mínimo; si ni así entra, usar dos hojas: python herramientas/generar-menu.py B (2 columnas, 4 caras).
+Adicionales va como nota al final de la última columna.
 - menu-impreso.pdf: para imprimir en casa, al 100 % (tamaño real), doble cara por el borde largo.
 - menu-imprenta.pdf: 216 × 303 mm (A4 + 3 mm de sangrado por lado) con marcas de corte, para la imprenta.
 La última cara tiene dos QR: la carta digital y la reserva por WhatsApp.
@@ -102,7 +107,7 @@ Bar de noche, premium y sobrio, con un solo color de marca: el verde musgo del r
 Accesibilidad: texto con contraste de 5,4:1 o más (palabras sin encender y botones deshabilitados, 3:1 o más),
 controles de 44 px, foco visible con teclado, nombres claros para lectores de pantalla, y respeta «reducir
 movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
-Lighthouse en celular (última medición): portada 97/100/100/100, carta 91/100/100/100.
+Lighthouse en celular (última medición): portada 97/100/100/100, carta 92/100/100/100.
 
 PÁGINA PRINCIPAL
 1. Portada: la surtida y el indicador en vivo (abierto/cerrado con la hora de Costa Rica).
@@ -115,8 +120,8 @@ PÁGINA PRINCIPAL
 FOTOGRAFÍAS
 - Página principal: portada_surtida, chicharrones_reales, imperial_real, fb_alitas, impreso_ceviche, impreso_fajitas
   y fachada (pequeña, en Cómo llegar).
-- Carta digital: chifrijo, patacones_frijol, arroz_camarones, impreso_fajitas, sopa_pollo, fb_alitas, ceviche,
-  bistec_encebollado, chicharrones_reales, imperial_real (Almuerzos y Especiales todavía sin foto).
+- Carta digital: patacones_frijol, surtida_real, chifrijo, bistec_encebollado, arroz_camarones, sopa_pollo, fb_alitas,
+  impreso_fajitas, chicharrones_reales, ceviche, imperial_real (Adicionales va sin foto).
 - Menú impreso: portada_surtida.
 barra.jpg e interior.jpg (de Facebook) ya no se usan porque no combinan con el resto. Cuando haya fotos nuevas del
 local de noche (rótulo encendido, barra con gente, cervezas en la mesa, el partido), tomadas en horizontal y con buena

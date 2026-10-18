@@ -17,6 +17,8 @@ window.CONFIG = {
  // TODO-DUEÑO: no tienen Instagram por ahora; al abrirlo, poner el enlace aquí y aparece solo.
  "instagram": "",
  "facebook": "https://www.facebook.com/share/1M2NZmSJWM/",
+ // Nombre de la página tal como aparece en redes (se muestra en el pie junto al enlace).
+ "facebookNombre": "Maracaibo's Bar",
  // TODO-DUEÑO: calificación de Google, por ejemplo {"valor": 4.6, "resenas": 120, "url": "https://..."}.
  "googleRating": null,
  // TODO-DUEÑO: enlace de la hoja de Google con las pestañas "carta" y "partidos" (ver LEEME.txt).

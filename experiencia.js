@@ -3,7 +3,7 @@
 (() => {
   const root = document.documentElement;
   const $ = id => document.getElementById(id);
-  const { CONFIG, MENU, money, esc, reduce, wa, find, fromPrice, catFrom, say, hora12, crParts, words, totalItems } = window.MCB;
+  const { CONFIG, MENU, SECCIONES, money, esc, reduce, wa, find, fromPrice, catFrom, say, hora12, crParts, words, totalItems } = window.MCB;
   const H = CONFIG.horario || { abre: 11, cierra: 24 };
 
   /* ---------- Entrada de la portada ---------- */
@@ -105,10 +105,10 @@
 
   /* ---------- La carta: título e índice con enlace directo a cada apartado ---------- */
   function renderCartaIndex() {
-    if (!MENU.length) return;
+    if (!SECCIONES.length) return;
     const cap = t => t[0].toUpperCase() + t.slice(1);
-    $('carta-title').innerHTML = `${cap(words(MENU.length))} apartados,<br><em>${words(totalItems)} antojos.</em>`;
-    $('index').innerHTML = MENU.map(cat => {
+    $('carta-title').innerHTML = `${cap(words(SECCIONES.length))} apartados,<br><em>${words(totalItems)} antojos.</em>`;
+    $('index').innerHTML = SECCIONES.map(cat => {
       const n = cat.items.length, min = catFrom(cat);
       return `<li><a href="menu.html#${cat.id}">
         <span class="index-name">${esc(cat.label)}</span>
@@ -124,8 +124,10 @@
       const it = find(a.dataset.item), meta = a.querySelector('.fav-meta');
       if (!it) { console.warn('El carrusel menciona un plato que no está en la carta:', a.dataset.item); return; }
       a.href = `menu.html#${it.cat.id}`;
-      const from = fromPrice(it.it);
-      if (meta) meta.innerHTML = `${esc(it.cat.label)}${from != null ? ` · <b>${it.it.sizes ? 'desde ' : ''}${money(from)}</b>` : ''}`;
+      // con tamaño concreto («Ceviche (grande)») muestra ese precio; si no, «desde» el menor
+      const from = it.size ? it.p : fromPrice(it.it);
+      const pre = it.size ? `${esc(it.size.l)} ` : it.it.sizes ? 'desde ' : '';
+      if (meta) meta.innerHTML = `${esc(it.cat.label)}${from != null ? ` · ${pre}<b>${money(from)}</b>` : ''}`;
     });
   }
   const rail = $('rail'), prev = $('railPrev'), next = $('railNext');
@@ -143,17 +145,18 @@
   }
 
   /* ---------- La ronda: total y cuánto pone cada uno ----------
-     Los nombres tienen que existir en menu-datos.js (con tamaño si lo tiene: «Ceviche grande»). */
+     Los nombres tienen que existir en menu-datos.js. Los platos con tamaños llevan uno concreto entre paréntesis,
+     tal como está en "sizes": «Alitas (6 unid.)», «Ceviche (grande)», «Surtido (4 personas)». */
   const RONDA = [
-    ['Para tomar', ['Imperial', 'Pilsen', 'Baldazo para compartir']],
-    ['Para picar', ['Alitas 6 unidades', 'Chicharrones', 'Nachos mixtos', 'Ceviche grande', 'Papas a la francesa', 'Canasta de patacones']],
-    ['Para compartir', ['Surtido 2 personas', 'Surtido 4 personas']]
+    ['Para tomar', ['Cerveza nacional', 'Chiliguaro']],
+    ['Para picar', ['Alitas (6 unid.)', 'Chicharrones', 'Nachos mixtos', 'Chifrijo', 'Ceviche (grande)', 'Papas a la francesa']],
+    ['Para compartir', ['Surtido (2 personas)', 'Surtido (4 personas)']]
   ];
   // Atajos: cantidades sugeridas (no son promociones del bar)
   const PRESETS = {
-    dos: { split: 2, items: { 'Imperial': 4, 'Chicharrones': 1 } },
-    cuatro: { split: 4, items: { 'Imperial': 8, 'Nachos mixtos': 1, 'Alitas 6 unidades': 1 } },
-    partido: { split: 6, items: { 'Baldazo para compartir': 2, 'Alitas 6 unidades': 2, 'Nachos mixtos': 1, 'Surtido 4 personas': 1 } }
+    dos: { split: 2, items: { 'Cerveza nacional': 4, 'Chicharrones': 1 } },
+    cuatro: { split: 4, items: { 'Cerveza nacional': 8, 'Nachos mixtos': 1, 'Alitas (6 unid.)': 1 } },
+    partido: { split: 6, items: { 'Cerveza nacional': 12, 'Chiliguaro': 6, 'Alitas (6 unid.)': 2, 'Nachos mixtos': 1, 'Surtido (4 personas)': 1 } }
   };
   function initRonda() {
     const list = $('rondaList');
