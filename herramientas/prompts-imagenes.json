@@ -1,0 +1,26 @@
+[
+  {
+    "archivo": "cerveza_carta.jpg",
+    "prompt": "Use case: photorealistic-natural. Create a NEW photograph for Bar Maracaibo menu. Reference image only guides walnut tabletop medium-dark warm brown color, soft window light and candid food photography realism; do not copy its composition. Subject: One chilled clear glass of golden lager with a modest realistic foam head and a few condensation droplets, beside one plain unlabeled brown beer bottle. No food. Entire glass and bottle visible. No brand or text. Portrait 2:3 image. Calm consistent walnut background with authentic wood grain, offwhite crockery. Restrained warm colors, natural food imperfections, documentary food photograph with appetizing texture, not glossy CGI. No hands, no lettering, no watermark, no decorative ingredients outside the described food. Keep entire subject inside frame with generous margins, sharp food detail."
+  },
+  {
+    "archivo": "portada_surtida.jpg",
+    "prompt": "Use case: photorealistic-natural. Create a NEW photograph for Bar Maracaibo menu. Reference image only guides walnut tabletop medium-dark warm brown color, soft window light and candid food photography realism; do not copy its composition. Subject: A generous Costa Rican bar sharing platter on oval offwhite ceramic: chicharron chunks, sausage slices, golden yuca sticks, potato wedges, a few chicken wings and small central pico de gallo bowl. New composition clearly different from reference: landscape oval plate angled diagonally, seen from slightly lower 50-degree overhead angle. Whole plate visible with space all around. Portrait 2:3 image. Calm consistent walnut background with authentic wood grain, offwhite crockery. Restrained warm colors, natural food imperfections, documentary food photograph with appetizing texture, not glossy CGI. No hands, no lettering, no watermark, no decorative ingredients outside the described food. Keep entire subject inside frame with generous margins, sharp food detail."
+  },
+  {
+    "archivo": "impreso_fajitas.jpg",
+    "prompt": "Use case: photorealistic-natural. Create a NEW photograph for Bar Maracaibo menu. Reference image only guides walnut tabletop medium-dark warm brown color, soft window light and candid food photography realism; do not copy its composition. Subject: Costa Rican chicken fajitas, browned irregular chicken strips sauteed with onion and red pepper, on one modest offwhite ceramic plate, informal real bar serving. Chicken is the focus. Whole plate visible. Portrait 2:3 image. Calm consistent walnut background with authentic wood grain, offwhite crockery. Restrained warm colors, natural food imperfections, documentary food photograph with appetizing texture, not glossy CGI. No hands, no lettering, no watermark, no decorative ingredients outside the described food. Keep entire subject inside frame with generous margins, sharp food detail."
+  },
+  {
+    "archivo": "impreso_nachos.jpg",
+    "prompt": "Use case: photorealistic-natural. Create a NEW photograph for Bar Maracaibo menu. Reference image only guides walnut tabletop medium-dark warm brown color, soft window light and candid food photography realism; do not copy its composition. Subject: Costa Rican bar nachos on offwhite ceramic plate, irregular corn tortilla chips, beans, modest shredded beef, melted cheese and pico de gallo. Natural believable homemade portions, not an extravagant tower. Whole plate visible. Portrait 2:3 image. Calm consistent walnut background with authentic wood grain, offwhite crockery. Restrained warm colors, natural food imperfections, documentary food photograph with appetizing texture, not glossy CGI. No hands, no lettering, no watermark, no decorative ingredients outside the described food. Keep entire subject inside frame with generous margins, sharp food detail."
+  },
+  {
+    "archivo": "impreso_ceviche.jpg",
+    "prompt": "Use case: photorealistic-natural. Create a NEW photograph for Bar Maracaibo menu. Reference image only guides walnut tabletop medium-dark warm brown color, soft window light and candid food photography realism; do not copy its composition. Subject: Costa Rican fish ceviche in a small offwhite ceramic bowl, fish chunks with lime, finely diced onion red pepper and cilantro, a lime wedge and a few plain crackers beside bowl on small plate. Whole bowl and plate visible. Portrait 2:3 image. Calm consistent walnut background with authentic wood grain, offwhite crockery. Restrained warm colors, natural food imperfections, documentary food photograph with appetizing texture, not glossy CGI. No hands, no lettering, no watermark, no decorative ingredients outside the described food. Keep entire subject inside frame with generous margins, sharp food detail."
+  },
+  {
+    "archivo": "cerveza_carta.jpg",
+    "correccion": "Sustituir botella sin marca por Imperial Original costarricense; usar la botella de barra.jpg como referencia de etiqueta amarilla, águila negra y marca blanca sobre rojo. Mantener vaso, fondo de madera y luz."
+  }
+]

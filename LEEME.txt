@@ -1,0 +1,69 @@
+BAR MARACAIBO · PROYECTO WEB
+
+QUÉ ES CADA ARCHIVO
+- index.html, experiencia.css, experiencia.js: página principal.
+- menu.html, carta.css, carta.js: carta digital (carta continua con pestañas fijas y búsqueda con o sin tildes).
+- menu-datos.js: LA CARTA (43 opciones en 8 apartados). Es la única fuente de platos y precios:
+  la usan la página principal, la carta digital y el generador del PDF. Para cambiar un precio, se cambia solo aquí
+  y después se regenera el PDF.
+- menu-impreso.pdf: carta para imprimir, 4 páginas A4 con portada y código QR de WhatsApp. Imprimir al 100 %, tamaño real.
+- fuentes/: tipografías Instrument Serif y Archivo (licencia libre OFL) incluidas en el proyecto; no depende de Google Fonts.
+- herramientas/generar-menu.py: regenera el PDF desde menu-datos.js.
+  Desde esta carpeta: python herramientas/generar-menu.py  (requiere Python 3, reportlab y Pillow).
+- logo-maracaibo.png (original, usado en el PDF), logo-maracaibo-web.png (ícono para la pantalla de inicio del iPhone)
+  y logo-maracaibo-icono.png (el logo sin el fondo blanco, para la navegación y la pestaña del navegador).
+- Fotografías (.jpg).
+
+PUBLICAR EN GITHUB PAGES
+Subí todo el contenido de esta carpeta (no el ZIP) a la raíz del repositorio y activá Pages en la rama principal.
+Todas las rutas son relativas, así que funciona tanto en usuario.github.io como en usuario.github.io/repositorio/.
+El archivo .nojekyll ya está incluido.
+
+IDENTIDAD (distinta a la de La Gallera)
+Bar de noche, premium y sobrio.
+- Colores: negro cálido #0c0b09, superficies #151411 y texto hueso #f3efe6. Sin color de acento:
+  el color lo ponen las fotos. Botón principal hueso con letra negra; secundario con borde fino.
+- Letra: Instrument Serif para titulares, con cursiva para el énfasis («Nos vemos en Maracaibo.»);
+  la fuente del sistema para leer (en iPhone y Mac es la de Apple). Las dos fuentes están en fuentes/.
+- Fotos a todo color y sin filtros, con esquinas suaves.
+- Un solo efecto animado: la declaración de «El bar» se enciende palabra por palabra al leer.
+- La Gallera usa morado, dorado, letra condensada en mayúsculas y cursiva manuscrita: no usar nada de eso aquí.
+Accesibilidad: contrastes de texto de 5,5:1 o más, controles de 44 px, foco visible con teclado,
+y respeta «reducir movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
+
+PÁGINA PRINCIPAL
+Portada con la foto del rótulo al atardecer (a la derecha en la computadora, a pantalla completa en el celular)
+y un indicador en vivo: punto verde «Abierto ahora · hasta las 12 a.m.» o rojo «Cerrado ahora · abre hoy/mañana a las 11 a.m.»,
+calculado con la hora de Costa Rica (avisa también cuando faltan menos de 60 minutos para abrir o cerrar).
+Después: «El bar» (la declaración y la foto de adentro con la barra, las mesas y la pantalla), «La casa» con dos
+recomendaciones y sus precios, el índice de los 8 apartados (cada uno abre la carta directo en ese apartado),
+el formulario que arma el mensaje de reserva para WhatsApp y «Cómo llegar» con la dirección, el código de
+ubicación 2V53+FCP, el mapa de Google y los botones de Google Maps y Waze.
+En el celular hay menú y una barra flotante con Carta, Llegar y Reservar.
+
+HORARIO
+Todos los días de 11 a.m. a 12 a.m. Si cambia: en experiencia.js, editar ABRE y CIERRA (al inicio del archivo),
+y el texto «Todos los días, 11 a.m. – 12 a.m.» en index.html (menú del celular y pie de página).
+
+UBICACIÓN
+Bar Maracaibo en Google Maps: https://maps.app.goo.gl/iqMi91LyRhNMNFzu8 (10.0087064, -84.1464181).
+El mapa se ve al publicar la página o abrirla desde un servidor; algunos navegadores no lo muestran
+si se abre el archivo directamente desde la computadora.
+
+CARTA DIGITAL
+Una sola carta continua, como en la mesa: pestañas fijas arriba que siguen el apartado que se está leyendo,
+una foto por apartado y los precios alineados. El buscador filtra sin importar tildes y resalta la coincidencia.
+Se puede enlazar directo a un apartado: menu.html#boquitas, menu.html#bebidas, etc.
+
+MENÚ IMPRESO
+Portada con la surtida y el nombre en Instrument Serif sobre negro; páginas en papel blanco con títulos en
+verde, una foto panorámica por página y, al final, un código QR que abre WhatsApp con la reserva lista.
+
+FOTOGRAFÍAS (sin repetir entre formatos)
+- Página principal: fachada.jpg (portada), interior.jpg, barra.jpg, fb_alitas.jpg.
+- Carta digital: bistec_encebollado, arroz_camarones, chifrijo, patacones_frijol, sopa_pollo, ceviche, surtida_real, imperial_real.
+- Menú impreso: portada_surtida, impreso_fajitas, chicharrones_reales, impreso_ceviche.
+Las fotos del local (fachada, interior, barra) son las originales sin modificar.
+
+CONTACTO
+WhatsApp y celular: +506 6082-1465. Horario: todos los días, 11 a.m. – 12 a.m.

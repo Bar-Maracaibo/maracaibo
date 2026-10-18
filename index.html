@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bar Maracaibo · San Lorenzo, San José</title>
+<meta name="description" content="Bar de pueblo en San Lorenzo, San José. Bocas, cerveza nacional, partidos y buena compañía hasta la medianoche. Mirá la carta y reservá por WhatsApp.">
+<meta name="theme-color" content="#0c0b09">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bar Maracaibo · San Lorenzo">
+<meta property="og:description" content="Bocas, cerveza nacional y buena compañía hasta la medianoche.">
+<meta property="og:image" content="fachada.jpg">
+<link rel="icon" type="image/png" href="logo-maracaibo-icono.png">
+<link rel="apple-touch-icon" href="logo-maracaibo-web.png">
+<link rel="preload" href="fuentes/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fachada.jpg" as="image">
+<link rel="stylesheet" href="experiencia.css">
+<script src="menu-datos.js" defer></script>
+<script src="experiencia.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#contenido">Ir al contenido</a>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#inicio" aria-label="Bar Maracaibo, inicio">
+      <img src="logo-maracaibo-icono.png" alt="" width="30" height="30">
+      <span>Maracaibo</span>
+    </a>
+    <nav class="nav-links" aria-label="Secciones">
+      <a href="#el-bar">El bar</a>
+      <a href="#carta">La carta</a>
+      <a href="#llegar">Cómo llegar</a>
+    </nav>
+    <a class="nav-cta" href="#reservar">Reservar</a>
+    <button class="nav-menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="sheet" aria-label="Abrir menú">
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" hidden>
+  <nav aria-label="Menú">
+    <a href="#el-bar">El bar</a>
+    <a href="menu.html">La carta</a>
+    <a href="#reservar">Reservar</a>
+    <a href="#llegar">Cómo llegar</a>
+  </nav>
+  <p class="status" data-status hidden><span class="status-dot" aria-hidden="true"></span><span data-status-text></span></p>
+  <p>WhatsApp <a href="https://wa.me/50660821465" target="_blank" rel="noopener">6082-1465</a><br>San Lorenzo, San José · Todos los días, 11 a.m. – 12 a.m.</p>
+</div>
+
+<main id="contenido">
+
+  <!-- 1 · Portada -->
+  <section class="hero" id="inicio" aria-labelledby="hero-title">
+    <figure class="hero-photo">
+      <img id="heroImg" src="fachada.jpg" alt="El rótulo de Maracaibo's Bar encendido frente al local, al atardecer" width="476" height="1020" fetchpriority="high">
+    </figure>
+    <div class="hero-inner frame">
+      <div class="hero-copy">
+        <p class="status" data-status hidden><span class="status-dot" aria-hidden="true"></span><span data-status-text></span></p>
+        <p class="kicker">Bar de pueblo · San Lorenzo, San José</p>
+        <h1 id="hero-title" class="display hero-title">Nos vemos<br>en <em>Maracaibo.</em></h1>
+        <p class="hero-lede">Bocas para compartir, cerveza nacional bien fría y el partido en pantalla. Hasta la medianoche.</p>
+        <div class="actions">
+          <a class="btn btn-light" href="#reservar">Reservar mesa</a>
+          <a class="btn btn-line" href="menu.html">Ver la carta</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · El bar: declaración y adentro -->
+  <section class="statement" id="el-bar" aria-labelledby="statement-label">
+    <div class="frame">
+      <p class="kicker" id="statement-label">El bar</p>
+      <p class="display statement-text" id="statement">Un bar de pueblo, <em>como tiene que ser.</em> Bocas para compartir, cerveza nacional bien fría y el partido en la pantalla. <span class="soft">Buena compañía, sin apuro, hasta la medianoche.</span></p>
+
+      <div class="inside">
+        <figure class="inside-photo">
+          <img src="interior.jpg" alt="Clientes conversando en la barra y las mesas de Bar Maracaibo, con el televisor encendido" width="1360" height="765" loading="lazy">
+        </figure>
+        <ul class="inside-notes" aria-label="Adentro del bar">
+          <li><h3 class="display">La barra</h3><p>Para la primera fría y una boca mientras llegan los demás.</p></li>
+          <li><h3 class="display">Las mesas</h3><p>Para el grupo completo, con surtidas para compartir.</p></li>
+          <li><h3 class="display">La pantalla</h3><p>Para el partido, con la cerveza a la mano.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · La casa -->
+  <section class="house" aria-labelledby="house-title">
+    <div class="frame">
+      <header class="head">
+        <p class="kicker">La casa</p>
+        <h2 id="house-title" class="display h2">Para empezar <em>la noche.</em></h2>
+      </header>
+      <div class="pair">
+        <article class="pick">
+          <figure class="pick-photo"><img src="barra.jpg" alt="Una cerveza Imperial en la barra, con un partido en el televisor al fondo" width="765" height="1020" loading="lazy"></figure>
+          <h3 class="display pick-title">La primera, bien fría.</h3>
+          <dl class="prices">
+            <div><dt>Cerveza nacional</dt><dd>₡1.300</dd></div>
+            <div><dt>Chiliguaro <small>2 por ₡1.500</small></dt><dd>₡800</dd></div>
+          </dl>
+        </article>
+        <article class="pick pick-low">
+          <figure class="pick-photo"><img src="fb_alitas.jpg" alt="Alitas de pollo con papas gajo y salsa" width="1024" height="1536" loading="lazy"></figure>
+          <h3 class="display pick-title">Para toda la mesa.</h3>
+          <dl class="prices">
+            <div><dt>Alitas de pollo</dt><dd>₡3.000</dd></div>
+            <div><dt>Surtida para compartir</dt><dd>desde ₡3.000</dd></div>
+          </dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · La carta -->
+  <section class="carta" id="carta" aria-labelledby="carta-title">
+    <div class="frame">
+      <header class="head head-row">
+        <div>
+          <p class="kicker">La carta</p>
+          <h2 id="carta-title" class="display h2">Ocho apartados,<br><em>cuarenta y tres antojos.</em></h2>
+        </div>
+        <div class="actions">
+          <a class="btn btn-light" href="menu.html">Abrir la carta</a>
+          <a class="link" href="menu-impreso.pdf" target="_blank" rel="noopener">Versión para imprimir <span aria-hidden="true">↗</span></a>
+        </div>
+      </header>
+      <ol class="index" id="index">
+        <noscript><li><a href="menu.html">Ver todos los platos y precios</a></li></noscript>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 6 · Reservar -->
+  <section class="reserve" id="reservar" aria-labelledby="reserve-title">
+    <div class="frame split">
+      <div class="reserve-copy">
+        <p class="kicker">Reservas</p>
+        <h2 id="reserve-title" class="display h2">Apartá <em>tu mesa.</em></h2>
+        <p class="body">Elegí cuántos son y cuándo vienen. El mensaje queda listo para enviarlo por WhatsApp.</p>
+        <p class="body">¿Preferís llamar? <a class="link" href="tel:+50660821465">6082-1465</a></p>
+      </div>
+      <form class="card" id="reserveForm" aria-label="Armar mensaje de reserva">
+        <div class="row">
+          <span class="row-label" id="peopleLabel">Personas</span>
+          <div class="stepper" role="group" aria-labelledby="peopleLabel">
+            <button type="button" id="minus" aria-label="Una persona menos"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg></button>
+            <output id="people" aria-live="polite">2</output>
+            <button type="button" id="plus" aria-label="Una persona más"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg></button>
+          </div>
+        </div>
+        <div class="row row-stack">
+          <span class="row-label" id="whenLabel">Cuándo</span>
+          <div class="seg" role="radiogroup" aria-labelledby="whenLabel" id="when">
+            <button type="button" role="radio" aria-checked="true" data-when="hoy">Hoy</button>
+            <button type="button" role="radio" aria-checked="false" data-when="mañana">Mañana</button>
+            <button type="button" role="radio" aria-checked="false" data-when="este fin de semana">Fin de semana</button>
+          </div>
+        </div>
+        <label class="row" for="match">
+          <span class="row-label">Venimos a ver el partido</span>
+          <span class="switch"><input type="checkbox" id="match" role="switch"><span aria-hidden="true"></span></span>
+        </label>
+        <div class="preview">
+          <span class="caption">Así se envía</span>
+          <p class="bubble" id="bubble">Hola, quiero reservar una mesa para 2 personas hoy en Bar Maracaibo.</p>
+        </div>
+        <a class="btn btn-light btn-block" id="send" href="https://wa.me/50660821465?text=Hola%2C%20quiero%20reservar%20una%20mesa%20para%202%20personas%20hoy%20en%20Bar%20Maracaibo." target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      </form>
+    </div>
+  </section>
+
+  <!-- 7 · Cómo llegar -->
+  <section class="visit" id="llegar" aria-labelledby="visit-title">
+    <div class="frame visit-grid">
+      <div class="visit-copy">
+        <p class="kicker">Cómo llegar</p>
+        <h2 id="visit-title" class="display visit-title">San Lorenzo, <em>San José.</em></h2>
+        <p class="body">Buscá el rótulo encendido frente al local. Abrí la ruta en tu app de mapas y llegás directo.</p>
+        <p class="plus">Código de ubicación <strong>2V53+FCP</strong></p>
+        <div class="actions">
+          <a class="btn btn-light" href="https://maps.app.goo.gl/iqMi91LyRhNMNFzu8" target="_blank" rel="noopener">Abrir en Google Maps</a>
+          <a class="btn btn-line" href="https://waze.com/ul?ll=10.0087064%2C-84.1464181&amp;navigate=yes" target="_blank" rel="noopener">Abrir en Waze</a>
+        </div>
+      </div>
+      <div class="map">
+        <iframe title="Mapa con la ubicación de Bar Maracaibo" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1200!2d-84.1464181!3d10.0087064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fa0fa60f5cc3085%3A0x789d5083611dd5b0!2sBar%20Maracaibo!5e0!3m2!1ses!2scr!4v1760800000000!5m2!1ses!2scr" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="frame footer-inner">
+    <a class="brand" href="#inicio"><img src="logo-maracaibo-icono.png" alt="" width="30" height="30"><span>Maracaibo</span></a>
+    <nav aria-label="Pie de página">
+      <a href="menu.html">La carta</a>
+      <a href="menu-impreso.pdf" target="_blank" rel="noopener">Carta para imprimir</a>
+      <a href="#reservar">Reservar</a>
+      <a href="#llegar">Cómo llegar</a>
+    </nav>
+    <p>Bar Maracaibo · San Lorenzo, San José, Costa Rica · Todos los días, 11 a.m. – 12 a.m. · 6082-1465</p>
+  </div>
+</footer>
+
+<nav class="dock" id="dock" aria-label="Accesos rápidos">
+  <a href="menu.html">Carta</a>
+  <a href="#llegar">Llegar</a>
+  <a class="dock-main" href="#reservar">Reservar</a>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

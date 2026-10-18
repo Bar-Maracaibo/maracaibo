@@ -1,0 +1,3 @@
+generar-menu.py: genera ../menu-impreso.pdf (4 páginas A4: portada con el rótulo, 3 páginas de carta y QR de WhatsApp) a partir de ../menu-datos.js (misma fuente que la web).
+fuentes-pdf/: instancias estáticas de Archivo (OFL) usadas en el PDF.
+prompts-imagenes.json y prompts-retoque.json: documentación de cómo se crearon o retocaron las fotos de comida.
