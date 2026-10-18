@@ -42,8 +42,8 @@ Cada plato: {"n": "Nombre", "d": "Descripción corta", "p": 3500}
 - Precio por confirmar: "p": null  → la página y el PDF dicen «Consultar» (y no cuenta para «desde ₡X»).
 - Tamaños o cantidades: "sizes": [{"l": "Pequeño", "p": 2000}, {"l": "Grande", "p": 3500}]  (van en una sola línea)
 - "verificar": true = precio dudoso en la foto de la carta; no se ve en la página. Borrarlo cuando la dueña lo confirme.
-- Etiquetas: "tags": ["popular"] (Lo más pedido) y/o ["compartir"] (filtro Para compartir). Los filtros sin
-  platos no aparecen: por ahora ningún plato tiene etiquetas, así que solo se ven Mariscos y Bebidas.
+- Etiquetas: "tags": ["compartir"] (filtro Para compartir) y/o ["popular"] (Lo más pedido). Los filtros sin
+  platos no aparecen: «Lo más pedido» sale cuando la dueña diga cuáles son (TODO-DUEÑO).
 - Promoción: "promo": {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos; está en el chiliguaro).
 - Apartado sin "img" = sin foto. El apartado con "id": "adicionales" va como nota al final, no como apartado.
 Los títulos con cantidades («Once apartados, setenta y cinco antojos») se calculan solos (sin contar Adicionales).
@@ -70,9 +70,10 @@ Instalar lo necesario una vez:  pip install pillow reportlab
 
 MENÚ IMPRESO
 Una hoja A4 a doble cara (2 caras), 3 columnas: platos a 12 pt, descripciones a 9,5 pt, precios en negrita.
-Con la carta real (75 platos) entra sin achicar nada. Si la carta crece, el generador baja solo hasta 10,5 pt
-como mínimo; si ni así entra, usar dos hojas: python herramientas/generar-menu.py B (2 columnas, 4 caras).
-Adicionales va como nota al final de la última columna.
+Ningún apartado se parte entre columnas: el generador prueba todos los repartos (en el orden de la carta o moviendo
+un solo apartado, nunca Boquitas) y elige el que deja las columnas de cada cara más parejas. Hoy Pollo queda
+debajo de Boquitas. Si la carta crece, baja solo hasta 10,5 pt como mínimo; si ni así entra, usar dos hojas:
+python herramientas/generar-menu.py B (2 columnas, 4 caras). Adicionales va como nota al final de la última columna.
 - menu-impreso.pdf: para imprimir en casa, al 100 % (tamaño real), doble cara por el borde largo.
 - menu-imprenta.pdf: 216 × 303 mm (A4 + 3 mm de sangrado por lado) con marcas de corte, para la imprenta.
 La última cara tiene dos QR: la carta digital y la reserva por WhatsApp.

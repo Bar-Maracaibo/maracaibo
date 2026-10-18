@@ -9,7 +9,8 @@
      verificar: true  → precio poco legible o dudoso en la foto; confirmar con la dueña (TODO-DUEÑO). No se muestra en la página.
      p: null → precio pendiente; mostrar «Consultar» (no cuenta para «desde ₡X»)
      promo  {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos)
-     tags   ["popular"] (Lo más pedido) y/o ["compartir"]: TODO-DUEÑO, ninguno marcado hasta que la dueña diga cuáles. */
+     tags   ["compartir"] (filtro Para compartir) y/o ["popular"] (Lo más pedido).
+            TODO-DUEÑO: "popular" sin marcar hasta que la dueña diga cuáles son los más pedidos. */
 window.MENU = [
  {
   "id": "boquitas",
@@ -35,9 +36,9 @@ window.MENU = [
   "note": "Para picar entre amigos.",
   "items": [
    { "n": "Nachos de carne o pollo", "p": 3500 },
-   { "n": "Nachos mixtos", "p": 4000 },
+   { "n": "Nachos mixtos", "p": 4000, "tags": ["compartir"] },
    { "n": "Papa nacho de carne o pollo", "p": 4000 },
-   { "n": "Papa nacho mixto", "p": 4500 },
+   { "n": "Papa nacho mixto", "p": 4500, "tags": ["compartir"] },
    { "n": "Papas a la francesa", "p": 2500 },
    { "n": "Quesadilla de carne o pollo", "p": 3500 },
    { "n": "Quesadilla mixta", "p": 4000 },
@@ -56,7 +57,7 @@ window.MENU = [
   "title": "Platos fuertes",
   "img": "chifrijo.jpg",
   "items": [
-   { "n": "Empanadas colombianas", "p": 5000, "sizes": [ { "l": "5 unid.", "p": 5000 }, { "l": "10 unid.", "p": 10000 } ] },
+   { "n": "Empanadas colombianas", "p": 5000, "sizes": [ { "l": "5 unid.", "p": 5000 }, { "l": "10 unid.", "p": 10000 } ], "tags": ["compartir"] },
    { "n": "Chifrijo", "p": 4000 },
 // TODO-DUEÑO: confirmar los precios del chifrijolito (₡2.000) y de las fajitas de carne o pollo (₡3.500).
    { "n": "Chifrijolito", "p": 2000, "verificar": true },
@@ -66,7 +67,7 @@ window.MENU = [
    { "n": "Hamburguesa de carne o pollo", "p": 3500 },
    { "n": "Patacones", "p": 3000 },
    { "n": "Patacones con camarones y guacamole", "p": 5000 },
-   { "n": "Canasta de patacones pequeña", "d": "3 unidades", "p": 2000 },
+   { "n": "Canasta de patacones pequeña", "d": "3 unidades", "p": 2000, "tags": ["compartir"] },
    { "n": "Ravioles", "p": 3000 },
    { "n": "Tacos", "p": 3500 },
    { "n": "Yuca frita", "p": 2500 }
@@ -118,7 +119,7 @@ window.MENU = [
   "title": "Pollo",
   "img": "fb_alitas.jpg",
   "items": [
-   { "n": "Alitas", "p": 4000, "sizes": [ { "l": "6 unid.", "p": 4000 }, { "l": "12 unid.", "p": 8000 } ] },
+   { "n": "Alitas", "p": 4000, "sizes": [ { "l": "6 unid.", "p": 4000 }, { "l": "12 unid.", "p": 8000 } ], "tags": ["compartir"] },
    { "n": "Pechuga", "p": 3500 },
    { "n": "Nuggets", "p": 3500 }
   ]
@@ -136,7 +137,7 @@ window.MENU = [
    { "n": "Chalupa mixta", "p": 4000 },
    { "n": "Burrito de carne o pollo", "p": 3500 },
    { "n": "Burrito mixto", "p": 4000 },
-   { "n": "Surtido", "d": "Para compartir", "p": 8000, "sizes": [ { "l": "2 personas", "p": 8000 }, { "l": "4 personas", "p": 16000 } ] }
+   { "n": "Surtido", "d": "Para compartir", "p": 8000, "sizes": [ { "l": "2 personas", "p": 8000 }, { "l": "4 personas", "p": 16000 } ], "tags": ["compartir"] }
   ]
  },
  {

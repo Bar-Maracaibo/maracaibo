@@ -12,8 +12,9 @@ window.CONFIG = {
  "mapa": "https://maps.app.goo.gl/iqMi91LyRhNMNFzu8",
  // Horas de 0 a 24, en hora de Costa Rica. 11 y 24 = de 11 a.m. a medianoche.
  "horario": {"abre": 11, "cierra": 24},
- // TODO-DUEÑO: confirmar si los precios incluyen IVA y si se cobra el 10 % de servicio.
- "notaPrecios": "Precios en colones · incluyen IVA",
+ // TODO-DUEÑO: confirmar si los precios incluyen IVA y si se cobra el 10 % de servicio; entonces agregarlo aquí
+ // (por ejemplo "Precios en colones · incluyen IVA").
+ "notaPrecios": "Precios en colones",
  // TODO-DUEÑO: no tienen Instagram por ahora; al abrirlo, poner el enlace aquí y aparece solo.
  "instagram": "",
  "facebook": "https://www.facebook.com/share/1M2NZmSJWM/",

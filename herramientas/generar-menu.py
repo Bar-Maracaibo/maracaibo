@@ -248,6 +248,56 @@ def flow(o, areas):
         placed.append((face, kind, data, x, y, h)); y -= h; i += 1
     return placed, w
 
+def flow_whole(o, areas):
+    """Sin partir apartados: cada apartado va entero en una columna.
+    Prueba todas las formas de repartir los apartados seguidos en las columnas, con el orden de la carta o moviendo
+    un solo apartado de lugar (nunca el primero), y se queda con la que entra y deja las columnas de cada cara más parejas
+    (menor diferencia entre la más llena y la más vacía; mover un apartado cuesta un poco)."""
+    from itertools import combinations
+    w = (W - 2 * o['margin'] - (o['cols'] - 1) * o['gap']) / o['cols']
+    bl = blocks(o, w)
+    secs, cur, extras = [], None, None
+    for b in bl:
+        if b[0] == 'title': cur = [b]; secs.append(cur)
+        elif b[0] in ('item', 'group'): cur.append(b)
+        elif b[0] == 'extras': extras = b
+    hs0 = [sum(b[2] for b in s) for s in secs]
+    n, k = len(secs), len(areas)
+    caps = [top - bottom for (_, _, top, bottom) in areas]
+    orders = [tuple(range(n))]
+    for i in range(1, n):                         # la carta siempre abre con su primer apartado (Boquitas)
+        for j in range(1, n):
+            if i != j:
+                l = list(range(n)); l.insert(j, l.pop(i)); orders.append(tuple(l))
+    best = None
+    for order in dict.fromkeys(orders):
+        hs = [hs0[i] for i in order]
+        moved = 0 if order == orders[0] else 12 * mm
+        for cuts in combinations(range(1, n), k - 1):
+            bounds = (0,) + cuts + (n,)
+            fill = []
+            for c in range(k):
+                a, b = bounds[c], bounds[c + 1]
+                h = sum(hs[a:b]) + o['space'] * (b - a - 1) + ((o['space'] + extras[2]) if extras and c == k - 1 else 0)
+                fill.append(h)
+            if any(f > cap for f, cap in zip(fill, caps)): continue
+            faces = {}
+            for (face, *_), f in zip(areas, fill): faces.setdefault(face, []).append(f)
+            score = sum(max(v) - min(v) for v in faces.values()) + .25 * max(fill) + moved
+            if best is None or score < best[0]: best = (score, bounds, order)
+    if best is None: return None, w
+    bounds, order, placed = best[1], best[2], []
+    secs = [secs[i] for i in order]
+    for c, (face, x, top, bottom) in enumerate(areas):
+        y = top
+        for si in range(bounds[c], bounds[c + 1]):
+            if si > bounds[c]: y -= o['space']
+            for kind, data, h in secs[si]:
+                placed.append((face, kind, data, x, y, h)); y -= h
+        if extras and c == k - 1:
+            y -= o['space']; placed.append((face, 'extras', extras[1], x, y, extras[2]))
+    return placed, w
+
 def areas_for(o, top_reserved, bottom_reserved):
     """Columnas de cada cara: reserva arriba (franja y foto) y abajo (QR y datos)."""
     m = o['margin']; w = (W - 2 * m - (o['cols'] - 1) * o['gap']) / o['cols']
@@ -268,7 +318,7 @@ def build(path, key, bleed):
     for size, pad, ph in tries:
         o['name'], o['pad'], photo_h = size, pad, ph
         areas = areas_for(o, {0: band + photo_h + 6 * mm + o['margin']}, {last: strip + 8 * mm})
-        placed, cw = flow(o, areas)
+        placed, cw = (flow_whole if key == 'A' else flow)(o, areas)
         if placed: break
     if not placed: raise SystemExit(f'La carta no entra en la opción {key}')
     d = Doc(path, o, bleed)
