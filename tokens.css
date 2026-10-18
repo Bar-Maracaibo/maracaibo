@@ -21,7 +21,7 @@
   --tinta:#f2f0e7;          /* texto · 17:1 */
   --gris:#a8a99b;           /* texto secundario · 8.2:1 */
   --gris-2:#8f9083;         /* texto terciario · 6.0:1 */
-  --apagado:#34372f;        /* palabras sin encender */
+  --apagado:#5e6054;        /* palabras sin encender · 3:1 */
   --linea:rgba(242,240,231,.13);
   --linea-2:rgba(242,240,231,.07);
   --musgo:#a9bd7f;          /* verde del rótulo, aclarado · 9.5:1 */
@@ -43,7 +43,7 @@
     --tinta:#171913;          /* 15.7:1 */
     --gris:#5a5c50;           /* 6.0:1 */
     --gris-2:#616357;         /* 5.4:1 */
-    --apagado:#cfcdc2;
+    --apagado:#8a8b7f;        /* 3:1 */
     --linea:rgba(23,25,19,.16);--linea-2:rgba(23,25,19,.08);
     --musgo:#4c5f2e;          /* 6.2:1 */
     --sobre-musgo:#ffffff;    /* 7.0:1 */
@@ -58,7 +58,7 @@
 }
 :root[data-theme=light]{
   --fondo:#f3f1e9;--sup:#e9e7dd;--ctrl:#dddbd0;--ctrl-2:#d1cfc3;
-  --tinta:#171913;--gris:#5a5c50;--gris-2:#616357;--apagado:#cfcdc2;
+  --tinta:#171913;--gris:#5a5c50;--gris-2:#616357;--apagado:#8a8b7f;
   --linea:rgba(23,25,19,.16);--linea-2:rgba(23,25,19,.08);
   --musgo:#4c5f2e;--sobre-musgo:#ffffff;--musgo-hover:#3f5025;
   --abierto:#248a3d;--cerrado:#d70015;

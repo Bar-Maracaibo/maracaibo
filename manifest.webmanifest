@@ -1,0 +1,19 @@
+{
+ "name": "Bar Maracaibo",
+ "short_name": "Maracaibo",
+ "description": "Bar de pueblo en San Lorenzo, San José: la carta, la ronda y reservas por WhatsApp.",
+ "lang": "es-CR",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#0c0d0a",
+ "theme_color": "#0c0d0a",
+ "icons": [
+  {"src": "icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+  {"src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+ ],
+ "shortcuts": [
+  {"name": "La carta", "url": "menu.html", "icons": [{"src": "icono-192.png", "sizes": "192x192"}]},
+  {"name": "Reservar", "url": "./#reservar", "icons": [{"src": "icono-192.png", "sizes": "192x192"}]}
+ ]
+}

@@ -66,10 +66,10 @@
     scope.querySelectorAll('[data-cfg]').forEach(el => { const v = txt[el.dataset.cfg]; if (v) el.textContent = v; else el.hidden = true; });
     scope.querySelectorAll('[data-wa]').forEach(el => { el.href = wa(el.dataset.wa); });
     scope.querySelectorAll('[data-tel]').forEach(el => { el.href = 'tel:+' + CONFIG.whatsapp; });
-    scope.querySelectorAll('[data-cfg-href]').forEach(el => { const v = CONFIG[el.dataset.cfgHref]; if (v) el.href = v; else el.hidden = true; });
+    scope.querySelectorAll('[data-cfg-href]').forEach(el => { const v = CONFIG[el.dataset.cfgHref]; if (v) el.href = v; else el.remove(); });
     const g = CONFIG.googleRating;
     scope.querySelectorAll('[data-rating]').forEach(el => {
-      if (!g || !g.valor) { el.hidden = true; return; }
+      if (!g || !g.valor) { el.remove(); return; }
       el.hidden = false;
       el.innerHTML = `<span aria-hidden="true">★</span> ${String(g.valor).replace('.', ',')} en Google${g.resenas ? ` <small>· ${g.resenas} reseñas</small>` : ''}`;
       if (el.tagName === 'A' && g.url) el.href = g.url;
@@ -180,7 +180,20 @@
     return Promise.race([load, timeout]).catch(() => false);
   })();
 
-  window.MCB = { ready, parseCSV, CONFIG, MENU, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
+  /* ---------- Fotos optimizadas: <picture> con AVIF, WebP y JPG (img/, ver herramientas/optimizar-imagenes.py) ---------- */
+  const pic = (file, sizes, alt = '', extra = '') => {
+    const stem = String(file).replace(/\.jpg$/, ''), m = (window.IMAGENES || {})[stem];
+    if (!m) return `<img src="${esc(file)}" alt="${esc(alt)}"${extra}>`;
+    const set = ext => m.w.map(w => `img/${stem}-${w}.${ext} ${w}w`).join(', ');
+    const fb = `img/${stem}-${m.w[Math.min(1, m.w.length - 1)]}.jpg`;
+    return `<picture>${m.avif ? `<source type="image/avif" srcset="${set('avif')}" sizes="${sizes}">` : ''}<source type="image/webp" srcset="${set('webp')}" sizes="${sizes}"><img src="${fb}" srcset="${set('jpg')}" sizes="${sizes}" alt="${esc(alt)}"${extra}></picture>`;
+  };
+
+  window.MCB = { pic, ready, parseCSV, CONFIG, MENU, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
+
+  /* ---------- Sin señal: service worker (sw.js) ---------- */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)))
+    addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
   fill();
   initTheme();

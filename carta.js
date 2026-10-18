@@ -45,7 +45,7 @@ window.MCB.ready.then(() => {
     const badge = tags.includes('popular') ? '<span class="badge">Lo más pedido</span>' : '';
     const sizes = it.sizes ? `<div class="sizes">${it.sizes.map((s, k) => s.p == null
       ? `<span class="size">${esc(s.l)} · Consultar</span>`
-      : `<button type="button" class="size add" data-key="${cat.id}|${i}|${k}" data-label="${esc(`${it.n} (${s.l.toLowerCase()})`)}" aria-label="Agregar ${esc(it.n)} ${esc(s.l.toLowerCase())}, ${money(s.p)}, a mi pedido"><span class="size-text">${esc(s.l)} <b>${money(s.p)}</b></span>${PLUS}<span class="add-n"></span></button>`).join('')}</div>` : '';
+      : `<button type="button" class="size add" data-key="${cat.id}|${i}|${k}" data-label="${esc(`${it.n} (${s.l.toLowerCase()})`)}" data-vis="${esc(`${s.l} ${money(s.p)}`)}"><span class="size-text">${esc(s.l)} <b>${money(s.p)}</b></span>${PLUS}<span class="add-n"></span></button>`).join('')}</div>` : '';
     return `<li class="dish${it.sizes ? ' has-sizes' : ''}" data-i="${i}">
       <span class="dish-name"><span class="dn">${esc(it.n)}</span>${badge}</span>
       ${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>${it.p != null ? addBtn(`${cat.id}|${i}|`, it.n) : '<span></span>'}`}
@@ -55,7 +55,7 @@ window.MCB.ready.then(() => {
     const min = catFrom(cat);
     return `<section class="cat" id="${cat.id}" aria-labelledby="t-${cat.id}">
       <div class="frame cat-grid${cat.img ? '' : ' no-photo'}">
-        ${cat.img ? `<figure class="cat-photo"><img src="${cat.img}" alt="" loading="lazy"></figure>` : ''}
+        ${cat.img ? `<figure class="cat-photo">${window.MCB.pic(cat.img, '(max-width: 900px) 100vw, 480px', '', ' loading="lazy" decoding="async"')}</figure>` : ''}
         <div>
           <header class="cat-head">
             <p class="kicker">${count(cat.items.length)}${min != null ? ` · desde ${money(min)}` : ''}</p>
@@ -152,7 +152,8 @@ window.MCB.ready.then(() => {
     const q = order[b.dataset.key] || 0;
     b.classList.toggle('in', q > 0);
     b.querySelector('.add-n').textContent = q || '';
-    b.setAttribute('aria-label', `Agregar ${b.dataset.label} a mi pedido${q ? ` (llevás ${q})` : ''}`);
+    // el nombre accesible empieza con el texto visible del botón («Grande ₡3.500»)
+    b.setAttribute('aria-label', `${b.dataset.vis ? b.dataset.vis + ': a' : 'A'}gregar ${b.dataset.label} a mi pedido${q ? ` (llevás ${q})` : ''}`);
   });
   const paintBar = () => {
     const n = orderCount();

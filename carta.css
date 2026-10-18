@@ -10,6 +10,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-padding-top:calc(var(--nav) + var(--tabs) + 8px)}
 body{margin:0;background:var(--fondo);color:var(--tinta);font-family:var(--texto);font-size:1.0625rem;line-height:1.5;letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+picture{display:contents}
 img{display:block;max-width:100%}
 h1,h2,p,ul,figure{margin:0}
 ul{padding:0;list-style:none}
@@ -103,6 +104,9 @@ a,button,label{touch-action:manipulation}
 .tab[hidden]{display:none}
 
 /* ---------- Apartados ---------- */
+/* espacio reservado mientras se arma la carta: así el cierre y el pie no saltan */
+#sections:empty{min-height:250vh}
+.tabs-track:empty{min-height:var(--tabs)}
 .status{min-height:1px;padding-top:28px;font-size:.875rem;color:var(--gris)}
 .status:empty{padding-top:0}
 .cat{padding-block:clamp(72px,9vw,120px);border-bottom:1px solid var(--linea-2)}

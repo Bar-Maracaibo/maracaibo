@@ -14,6 +14,7 @@ html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100
 a,button,label,[role=radio]{touch-action:manipulation}
 .btn,.nav-cta,.round,.stepper button,.seg button,.look-seg button,.dock a,.fav,.index a{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 body{margin:0;background:var(--fondo);color:var(--tinta);font-family:var(--texto);font-size:1.0625rem;line-height:1.5;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+picture{display:contents}
 img{display:block;max-width:100%;height:auto}
 figure,h1,h2,h3,p,dl,dd,ol,ul{margin:0}
 ol,ul{padding:0;list-style:none}
