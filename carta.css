@@ -103,6 +103,11 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .dish-name{font-size:1.125rem}
 .dish-price{font-size:1.0625rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 .dish small{grid-column:1/-1;font-size:.9375rem;color:var(--gris)}
+.dish-sizes{grid-column:1/-1;font-variant-numeric:tabular-nums}
+.dish-group{padding:28px 0 10px;font-size:.8125rem;font-weight:600;letter-spacing:.04em;color:var(--gris);border-bottom:1px solid var(--linea)}
+.dish-group:first-child{padding-top:14px}
+.cat-nophoto{display:none}
+.cat-grid:has(.cat-nophoto){grid-template-columns:minmax(0,1fr)}
 .dish mark{background:rgba(243,239,230,.18);color:inherit;border-radius:3px;padding:0 2px}
 .empty{padding-block:96px;display:grid;gap:12px;color:var(--gris)}
 .empty .display{font-size:clamp(2.5rem,5vw,4rem);color:var(--hueso)}

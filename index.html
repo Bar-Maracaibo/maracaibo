@@ -21,7 +21,9 @@
 <link rel="preload" href="portada_surtida.jpg" as="image">
 <script>/* apariencia elegida antes de pintar, para que no parpadee */try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="experiencia.css">
+<script src="config.js" defer></script>
 <script src="menu-datos.js" defer></script>
+<script src="comun.js" defer></script>
 <script src="experiencia.js" defer></script>
 </head>
 <body>
@@ -63,7 +65,7 @@
     <a href="#llegar">Cómo llegar</a>
   </nav>
   <p class="status" data-status hidden><span class="status-dot" aria-hidden="true"></span><span data-status-text></span></p>
-  <p>WhatsApp <a href="https://wa.me/50660821465" target="_blank" rel="noopener">6082-1465</a><br>San Lorenzo, San José · Todos los días, 11 a.m. – 12 a.m.</p>
+  <p>WhatsApp <a data-wa="" data-cfg="telefono" target="_blank" rel="noopener"></a><br><span data-cfg="direccion"></span><br><span data-cfg="horario"></span></p>
 </div>
 
 <main id="contenido">
@@ -103,19 +105,19 @@
         </div>
       </div>
       <ul class="rail" id="rail" aria-labelledby="favs-title">
-        <li><a class="fav" href="menu.html#boquitas" data-item="Chicharrones">
+        <li><a class="fav" href="menu.html#cortes" data-item="Chicharrones">
           <figure><img src="chicharrones_reales.jpg" alt="Chicharrones con yuca y limón" width="1024" height="1536" loading="lazy"></figure>
-          <span class="fav-name">Chicharrones</span><span class="fav-meta">Boquitas</span></a></li>
-        <li><a class="fav" href="menu.html#bebidas" data-item="Cerveza nacional">
+          <span class="fav-name">Chicharrones</span><span class="fav-meta">Cortes</span></a></li>
+        <li><a class="fav" href="menu.html#bebidas" data-item="Imperial">
           <figure><img src="imperial_real.jpg" alt="Cervezas Imperial bien frías en cubetas con hielo, sobre una mesa de madera" width="1024" height="1536" loading="lazy"></figure>
-          <span class="fav-name">La primera, bien fría</span><span class="fav-meta">Cerveza nacional</span></a></li>
-        <li><a class="fav" href="menu.html#boquitas" data-item="Alitas de pollo">
+          <span class="fav-name">La primera, bien fría</span><span class="fav-meta">Bebidas</span></a></li>
+        <li><a class="fav" href="menu.html#pollo" data-item="Alitas">
           <figure><img src="fb_alitas.jpg" alt="Alitas de pollo con papas gajo" width="1024" height="1536" loading="lazy"></figure>
-          <span class="fav-name">Alitas de pollo</span><span class="fav-meta">Boquitas</span></a></li>
-        <li><a class="fav" href="menu.html#mariscos" data-item="Ceviche grande">
+          <span class="fav-name">Alitas</span><span class="fav-meta">Pollo</span></a></li>
+        <li><a class="fav" href="menu.html#mariscos" data-item="Ceviche">
           <figure><img src="impreso_ceviche.jpg" alt="Ceviche de pescado con galletas y limón" width="1024" height="1536" loading="lazy"></figure>
           <span class="fav-name">Ceviche</span><span class="fav-meta">Mariscos</span></a></li>
-        <li><a class="fav" href="menu.html#fuertes" data-item="Fajitas de pollo">
+        <li><a class="fav" href="menu.html#fuertes" data-item="Fajitas">
           <figure><img src="impreso_fajitas.jpg" alt="Fajitas de pollo con chile dulce y cebolla" width="1024" height="1536" loading="lazy"></figure>
           <span class="fav-name">Fajitas</span><span class="fav-meta">Platos fuertes</span></a></li>
       </ul>
@@ -129,7 +131,7 @@
         <p class="kicker">La ronda</p>
         <h2 id="ronda-title" class="display h2">¿Cuánto sale <em>la salida?</em></h2>
         <p class="body">Armá la ronda con precios de la carta, dividila entre todos y mandásela al grupo antes de salir.</p>
-        <p class="caption">El chiliguaro ya va con la promo de 2 por ₡1.500.</p>
+        <p class="caption">Los precios salen de la carta y se actualizan con ella.</p>
       </div>
       <div class="card ronda-card">
         <div id="rondaList" class="ronda-list"><noscript><p class="caption">Activá JavaScript para usar la calculadora, o mirá los precios en <a class="link" href="menu.html">la carta</a>.</p></noscript></div>
@@ -159,7 +161,7 @@
       <header class="head head-row">
         <div>
           <p class="kicker">La carta</p>
-          <h2 id="carta-title" class="display h2">Ocho apartados,<br><em>cuarenta y tres antojos.</em></h2>
+          <h2 id="carta-title" class="display h2">Toda la carta,<br><em>apartado por apartado.</em></h2>
         </div>
         <div class="actions">
           <a class="btn btn-main" href="menu.html">Abrir la carta</a>
@@ -179,7 +181,7 @@
         <p class="kicker">Reservas</p>
         <h2 id="reserve-title" class="display h2">Apartá <em>tu mesa.</em></h2>
         <p class="body">Elegí cuántos son y cuándo vienen. El mensaje queda listo para enviarlo por WhatsApp.</p>
-        <p class="body">¿Preferís llamar? <a class="link" href="tel:+50660821465">6082-1465</a></p>
+        <p class="body">¿Preferís llamar? <a class="link" data-tel data-cfg="telefono"></a></p>
       </div>
       <form class="card" id="reserveForm" aria-label="Armar mensaje de reserva">
         <div class="row">
@@ -206,7 +208,7 @@
           <span class="caption">Así se envía</span>
           <p class="bubble" id="bubble">Hola, quiero reservar una mesa para 2 personas hoy en Bar Maracaibo.</p>
         </div>
-        <a class="btn btn-main btn-block" id="send" href="https://wa.me/50660821465?text=Hola%2C%20quiero%20reservar%20una%20mesa%20para%202%20personas%20hoy%20en%20Bar%20Maracaibo." target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <a class="btn btn-main btn-block" id="send" data-wa="Hola, quiero reservar una mesa en Bar Maracaibo." target="_blank" rel="noopener">Enviar por WhatsApp</a>
       </form>
     </div>
   </section>
@@ -221,7 +223,7 @@
           <img src="fachada.jpg" alt="El rótulo verde y amarillo de Maracaibo's Bar, encendido al atardecer" width="476" height="1020" loading="lazy">
           <figcaption><strong>Buscá este rótulo.</strong> Verde y amarillo, encendido frente al local.</figcaption>
         </figure>
-        <p class="plus">Código de ubicación <strong>2V53+FCP</strong></p>
+        <p class="plus">Código de ubicación <strong data-cfg="codigoUbicacion"></strong></p>
         <div class="actions">
           <a class="btn btn-main" href="https://maps.app.goo.gl/iqMi91LyRhNMNFzu8" target="_blank" rel="noopener">Abrir en Google Maps</a>
           <a class="btn btn-line" href="https://waze.com/ul?ll=10.0087064%2C-84.1464181&amp;navigate=yes" target="_blank" rel="noopener">Abrir en Waze</a>
@@ -252,7 +254,8 @@
         <button type="button" role="radio" aria-checked="false" data-look="dark">Oscura</button>
       </div>
     </div>
-    <p>Bar Maracaibo · San Lorenzo, San José, Costa Rica · Todos los días, 11 a.m. – 12 a.m. · 6082-1465</p>
+    <p><span>Bar Maracaibo</span> · <span data-cfg="direccion"></span> · <span data-cfg="horario"></span> · <span data-cfg="telefono"></span></p>
+    <noscript><p>Bar Maracaibo · San Lorenzo, San José · Todos los días, 11 a.m. – 12 a.m. · WhatsApp 6082-1465</p></noscript>
   </div>
 </footer>
 

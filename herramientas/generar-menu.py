@@ -21,10 +21,14 @@ from reportlab.graphics import renderPDF
 from PIL import Image, ImageFilter
 
 root = Path(__file__).resolve().parent.parent
-src = (root / 'menu-datos.js').read_text(encoding='utf-8')
-data = json.loads(re.search(r'window\.MENU\s*=\s*(\[.*\]);', src, re.S).group(1))
+def load(file, var):
+    """Lee window.VAR = {...}; de un .js, ignorando las líneas de comentario //."""
+    src = (root / file).read_text(encoding='utf-8')
+    body = re.search(r'window\.' + var + r'\s*=\s*(.*);\s*$', src, re.S).group(1)
+    return json.loads('\n'.join(l for l in body.splitlines() if not l.strip().startswith('//')))
+data = load('menu-datos.js', 'MENU')
+CFG = load('config.js', 'CONFIG')
 by = {x['id']: x for x in data}
-assert sum(len(c['items']) for c in data) == 43, 'La carta debe tener 43 opciones'
 
 fdir = Path(__file__).parent / 'fuentes-pdf'
 for name in ['Light', 'Regular', 'SemiBold', 'Bold', 'Italic']:
@@ -42,6 +46,10 @@ c = canvas.Canvas(str(root / 'menu-impreso.pdf'), pagesize=A4)
 c.setTitle('Bar Maracaibo · La carta'); c.setAuthor('Bar Maracaibo'); c.setSubject('Carta para imprimir, 4 páginas A4')
 
 def money(p): return '₡' + format(p, ',').replace(',', '.')
+def price_text(it): return '  ·  '.join(f"{s['l']} {money(s['p'])}" for s in it['sizes']) if it.get('sizes') else money(it['p'])
+def hora12(h):
+    h = int(h) % 24; return '12 a.m.' if h == 0 else '12 m.d.' if h == 12 else f'{h} a.m.' if h < 12 else f'{h - 12} p.m.'
+TEL = CFG['telefono']; WA = CFG['whatsapp']
 
 def txt(s, x, y, font, size, color, align='l', track=0):
     c.setFont(font, size); c.setFillColor(color)
@@ -105,14 +113,14 @@ def section(cid, x, y, w):
     y -= 27
     c.setStrokeColor(linea_fuerte); c.setLineWidth(.7); c.line(x, y, x + w, y)
     for i, it in enumerate(cat['items']):
-        price = money(it['p']); pw = width(price, 'SemiBold', PRICE)
+        price = price_text(it); pw = width(price, 'SemiBold', PRICE)
         size = NAME
         while width(it['n'], 'Regular', size) > w - pw - 4 * mm and size > 10.5: size -= .25
         y -= ROW - 2.6 * mm
         y -= size * .72
         txt(it['n'], x, y, 'Regular', size, tinta)
         txt(price, x + w, y, 'SemiBold', PRICE, tinta, 'r')
-        if it.get('d'):
+        if it.get('d') and not it.get('review'):   # las descripciones por confirmar entran con el rediseño de la fase 6
             y -= DESC + 3.5; txt(it['d'], x, y, 'Regular', DESC, gris)
         y -= 3.2 * mm
         if i < n - 1:
@@ -128,7 +136,7 @@ logo(M + .5 * mm, H - M - 25.5 * mm, 25 * mm)
 txt('Maracaibo', W / 2, 74 * mm, 'Serif', 78, hueso, 'c')
 txt('La carta', W / 2, 54 * mm, 'SerifItalic', 30, gris_noche, 'c')
 c.setStrokeColor(HexColor('#3b3933')); c.setLineWidth(.6); c.line(W / 2 - 12 * mm, 42 * mm, W / 2 + 12 * mm, 42 * mm)
-txt('Bar de pueblo en San Lorenzo, San José  ·  Cerramos a medianoche  ·  WhatsApp 6082-1465',
+txt(f"Bar de pueblo en San Lorenzo, San José  ·  Hasta las {hora12(CFG['horario']['cierra'])}  ·  WhatsApp {TEL}",
     W / 2, 22 * mm, 'Regular', 9.5, gris_noche, 'c', track=.2)
 
 # ---------- Páginas interiores ----------
@@ -161,13 +169,13 @@ for n, (cols, file, label, fy) in enumerate(pages, 2):
         txt('Reservá tu mesa.', bx + 10 * mm, by0 + bh_ - 16 * mm, 'SemiBold', 24, white)
         txt('Escaneá el código con la cámara del celular:', bx + 10 * mm, by0 + bh_ - 26 * mm, 'Regular', 11.5, gris_claro)
         txt('el mensaje de WhatsApp queda listo para enviar.', bx + 10 * mm, by0 + bh_ - 31.5 * mm, 'Regular', 11.5, gris_claro)
-        txt('WhatsApp 6082-1465', bx + 10 * mm, by0 + 8 * mm, 'SemiBold', 12, hueso)
+        txt(f'WhatsApp {TEL}', bx + 10 * mm, by0 + 8 * mm, 'SemiBold', 12, hueso)
         q = 36 * mm
         c.setFillColor(white); c.roundRect(bx + bw_ - q - 12 * mm, by0 + (bh_ - q - 4 * mm) / 2, q + 4 * mm, q + 4 * mm, 3 * mm, fill=1, stroke=0)
-        qr('https://wa.me/50660821465?text=' + 'Hola%2C%20quiero%20reservar%20una%20mesa%20en%20Bar%20Maracaibo.',
+        qr(f'https://wa.me/{WA}?text=' + 'Hola%2C%20quiero%20reservar%20una%20mesa%20en%20Bar%20Maracaibo.',
            bx + bw_ - q - 10 * mm, by0 + (bh_ - q) / 2, q)
     print('Página', n, 'el contenido termina a', round(bottom / mm, 1), 'mm del borde inferior')
-    txt('Bar Maracaibo · Precios en colones', M, 10 * mm, 'Regular', 8.5, gris)
+    txt('Bar Maracaibo · ' + CFG['notaPrecios'], M, 10 * mm, 'Regular', 8.5, gris)
     txt(f'{n} / 4', W - M, 10 * mm, 'Regular', 8.5, gris, 'r')
 c.save()
 print('menu-impreso.pdf generado')

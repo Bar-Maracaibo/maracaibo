@@ -1,37 +1,8 @@
 /* Bar Maracaibo · interacciones de la página principal (sin dependencias) */
 (() => {
   const root = document.documentElement;
-  root.classList.add('js');
   const $ = id => document.getElementById(id);
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const MENU = window.MENU || [];
-  const WA = 'https://wa.me/50660821465?text=';
-  const money = n => '₡' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  /* ---------- Abierto / cerrado, en hora de Costa Rica ----------
-     Horario: todos los días de 11 a.m. a 12 a.m. Para cambiarlo, editar ABRE y CIERRA (horas de 0 a 24). */
-  const ABRE = 11, CIERRA = 24;
-  const hora12 = h => { h %= 24; return h === 0 ? '12 a.m.' : h === 12 ? '12 m.d.' : h < 12 ? `${h} a.m.` : `${h - 12} p.m.`; };
-  const crNow = () => {
-    const p = new Intl.DateTimeFormat('en-GB', { timeZone: 'America/Costa_Rica', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date());
-    return +p.find(x => x.type === 'hour').value * 60 + +p.find(x => x.type === 'minute').value;
-  };
-  function updateStatus() {
-    const m = crNow(), open = m >= ABRE * 60 && m < CIERRA * 60;
-    const left = open ? CIERRA * 60 - m : (ABRE * 60 - m + 1440) % 1440;
-    const main = open ? 'Abierto ahora' : 'Cerrado ahora';
-    const detail = left <= 60
-      ? (open ? `cierra en ${left} min` : `abre en ${left} min`)
-      : (open ? `hasta las ${hora12(CIERRA)}` : `abre ${m < ABRE * 60 ? 'hoy' : 'mañana'} a las ${hora12(ABRE)}`);
-    document.querySelectorAll('[data-status]').forEach(el => {
-      el.hidden = false;
-      el.classList.toggle('open', open);
-      el.querySelector('[data-status-text]').innerHTML = `${main} <small>· ${detail}</small>`;
-    });
-  }
-  updateStatus();
-  setInterval(updateStatus, 30000);
+  const { CONFIG, MENU, money, esc, reduce, wa, find, fromPrice, say } = window.MCB;
 
   /* ---------- Entrada de la portada ---------- */
   const hero = $('inicio');
@@ -116,12 +87,16 @@
 
   /* ---------- La carta: índice con enlace directo a cada apartado ---------- */
   const index = $('index');
+  if (MENU.length) {
+    const cap = t => t[0].toUpperCase() + t.slice(1);
+    $('carta-title').innerHTML = `${cap(window.MCB.words(MENU.length))} apartados,<br><em>${window.MCB.words(window.MCB.totalItems)} antojos.</em>`;
+  }
   if (index && MENU.length) {
     index.innerHTML = MENU.map(cat => {
-      const n = cat.items.length, min = Math.min(...cat.items.map(x => x.p));
+      const n = cat.items.length, min = window.MCB.catFrom(cat);
       return `<li><a href="menu.html#${cat.id}">
         <span class="index-name">${esc(cat.label)}</span>
-        <span class="index-meta">${n} ${n === 1 ? 'opción' : 'opciones'} · desde ${money(min)}</span>
+        <span class="index-meta">${n} ${n === 1 ? 'opción' : 'opciones'}${min != null ? ` · desde ${money(min)}` : ''}</span>
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </a></li>`;
     }).join('');
@@ -136,7 +111,7 @@
     const who = people === 1 ? 'una persona' : `${people} personas`;
     const msg = `Hola, quiero reservar una mesa para ${who} ${when} en Bar Maracaibo.${match.checked ? ' Venimos a ver el partido.' : ''}`;
     bubble.textContent = msg;
-    send.href = WA + encodeURIComponent(msg);
+    send.href = wa(msg);
   }
   $('minus').addEventListener('click', () => { people = Math.max(1, people - 1); compose(); });
   $('plus').addEventListener('click', () => { people = Math.min(40, people + 1); compose(); });
@@ -167,18 +142,13 @@
   if ('ResizeObserver' in window) new ResizeObserver(place).observe(seg);
   place(); compose();
 
-  /* ---------- Aviso breve ---------- */
-  const toast = $('toast'); let tt;
-  const say = t => { toast.textContent = t; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2600); };
-
-  /* ---------- Precios desde la carta ---------- */
-  const ITEMS = {};
-  MENU.forEach(cat => cat.items.forEach(it => { ITEMS[it.n] = { ...it, cat: cat.id }; }));
-
   /* ---------- Lo que más se pide: precio en cada tarjeta y flechas ---------- */
   document.querySelectorAll('.fav[data-item]').forEach(a => {
-    const it = ITEMS[a.dataset.item], meta = a.querySelector('.fav-meta');
-    if (it && meta) meta.innerHTML = `${esc(meta.textContent)} · <b>${money(it.p)}</b>`;
+    const it = find(a.dataset.item), meta = a.querySelector('.fav-meta');
+    if (!it) { console.warn('El carrusel menciona un plato que no está en la carta:', a.dataset.item); return; }
+    a.href = `menu.html#${it.cat.id}`;
+    const from = fromPrice(it.it);
+    if (meta) meta.innerHTML = `${esc(it.cat.label)}${from != null ? ` · <b>${it.it.sizes ? 'desde ' : ''}${money(from)}</b>` : ''}`;
   });
   const rail = $('rail'), prev = $('railPrev'), next = $('railNext');
   if (rail && prev && next) {
@@ -196,22 +166,23 @@
 
   /* ---------- La ronda: total y cuánto pone cada uno ---------- */
   const RONDA = [
-    ['Para tomar', ['Cerveza nacional', 'Chiliguaro']],
-    ['Para picar', ['Alitas de pollo', 'Chicharrones', 'Nachos', 'Chifrijo', 'Ceviche grande', 'Papas fritas']],
-    ['Para compartir', ['Surtida 2 personas', 'Surtida 4 personas']]
+    ['Para tomar', ['Imperial', 'Pilsen', 'Baldazo para compartir']],
+    ['Para picar', ['Alitas 6 unidades', 'Chicharrones', 'Nachos mixtos', 'Ceviche grande', 'Papas a la francesa', 'Canasta de patacones']],
+    ['Para compartir', ['Surtido 2 personas', 'Surtido 4 personas']]
   ];
-  // promo de la carta: chiliguaro a ₡800, o 2 por ₡1.500
-  const cost = (name, q) => name === 'Chiliguaro' ? Math.floor(q / 2) * 1500 + (q % 2) * 800 : ITEMS[name].p * q;
+  // el precio y la promo («2 por ₡1.500») salen de la carta
+  const cost = (name, q) => { const f = find(name); return window.MCB.cost(f.p, q, f.promo); };
   const list = $('rondaList');
   if (list && MENU.length) {
     const qty = {}; let split = 4;
     const minus = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10"/></svg>';
     const plus = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2v10M2 7h10"/></svg>';
-    list.innerHTML = RONDA.map(([group, names]) => `<p class="ronda-group">${group}</p>` + names.filter(n => ITEMS[n]).map(n => {
+    list.innerHTML = RONDA.map(([group, names]) => `<p class="ronda-group">${group}</p>` + names.filter(n => find(n)).map(n => {
       qty[n] = 0;
-      const price = n === 'Chiliguaro' ? `${money(800)} · 2 por ${money(1500)}` : money(ITEMS[n].p);
+      const f = find(n);
+      const price = f.promo ? `${money(f.p)} · ${f.promo.n} por ${money(f.promo.p)}` : money(f.p);
       return `<div class="item" data-n="${esc(n)}">
-        <div class="item-text"><span class="item-name">${esc(n)}</span><span class="item-price">${price}</span></div>
+        <div class="item-text"><span class="item-name">${esc(f.name)}</span><span class="item-price">${price}</span></div>
         <div class="stepper" role="group" aria-label="${esc(n)}">
           <button type="button" data-d="-1" aria-label="Una menos de ${esc(n)}" disabled>${minus}</button>
           <output class="zero">0</output>
@@ -255,10 +226,10 @@
       tally(); list.querySelector('[data-d="1"]').focus();
     });
     $('shareRonda').addEventListener('click', async () => {
-      const lines = Object.keys(qty).filter(n => qty[n]).map(n => `• ${qty[n]} × ${n}`);
+      const lines = Object.keys(qty).filter(n => qty[n]).map(n => `• ${qty[n]} × ${find(n).name}`);
       const who = split === 1 ? '' : ` · ${money(each())} cada uno (entre ${split})`;
       const text = `¿Vamos a Maracaibo?\n\nLa ronda:\n${lines.join('\n')}\n\nTotal ${money(total())}${who}\nBar Maracaibo, San Lorenzo`;
-      const url = 'https://bar-maracaibo.github.io/maracaibo/';
+      const url = CONFIG.sitio;
       if (navigator.share) {
         try { await navigator.share({ text, url }); } catch (err) { /* cancelado */ }
       } else {
@@ -269,36 +240,4 @@
     tally();
   }
 
-  /* ---------- Apariencia: automática (la del sistema), clara u oscura ----------
-     El bombillo de la barra cambia entre clara y oscura; el pie permite volver a «Automática». */
-  const KEY = 'maracaibo-apariencia';
-  const sysDark = matchMedia('(prefers-color-scheme: dark)');
-  const metas = [...document.querySelectorAll('meta[name="theme-color"]')];
-  const base = metas.map(m => m.content);
-  const look = $('look'), bulb = $('bulb');
-  const looks = look ? [...look.querySelectorAll('[role=radio]')] : [];
-  const current = () => root.dataset.theme || (sysDark.matches ? 'dark' : 'light');
-  const paintBulb = () => {
-    if (!bulb) return;
-    const lit = current() === 'light';
-    bulb.classList.toggle('on', lit);
-    bulb.setAttribute('aria-label', lit ? 'Apagar la luz: cambiar a apariencia oscura' : 'Encender la luz: cambiar a apariencia clara');
-    bulb.title = lit ? 'Apariencia oscura' : 'Apariencia clara';
-  };
-  const apply = (v, save) => {
-    if (v === 'auto') delete root.dataset.theme; else root.dataset.theme = v;
-    metas.forEach((m, i) => { m.content = v === 'auto' ? base[i] : (v === 'dark' ? '#0c0d0a' : '#f3f1e9'); });
-    looks.forEach(o => { const on = o.dataset.look === v; o.setAttribute('aria-checked', String(on)); o.tabIndex = on ? 0 : -1; });
-    paintBulb();
-    if (save) { try { v === 'auto' ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, v); } catch (e) { /* sin almacenamiento */ } }
-  };
-  apply(root.dataset.theme || 'auto', false);
-  sysDark.addEventListener?.('change', paintBulb);
-  bulb?.addEventListener('click', () => apply(current() === 'light' ? 'dark' : 'light', true));
-  looks.forEach(o => o.addEventListener('click', () => apply(o.dataset.look, true)));
-  look?.addEventListener('keydown', e => {
-    const i = looks.indexOf(document.activeElement); if (i < 0) return;
-    const d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
-    if (d) { e.preventDefault(); const o = looks[(i + d + looks.length) % looks.length]; apply(o.dataset.look, true); o.focus(); }
-  });
 })();

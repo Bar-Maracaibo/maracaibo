@@ -1,12 +1,8 @@
 /* Bar Maracaibo · carta digital. Datos en menu-datos.js (fuente única compartida con la página principal y el PDF). */
 (() => {
-  const MENU = window.MENU || [];
+  const { MENU, money, esc, normalize, reduce, catFrom, priceText, sizesText } = window.MCB;
   const $ = id => document.getElementById(id);
-  const normalize = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
-  const money = n => '₡' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const count = n => `${n} ${n === 1 ? 'opción' : 'opciones'}`;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 
   /* Resalta la coincidencia conservando las tildes del texto original */
   const highlight = (text, q) => {
@@ -15,20 +11,23 @@
     return esc(text.slice(0, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>' + esc(text.slice(i + q.length));
   };
 
+  const cap = t => t[0].toUpperCase() + t.slice(1);
+  if ($('conteo')) $('conteo').textContent = `${cap(window.MCB.words(MENU.length))} apartados y ${window.MCB.words(window.MCB.totalItems)} antojos`;
+
   /* ---------- Carta completa y pestañas ---------- */
   const sections = $('sections'), track = $('tabsTrack'), search = $('search');
   sections.innerHTML = MENU.map(cat => {
-    const min = Math.min(...cat.items.map(x => x.p));
+    const min = catFrom(cat);
     return `<section class="cat" id="${cat.id}" aria-labelledby="t-${cat.id}">
       <div class="frame cat-grid">
-        <figure class="cat-photo"><img src="${cat.img}" alt="" loading="lazy"></figure>
+        ${cat.img ? `<figure class="cat-photo"><img src="${cat.img}" alt="" loading="lazy"></figure>` : '<div class="cat-photo cat-nophoto" aria-hidden="true"></div>'}
         <div>
           <header class="cat-head">
-            <p class="kicker">${count(cat.items.length)} · desde ${money(min)}</p>
+            <p class="kicker">${count(cat.items.length)}${min != null ? ` · desde ${money(min)}` : ''}</p>
             <h2 class="display" id="t-${cat.id}">${esc(cat.title)}</h2>
             ${cat.note ? `<p class="cat-note">${esc(cat.note)}</p>` : ''}
           </header>
-          <ul class="dishes">${cat.items.map((it, i) => `<li class="dish" data-i="${i}"><span class="dish-name">${esc(it.n)}</span><span class="dish-price">${money(it.p)}</span>${it.d ? `<small>${esc(it.d)}</small>` : ''}</li>`).join('')}</ul>
+          <ul class="dishes">${cat.items.map((it, i) => (it.g && it.g !== (cat.items[i - 1] || {}).g ? `<li class="dish-group" data-g="${esc(it.g)}">${esc(it.g)}</li>` : '') + `<li class="dish" data-i="${i}"><span class="dish-name">${esc(it.n)}</span>${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>`}${it.d ? `<small>${esc(it.d)}</small>` : ''}${it.sizes ? `<span class="dish-sizes">${sizesText(it)}</span>` : ''}</li>`).join('')}</ul>
         </div>
       </div>
     </section>`;
