@@ -38,7 +38,8 @@
   --luz:#f7c948;--luz-borde:#7a5600;--luz-rayo:#b57c00;--luz-brillo:rgba(247,201,72,.75); /* bombillo encendido */
   --logo:var(--tinta);      /* logo monocromo: hueso en oscuro */
   --off-tinta:#7d7f72;      /* texto de controles deshabilitados · 3.6:1 sobre --ctrl */
-  --marca-placa:#f2f0e7;    /* logos de cerveza: con su color original sobre placa hueso (Imperial y Corona son oscuros) */
+  /* logos de cerveza: color original y fondo transparente; un borde hueso finito para que se vean los negros y azules */
+  --marca-halo:drop-shadow(0 0 .6px rgba(242,240,231,.95)) drop-shadow(0 0 .6px rgba(242,240,231,.95)) drop-shadow(0 0 5px rgba(242,240,231,.28));
   color-scheme:dark;
 }
 /* ---------- Colores: clara ---------- */
@@ -58,7 +59,7 @@
     --mapa:saturate(.6) contrast(.95);
     --logo:var(--musgo);
     --off-tinta:#6f7165;
-    --marca-placa:transparent;
+    --marca-halo:none;
     color-scheme:light;
   }
 }
@@ -71,7 +72,7 @@
   --sombra:rgba(40,38,30,.18);
   --mapa:saturate(.6) contrast(.95);
   --logo:var(--musgo);--off-tinta:#6f7165;
-  --marca-placa:transparent;
+  --marca-halo:none;
   color-scheme:light;
 }
 
@@ -110,8 +111,8 @@
 /* ---------- Carrusel «Nuestras cervezas» (index.html y menu.html) ----------
    Franja de borde a borde; los logos pasan solos en vuelta infinita solo con CSS: dos juegos iguales y
    translateX(-50%) = exactamente un juego. Se pausa al pasar el mouse o con el foco adentro.
-   Los logos van siempre con sus colores originales, sin modificar (así lo piden las marcas); en oscuro, cada uno
-   sobre una placa hueso del mismo alto para que se vean los negros y azules. La franja se enfoca con el teclado
+   Los logos van siempre con sus colores originales, sin modificar (así lo piden las marcas) y sin fondo; en oscuro,
+   con un borde hueso finito (--marca-halo) para que se vean los negros y azules. La franja se enfoca con el teclado
    (y así se detiene).
    Con «reducir movimiento»: quieta, centrada y se desliza con el dedo. */
 .marcas{border-block:1px solid var(--linea);padding-block:14px}
@@ -122,8 +123,8 @@
 @keyframes marcas{to{transform:translateX(-50%)}}
 /* 48 px entre logos: el hueco del flex más el relleno de la placa de cada lado */
 .marcas-set{display:flex;align-items:center;gap:calc(48px - 2 * var(--px));margin:0;padding:0 calc(48px - 2 * var(--px)) 0 0;list-style:none}
-.marca{display:flex;align-items:center;justify-content:center;height:60px;padding:0 var(--px);border-radius:var(--r-sm);background:var(--marca-placa)}
-.marca img{display:block;max-width:none}
+.marca{display:flex;align-items:center;justify-content:center;height:60px;padding:0 var(--px)}
+.marca img{display:block;max-width:none;filter:var(--marca-halo)}
 .marcas-view:focus-visible{outline-offset:-2px}
 @media (prefers-reduced-motion:reduce){
   .marcas-view{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;

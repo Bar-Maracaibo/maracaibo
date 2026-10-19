@@ -59,8 +59,8 @@ Si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa 
 
 NUESTRAS CERVEZAS (carrusel de logos)
 Franja de logos que pasan solos en la portada (entre «Lo que más se pide» y «La ronda») y, más chica y sin titular,
-en la carta justo arriba de Bebidas. Los logos van con sus colores originales, sin modificar (en oscuro, sobre una
-placa clara). Se detiene al pasar el mouse o al enfocarla con el teclado; con «reducir movimiento» queda quieta.
+en la carta justo arriba de Bebidas. Los logos van con sus colores originales, sin modificar y sin fondo (en oscuro,
+con un borde claro finito para que se vean los negros y azules). Se detiene al pasar el mouse o al enfocarla con el teclado; con «reducir movimiento» queda quieta.
 Qué marcas salen y en qué orden: config.js →  "cervezas": ["imperial","pilsen","bavaria",...]
   (cada nombre es el de su logo en img/marcas/, sin .png; [] = el carrusel no aparece).
 - Quitar una marca: borrarla de la lista en config.js.
@@ -117,7 +117,7 @@ Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se
 
 SIN SEÑAL (service worker)
 La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
-subir el número de VERSION al inicio de sw.js (hoy maracaibo-v5 → maracaibo-v6) para que los celulares actualicen.
+subir el número de VERSION al inicio de sw.js (hoy maracaibo-v6 → maracaibo-v7) para que los celulares actualicen.
 
 PUBLICAR EN GITHUB PAGES
 Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).

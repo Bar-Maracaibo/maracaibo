@@ -57,7 +57,7 @@ if im.width > 800:
 
 # ---------- Logos de cerveza (img/marcas/) ----------
 # Cada img/marcas/<marca>.png (fondo transparente) se recorta a lo que se ve y se achica a 240 px de ancho como máximo.
-# El logo no se toca: se muestra con sus colores originales (en oscuro, sobre una placa hueso). Se puede correr las veces que sea.
+# El logo no se toca: se muestra con sus colores originales y fondo transparente (en oscuro, con un borde claro finito). Se puede correr las veces que sea.
 # Escribe <marca>.png y .webp, y img/marcas/marcas.js con el nombre y el tamaño en pantalla de cada logo.
 NOMBRES = {'imperial': 'Imperial', 'pilsen': 'Pilsen', 'bavaria': 'Bavaria', 'heineken': 'Heineken',
            'corona': 'Corona', 'sol': 'Sol', 'coors': 'Coors'}
