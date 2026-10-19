@@ -56,10 +56,8 @@ if im.width > 800:
     print('logo-maracaibo.png optimizado:', logo.stat().st_size // 1024, 'KB')
 
 # ---------- Logos de cerveza (img/marcas/) ----------
-# Cada img/marcas/<marca>.png (fondo transparente) se recorta a lo que se ve, se achica a 240 px de ancho como máximo
-# y se le quita el blanco de adentro (letras de Pilsen, «Original» de Coors, líneas del águila de Imperial): en reposo
-# la página pinta el logo de un solo color y así esos detalles se siguen leyendo; al pasar el mouse vuelve a su color
-# sobre una placa hueso, que se ve por esos huecos igual que el blanco original. Se puede correr las veces que sea.
+# Cada img/marcas/<marca>.png (fondo transparente) se recorta a lo que se ve y se achica a 240 px de ancho como máximo.
+# El logo no se toca: se muestra con sus colores originales (en oscuro, sobre una placa hueso). Se puede correr las veces que sea.
 # Escribe <marca>.png y .webp, y img/marcas/marcas.js con el nombre y el tamaño en pantalla de cada logo.
 NOMBRES = {'imperial': 'Imperial', 'pilsen': 'Pilsen', 'bavaria': 'Bavaria', 'heineken': 'Heineken',
            'corona': 'Corona', 'sol': 'Sol', 'coors': 'Coors'}
@@ -68,32 +66,11 @@ MAX_W = 240
 AREA, ALTO, ANCHO = 4400, 44, 130
 marcas = {}
 mdir = out / 'marcas'
-def blanco(r, g, b): return min(r, g, b) > 200 and max(r, g, b) - min(r, g, b) < 40   # blanco o casi, sin color
-def quitar_blanco(im):
-    """Vuelve transparente el blanco que queda encerrado por el logo (con tinta a los cuatro lados): las letras de
-    Pilsen, «Original» de Coors. El blanco que da hacia afuera (la P de Pilsen se sale del rectángulo) se queda."""
-    w, h = im.size; px = im.load()
-    tinta = [[px[x, y][3] > 128 and not blanco(*px[x, y][:3]) for x in range(w)] for y in range(h)]
-    def antes(seq):                      # ¿hay tinta antes de cada posición?
-        out, vista = [], False
-        for t in seq: out.append(vista); vista = vista or t
-        return out
-    izq = [antes(f) for f in tinta]; der = [antes(f[::-1])[::-1] for f in tinta]
-    cols = [[tinta[y][x] for y in range(h)] for x in range(w)]
-    arr = [antes(c) for c in cols]; aba = [antes(c[::-1])[::-1] for c in cols]
-    for y in range(h):
-        for x in range(w):
-            r, g, b, a = px[x, y]
-            if a and blanco(r, g, b) and izq[y][x] and der[y][x] and arr[x][y] and aba[x][y]:
-                px[x, y] = (r, g, b, min(a, round(255 * max(0, 1 - (min(r, g, b) - 200) / 40))))
-    return im
 for f in sorted(mdir.glob('*.png')):
     im = Image.open(f).convert('RGBA')
     im = im.crop(im.getchannel('A').getbbox())
     if im.width > MAX_W:
         im = im.resize((MAX_W, round(im.height * MAX_W / im.width)), Image.LANCZOS)
-    im = quitar_blanco(im)
-    im = im.crop(im.getchannel('A').getbbox())
     im.save(f, 'PNG', optimize=True)
     im.save(f.with_suffix('.webp'), 'WEBP', quality=90, method=6)
     r = im.width / im.height

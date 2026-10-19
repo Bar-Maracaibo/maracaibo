@@ -72,7 +72,7 @@ window.MCB.ready.then(() => {
   // Nuestras cervezas (versión compacta, sin titular) justo arriba de Bebidas; CONFIG.cervezas vacío = no aparece
   const beerList = window.MARCAS ? window.MCB.cervezas() : [], bebidas = $('bebidas');
   if (beerList.length && bebidas) bebidas.insertAdjacentHTML('beforebegin', `<section class="cervezas cervezas-compacta" id="cervezas" aria-label="Nuestras cervezas">
-      <div class="marcas"><div class="marcas-view"><div class="marcas-track">${window.MCB.marcasTrack(beerList)}</div></div></div></section>`);
+      <div class="marcas"><div class="marcas-view" tabindex="0" role="region" aria-label="Logos de las cervezas"><div class="marcas-track">${window.MCB.marcasTrack(beerList)}</div></div></div></section>`);
   const beers = $('cervezas');
   track.innerHTML = SECCIONES.map(cat => `<a class="tab" href="#${cat.id}" data-tab="${cat.id}">${esc(cat.label)}</a>`).join('');
   const tabs = [...track.querySelectorAll('.tab')];

@@ -137,8 +137,7 @@ lista = [k for k in CFG.get('cervezas') or [] if k in MARCAS]
 for k in CFG.get('cervezas') or []:
     if k not in MARCAS: print('Aviso: config.js menciona una cerveza sin logo en img/marcas/:', k)
 def juego(dup):
-    foco = '' if dup else ' tabindex="0"'
-    lis = ''.join(f'<li class="marca"{foco}><picture><source type="image/webp" srcset="img/marcas/{k}.webp">'
+    lis = ''.join(f'<li class="marca"><picture><source type="image/webp" srcset="img/marcas/{k}.webp">'
                   f'<img src="img/marcas/{k}.png" alt="{"" if dup else esc(MARCAS[k]["n"])}" width="{MARCAS[k]["w"]}" height="{MARCAS[k]["h"]}" loading="lazy" decoding="async"></picture></li>'
                   for k in lista)
     oculto = ' aria-hidden="true"' if dup else ''
@@ -151,7 +150,7 @@ block = ('<!-- CERVEZAS:inicio (lo genera herramientas/generar-seo.py desde conf
          '        <h2 id="cervezas-title" class="display h2">Nuestras <em>cervezas.</em></h2>\n'
          '      </header>\n'
          '    </div>\n'
-         f'    <div class="marcas"><div class="marcas-view"><div class="marcas-track">{juego(False)}{juego(True)}</div></div></div>\n'
+         f'    <div class="marcas"><div class="marcas-view" tabindex="0" role="region" aria-label="Logos de las cervezas"><div class="marcas-track">{juego(False)}{juego(True)}</div></div></div>\n'
          '  </section>\n'
          '  <!-- CERVEZAS:fin -->')
 f = root / 'index.html'; html = f.read_text(encoding='utf-8')

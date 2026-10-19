@@ -3,7 +3,7 @@
    - CSS, JS, fuentes e imágenes: stale-while-revalidate (sale al instante de la copia y se actualiza por detrás).
    - Sin señal, si falta una foto grande, se usa su versión de 480 px.
    Al publicar cambios grandes, subir VERSION para que los celulares descarten la copia vieja. */
-const VERSION = 'maracaibo-v4';
+const VERSION = 'maracaibo-v5';
 self.window = self;                       // img/imagenes.js y img/marcas/marcas.js escriben en window
 importScripts('img/imagenes.js', 'img/marcas/marcas.js');
 

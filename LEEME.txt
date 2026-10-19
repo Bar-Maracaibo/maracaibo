@@ -59,14 +59,14 @@ Si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa 
 
 NUESTRAS CERVEZAS (carrusel de logos)
 Franja de logos que pasan solos en la portada (entre «Lo que más se pide» y «La ronda») y, más chica y sin titular,
-en la carta justo arriba de Bebidas. En reposo los logos van de un solo color; al pasar el mouse, tocarlos o
-llegar con el teclado salen a color. Se detiene al pasar el mouse; con «reducir movimiento» queda quieta.
+en la carta justo arriba de Bebidas. Los logos van con sus colores originales, sin modificar (en oscuro, sobre una
+placa clara). Se detiene al pasar el mouse o al enfocarla con el teclado; con «reducir movimiento» queda quieta.
 Qué marcas salen y en qué orden: config.js →  "cervezas": ["imperial","pilsen","bavaria",...]
   (cada nombre es el de su logo en img/marcas/, sin .png; [] = el carrusel no aparece).
 - Quitar una marca: borrarla de la lista en config.js.
 - Agregar una marca:
   1. Poner el logo en img/marcas/ como PNG con fondo transparente, nombre en minúsculas y sin espacios
-     (por ejemplo img/marcas/rock-ice.png). Cuanto más grande y limpio, mejor: el script lo achica.
+     (por ejemplo img/marcas/rock-ice.png), el logo oficial sin modificar. Cuanto más grande, mejor: el script lo achica.
   2. Correr  python herramientas/optimizar-imagenes.py marcas   (solo los logos; tarda segundos). Lo recorta,
      lo deja de 240 px de ancho como máximo, crea el .webp y lo anota en img/marcas/marcas.js.
      Si la marca no se llama como el archivo con mayúscula inicial («Rock-ice»), poner el nombre correcto en
@@ -117,7 +117,7 @@ Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se
 
 SIN SEÑAL (service worker)
 La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
-subir el número de VERSION al inicio de sw.js (hoy maracaibo-v4 → maracaibo-v5) para que los celulares actualicen.
+subir el número de VERSION al inicio de sw.js (hoy maracaibo-v5 → maracaibo-v6) para que los celulares actualicen.
 
 PUBLICAR EN GITHUB PAGES
 Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).
