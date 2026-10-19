@@ -125,3 +125,36 @@ for page, data in paginas.items():
         html = html.replace('</head>', block + '\n</head>', 1)
     f.write_text(html, encoding='utf-8')
     print(page, 'JSON-LD:', len(json.dumps(data, ensure_ascii=False)) // 1024, 'KB')
+
+# ---------- Carrusel «Nuestras cervezas» en index.html ----------
+# Se escribe en el HTML (entre <!-- CERVEZAS:inicio --> y <!-- CERVEZAS:fin -->) para que se vea y se mueva sin
+# JavaScript. Marcas de config.js ("cervezas") con logo en img/marcas/ (marcas.js lo genera optimizar-imagenes.py).
+# Misma estructura que marcasTrack() en comun.js, que lo rehace si config.js cambió después de correr este script.
+def esc(s): return str(s).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+mjs = root / 'img' / 'marcas' / 'marcas.js'
+MARCAS = json.loads(re.search(r'window\.MARCAS\s*=\s*(.*);\s*$', mjs.read_text(encoding='utf-8'), re.S).group(1)) if mjs.exists() else {}
+lista = [k for k in CFG.get('cervezas') or [] if k in MARCAS]
+for k in CFG.get('cervezas') or []:
+    if k not in MARCAS: print('Aviso: config.js menciona una cerveza sin logo en img/marcas/:', k)
+def juego(dup):
+    foco = '' if dup else ' tabindex="0"'
+    lis = ''.join(f'<li class="marca"{foco}><picture><source type="image/webp" srcset="img/marcas/{k}.webp">'
+                  f'<img src="img/marcas/{k}.png" alt="{"" if dup else esc(MARCAS[k]["n"])}" width="{MARCAS[k]["w"]}" height="{MARCAS[k]["h"]}" loading="lazy" decoding="async"></picture></li>'
+                  for k in lista)
+    oculto = ' aria-hidden="true"' if dup else ''
+    return f'<ul class="marcas-set"{oculto}>{lis}</ul>'
+block = ('<!-- CERVEZAS:inicio (lo genera herramientas/generar-seo.py desde config.js; no editar a mano) -->\n'
+         f'  <section class="cervezas" id="cervezas" aria-labelledby="cervezas-title" data-marcas="{",".join(lista)}"{"" if lista else " hidden"}>\n'
+         '    <div class="frame">\n'
+         '      <header class="head">\n'
+         '        <p class="kicker">En la barra</p>\n'
+         '        <h2 id="cervezas-title" class="display h2">Nuestras <em>cervezas.</em></h2>\n'
+         '      </header>\n'
+         '    </div>\n'
+         f'    <div class="marcas"><div class="marcas-view"><div class="marcas-track">{juego(False)}{juego(True)}</div></div></div>\n'
+         '  </section>\n'
+         '  <!-- CERVEZAS:fin -->')
+f = root / 'index.html'; html = f.read_text(encoding='utf-8')
+html, n = re.subn(r'<!-- CERVEZAS:inicio.*?<!-- CERVEZAS:fin -->', lambda m: block, html, flags=re.S)
+if n: f.write_text(html, encoding='utf-8'); print('index.html cervezas:', ', '.join(lista) or '(ninguna: no aparece)')
+else: print('Aviso: index.html no tiene los comentarios CERVEZAS:inicio / CERVEZAS:fin')

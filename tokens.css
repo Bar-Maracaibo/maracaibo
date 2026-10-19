@@ -38,6 +38,8 @@
   --luz:#f7c948;--luz-borde:#7a5600;--luz-rayo:#b57c00;--luz-brillo:rgba(247,201,72,.75); /* bombillo encendido */
   --logo:var(--tinta);      /* logo monocromo: hueso en oscuro */
   --off-tinta:#7d7f72;      /* texto de controles deshabilitados · 3.6:1 sobre --ctrl */
+  --marca-mono:brightness(0) invert(94%) sepia(9%);   /* logos de cerveza en reposo: hueso */
+  --marca-placa:#f2f0e7;    /* al pasar: logo a color sobre placa hueso (Imperial y Corona son oscuros) */
   color-scheme:dark;
 }
 /* ---------- Colores: clara ---------- */
@@ -57,6 +59,8 @@
     --mapa:saturate(.6) contrast(.95);
     --logo:var(--musgo);
     --off-tinta:#6f7165;
+    --marca-mono:brightness(0) invert(9%);   /* tinta */
+    --marca-placa:transparent;
     color-scheme:light;
   }
 }
@@ -69,6 +73,7 @@
   --sombra:rgba(40,38,30,.18);
   --mapa:saturate(.6) contrast(.95);
   --logo:var(--musgo);--off-tinta:#6f7165;
+  --marca-mono:brightness(0) invert(9%);--marca-placa:transparent;
   color-scheme:light;
 }
 
@@ -102,4 +107,30 @@
   --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px;--s8:64px;
   /* radios */
   --r-sm:12px;--r:20px;--r-lg:24px;--r-pill:999px;
+}
+
+/* ---------- Carrusel «Nuestras cervezas» (index.html y menu.html) ----------
+   Franja de borde a borde; los logos pasan solos en vuelta infinita solo con CSS: dos juegos iguales y
+   translateX(-50%) = exactamente un juego. Se pausa al pasar el mouse o con el foco adentro.
+   En reposo, un solo color (--marca-mono); al pasar, tocar o enfocar, el color original.
+   Con «reducir movimiento»: quieta, centrada y se desliza con el dedo. */
+.marcas{border-block:1px solid var(--linea);padding-block:14px}
+.marcas-view{--px:10px;overflow:hidden;padding-block:10px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marcas-track{display:flex;width:max-content;animation:marcas 30s linear infinite}
+.marcas-view:hover .marcas-track,.marcas-view:focus-within .marcas-track{animation-play-state:paused}
+@keyframes marcas{to{transform:translateX(-50%)}}
+/* 48 px entre logos: el hueco del flex más el relleno de la placa de cada lado */
+.marcas-set{display:flex;align-items:center;gap:calc(48px - 2 * var(--px));margin:0;padding:0 calc(48px - 2 * var(--px)) 0 0;list-style:none}
+.marca{display:flex;align-items:center;padding:8px var(--px);border-radius:var(--r-sm);transition:background-color .25s var(--ease)}
+.marca img{display:block;max-width:none;filter:var(--marca-mono);transition:filter .25s var(--ease)}
+.marca:hover,.marca:focus,.marca:active{background:var(--marca-placa)}
+.marca:hover img,.marca:focus img,.marca:active img{filter:none}
+@media (prefers-reduced-motion:reduce){
+  .marcas-view{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+  .marcas-view::-webkit-scrollbar{display:none}
+  .marcas-track{animation:none;margin-inline:auto}
+  .marcas-set{padding-inline:var(--gutter)}
+  .marcas-set[aria-hidden]{display:none}
 }

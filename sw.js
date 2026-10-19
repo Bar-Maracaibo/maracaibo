@@ -3,15 +3,15 @@
    - CSS, JS, fuentes e imágenes: stale-while-revalidate (sale al instante de la copia y se actualiza por detrás).
    - Sin señal, si falta una foto grande, se usa su versión de 480 px.
    Al publicar cambios grandes, subir VERSION para que los celulares descarten la copia vieja. */
-const VERSION = 'maracaibo-v3';
-self.window = self;                       // img/imagenes.js escribe en window.IMAGENES
-importScripts('img/imagenes.js');
+const VERSION = 'maracaibo-v4';
+self.window = self;                       // img/imagenes.js y img/marcas/marcas.js escriben en window
+importScripts('img/imagenes.js', 'img/marcas/marcas.js');
 
 const BASE = ['./', 'index.html', 'menu.html', 'tokens.css', 'experiencia.css', 'carta.css',
   'config.js', 'menu-datos.js', 'comun.js', 'experiencia.js', 'carta.js', 'img/imagenes.js',
   'fuentes/instrument-serif-latin.woff2', 'fuentes/instrument-serif-latin-ext.woff2',
   'fuentes/instrument-serif-italic-latin.woff2', 'fuentes/instrument-serif-italic-latin-ext.woff2',
-  'logo-mono.png', 'favicon.png', 'icono-192.png', 'manifest.webmanifest'];
+  'logo-mono.png', 'favicon.png', 'icono-192.png', 'manifest.webmanifest', 'img/marcas/marcas.js'];
 // la versión más chica de cada foto, en AVIF y WebP (el navegador usa la que soporte); incluye las fotos de platos
 // ("img" en menu-datos.js, p. ej. tacos): la miniatura de la carta usa esa misma versión
 const FOTOS = Object.entries(self.IMAGENES || {}).flatMap(([stem, m]) =>
@@ -20,7 +20,9 @@ const FOTOS = Object.entries(self.IMAGENES || {}).flatMap(([stem, m]) =>
   .concat(['portada-rotulo', 'bar-ambiente-ancho'].flatMap(stem => {
     const m = (self.IMAGENES || {})[stem]; const w = m && m.w[Math.min(1, m.w.length - 1)];
     return m ? [m.avif && `img/${stem}-${w}.avif`, `img/${stem}-${w}.webp`].filter(Boolean) : [];
-  }));
+  }))
+  // logos del carrusel «Nuestras cervezas» (WebP; el PNG es solo el respaldo del <picture>)
+  .concat(Object.keys(self.MARCAS || {}).map(k => `img/marcas/${k}.webp`));
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE).then(() => Promise.allSettled(FOTOS.map(f => c.add(f))))).then(() => self.skipWaiting()));

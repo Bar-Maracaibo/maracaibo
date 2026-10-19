@@ -22,6 +22,7 @@
 <link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
 <link rel="apple-touch-icon" href="logo-maracaibo-web.png">
 <link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Maracaibo">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,6 +33,7 @@
 <link rel="stylesheet" href="experiencia.css">
 <script src="config.js" defer></script>
 <script src="menu-datos.js" defer></script>
+<script src="img/marcas/marcas.js" defer></script>
 <script src="comun.js" defer></script>
 <script src="experiencia.js" defer></script>
 <!-- JSON-LD:inicio (lo genera herramientas/generar-seo.py; no editar a mano) -->
@@ -143,6 +145,19 @@
       </ul>
     </div>
   </section>
+
+  <!-- 2b · Nuestras cervezas: logos de img/marcas/ según config.js ("cervezas"); [] = no aparece -->
+  <!-- CERVEZAS:inicio (lo genera herramientas/generar-seo.py desde config.js; no editar a mano) -->
+  <section class="cervezas" id="cervezas" aria-labelledby="cervezas-title" data-marcas="imperial,pilsen,bavaria,heineken,corona,sol,coors">
+    <div class="frame">
+      <header class="head">
+        <p class="kicker">En la barra</p>
+        <h2 id="cervezas-title" class="display h2">Nuestras <em>cervezas.</em></h2>
+      </header>
+    </div>
+    <div class="marcas"><div class="marcas-view"><div class="marcas-track"><ul class="marcas-set"><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/imperial.webp"><img src="img/marcas/imperial.png" alt="Imperial" width="118" height="37" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/pilsen.webp"><img src="img/marcas/pilsen.png" alt="Pilsen" width="64" height="44" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/bavaria.webp"><img src="img/marcas/bavaria.png" alt="Bavaria" width="115" height="38" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/heineken.webp"><img src="img/marcas/heineken.png" alt="Heineken" width="130" height="18" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/corona.webp"><img src="img/marcas/corona.png" alt="Corona" width="81" height="44" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/sol.webp"><img src="img/marcas/sol.png" alt="Sol" width="44" height="44" loading="lazy" decoding="async"></picture></li><li class="marca" tabindex="0"><picture><source type="image/webp" srcset="img/marcas/coors.webp"><img src="img/marcas/coors.png" alt="Coors" width="67" height="44" loading="lazy" decoding="async"></picture></li></ul><ul class="marcas-set" aria-hidden="true"><li class="marca"><picture><source type="image/webp" srcset="img/marcas/imperial.webp"><img src="img/marcas/imperial.png" alt="" width="118" height="37" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/pilsen.webp"><img src="img/marcas/pilsen.png" alt="" width="64" height="44" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/bavaria.webp"><img src="img/marcas/bavaria.png" alt="" width="115" height="38" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/heineken.webp"><img src="img/marcas/heineken.png" alt="" width="130" height="18" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/corona.webp"><img src="img/marcas/corona.png" alt="" width="81" height="44" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/sol.webp"><img src="img/marcas/sol.png" alt="" width="44" height="44" loading="lazy" decoding="async"></picture></li><li class="marca"><picture><source type="image/webp" srcset="img/marcas/coors.webp"><img src="img/marcas/coors.png" alt="" width="67" height="44" loading="lazy" decoding="async"></picture></li></ul></div></div></div>
+  </section>
+  <!-- CERVEZAS:fin -->
 
   <!-- 3 · Partidos de la semana: CONFIG.partidos o la hoja de Google; oculto si no hay -->
   <section class="matches" id="partidos" aria-labelledby="matches-title" hidden>

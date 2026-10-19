@@ -196,7 +196,19 @@
     return `<picture>${m.avif ? `<source type="image/avif" srcset="${set('avif')}" sizes="${sizes}">` : ''}<source type="image/webp" srcset="${set('webp')}" sizes="${sizes}"><img src="${fb}" srcset="${set('jpg')}" sizes="${sizes}" alt="${esc(alt)}"${extra}></picture>`;
   };
 
-  window.MCB = { pic, ready, parseCSV, CONFIG, MENU, SECCIONES, ADICIONALES, extrasText, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
+  /* ---------- Carrusel «Nuestras cervezas»: CONFIG.cervezas + img/marcas/marcas.js ----------
+     Dos juegos iguales de logos: el segundo (aria-hidden, sin alt) completa la vuelta infinita del CSS.
+     Misma estructura que escribe herramientas/generar-seo.py en index.html (para cuando no hay JavaScript). */
+  const cervezas = () => (CONFIG.cervezas || []).filter(k => {
+    if ((window.MARCAS || {})[k]) return true;
+    console.warn('config.js menciona una cerveza sin logo en img/marcas/:', k); return false;
+  });
+  const marcasTrack = list => [false, true].map(dup => `<ul class="marcas-set"${dup ? ' aria-hidden="true"' : ''}>${list.map(k => {
+    const m = window.MARCAS[k];
+    return `<li class="marca"${dup ? '' : ' tabindex="0"'}><picture><source type="image/webp" srcset="img/marcas/${k}.webp"><img src="img/marcas/${k}.png" alt="${dup ? '' : esc(m.n)}" width="${m.w}" height="${m.h}" loading="lazy" decoding="async"></picture></li>`;
+  }).join('')}</ul>`).join('');
+
+  window.MCB = { pic, cervezas, marcasTrack, ready, parseCSV, CONFIG, MENU, SECCIONES, ADICIONALES, extrasText, words, totalItems, money, priceText, catFrom, esc, normalize, reduce, hora12, horarioTexto, crParts, priceList, fromPrice, sizesText, cost, find, wa, fill, updateStatus, initTheme, say };
 
   /* ---------- Sin señal: service worker (sw.js) ---------- */
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)))

@@ -69,6 +69,11 @@ window.MCB.ready.then(() => {
       </div>
     </section>`;
   }).join('');
+  // Nuestras cervezas (versión compacta, sin titular) justo arriba de Bebidas; CONFIG.cervezas vacío = no aparece
+  const beerList = window.MARCAS ? window.MCB.cervezas() : [], bebidas = $('bebidas');
+  if (beerList.length && bebidas) bebidas.insertAdjacentHTML('beforebegin', `<section class="cervezas cervezas-compacta" id="cervezas" aria-label="Nuestras cervezas">
+      <div class="marcas"><div class="marcas-view"><div class="marcas-track">${window.MCB.marcasTrack(beerList)}</div></div></div></section>`);
+  const beers = $('cervezas');
   track.innerHTML = SECCIONES.map(cat => `<a class="tab" href="#${cat.id}" data-tab="${cat.id}">${esc(cat.label)}</a>`).join('');
   const tabs = [...track.querySelectorAll('.tab')];
   const cats = [...sections.querySelectorAll('.cat')];
@@ -140,6 +145,7 @@ window.MCB.ready.then(() => {
     });
     const active = q || f;
     extras.hidden = !extrasTxt || !!active;
+    if (beers) beers.hidden = !bebidas || bebidas.hidden;
     $('clearSearch').hidden = !q;
     $('empty').hidden = !active || total > 0;
     const what = [q && `«${search.value.trim()}»`, f && f.label.toLowerCase()].filter(Boolean).join(' en ');

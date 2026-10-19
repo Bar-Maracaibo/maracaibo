@@ -112,6 +112,9 @@ a,button,label{touch-action:manipulation}
 .status:empty{padding-top:0}
 .cat{padding-block:clamp(72px,9vw,120px);border-bottom:1px solid var(--linea-2)}
 .cat:last-child{border-bottom:0}
+/* Nuestras cervezas, compacta y sin titular, arriba de Bebidas (la franja está en tokens.css) */
+.cervezas-compacta{padding-top:clamp(40px,6vw,64px)}
+.cat:has(+ .cervezas-compacta){border-bottom:0}
 /* Adicionales: una nota compacta al final, sin foto */
 .extras{padding-block:28px 8px;font-size:.9375rem;color:var(--gris);text-wrap:pretty}
 .extras b{color:var(--tinta);font-weight:600}
@@ -259,7 +262,7 @@ body.has-order .footer{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px
 @media (prefers-contrast:more){:root{--linea:color-mix(in srgb,var(--tinta) 45%,transparent);--linea-2:color-mix(in srgb,var(--tinta) 28%,transparent)}.lede,.kicker,.dish small,.cat-note{color:var(--tinta)}}
 @media print{
   :root{--fondo:#fff;--sup:#fff;--tinta:#111;--gris:#555;--musgo:#4c5f2e}
-  .nav,.tabs,.search,.filters,.closing,.footer,.cat-photo,.add,.order-bar,.toast{display:none!important}
+  .nav,.tabs,.search,.filters,.closing,.footer,.cat-photo,.add,.order-bar,.toast,.cervezas,.thumb{display:none!important}
   .cat{break-inside:avoid;padding-block:24px}
   .cat-grid{grid-template-columns:1fr}
 }

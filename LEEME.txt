@@ -18,6 +18,7 @@ Páginas
 
 Imágenes y archivos generados (no editar a mano: se regeneran con los scripts de herramientas/)
 - img/: fotos optimizadas (AVIF, WebP y JPG de 480/800/1200 px) e img/imagenes.js.
+- img/marcas/: logos de cerveza del carrusel «Nuestras cervezas» (PNG y WebP) e img/marcas/marcas.js.
 - og-maracaibo.jpg (imagen al compartir el enlace), icono-192.png, icono-512.png, favicon.png.
 - menu-impreso.pdf (imprimir en casa) y menu-imprenta.pdf (imprenta).
 - Los datos para Google (JSON-LD) dentro de index.html y menu.html.
@@ -56,6 +57,24 @@ Ojo: «La ronda» (lista RONDA en experiencia.js) y el carrusel (data-item en in
 los que tienen tamaños llevan uno concreto entre paréntesis, igual que en "sizes": «Alitas (6 unid.)», «Ceviche (grande)».
 Si se cambia un nombre, cambiarlo también ahí (la consola del navegador avisa si alguno no existe).
 
+NUESTRAS CERVEZAS (carrusel de logos)
+Franja de logos que pasan solos en la portada (entre «Lo que más se pide» y «La ronda») y, más chica y sin titular,
+en la carta justo arriba de Bebidas. En reposo los logos van de un solo color; al pasar el mouse, tocarlos o
+llegar con el teclado salen a color. Se detiene al pasar el mouse; con «reducir movimiento» queda quieta.
+Qué marcas salen y en qué orden: config.js →  "cervezas": ["imperial","pilsen","bavaria",...]
+  (cada nombre es el de su logo en img/marcas/, sin .png; [] = el carrusel no aparece).
+- Quitar una marca: borrarla de la lista en config.js.
+- Agregar una marca:
+  1. Poner el logo en img/marcas/ como PNG con fondo transparente, nombre en minúsculas y sin espacios
+     (por ejemplo img/marcas/rock-ice.png). Cuanto más grande y limpio, mejor: el script lo achica.
+  2. Correr  python herramientas/optimizar-imagenes.py marcas   (solo los logos; tarda segundos). Lo recorta,
+     lo deja de 240 px de ancho como máximo, crea el .webp y lo anota en img/marcas/marcas.js.
+     Si la marca no se llama como el archivo con mayúscula inicial («Rock-ice»), poner el nombre correcto en
+     NOMBRES dentro de herramientas/optimizar-imagenes.py y volver a correrlo.
+  3. Agregar "rock-ice" a "cervezas" en config.js.
+  4. Correr  python herramientas/generar-seo.py  (escribe el carrusel en index.html para quien no tiene JavaScript;
+     con JavaScript la página ya toma la lista de config.js) y subir la VERSION de sw.js.
+
 HOJA DE GOOGLE (opcional, para cambiar precios y partidos sin tocar archivos)
 1. Crear una hoja de cálculo de Google con dos pestañas, con estos nombres exactos:
    carta     columnas: plato | tamaño | precio
@@ -68,10 +87,12 @@ Si la hoja falla o tarda más de 2 segundos, la página usa menu-datos.js y conf
 
 REGENERAR IMÁGENES, PDF Y DATOS PARA GOOGLE
 Desde esta carpeta, con Python 3 y Pillow 11 o más nuevo (y reportlab para el PDF):
-  python herramientas/optimizar-imagenes.py   → img/ (después de agregar o cambiar fotos .jpg)
+  python herramientas/optimizar-imagenes.py   → img/ (después de agregar o cambiar fotos .jpg) y los logos de img/marcas/
+  python herramientas/optimizar-imagenes.py marcas → solo los logos de cerveza
   python herramientas/generar-impreso.py       → menu-impreso.pdf, menu-imprenta.pdf y menu-folleto-a3.pdf
                                                  (necesita Microsoft Edge o Google Chrome instalado)
-  python herramientas/generar-seo.py           → og-maracaibo.jpg, íconos y JSON-LD en las dos páginas
+  python herramientas/generar-seo.py           → og-maracaibo.jpg, íconos, JSON-LD en las dos páginas y el carrusel
+                                                 de cervezas en index.html (según config.js)
 Instalar lo necesario una vez:  pip install pillow reportlab
 
 MENÚ IMPRESO
@@ -96,7 +117,7 @@ Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se
 
 SIN SEÑAL (service worker)
 La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
-subir el número de VERSION al inicio de sw.js (hoy maracaibo-v3 → maracaibo-v4) para que los celulares actualicen.
+subir el número de VERSION al inicio de sw.js (hoy maracaibo-v4 → maracaibo-v5) para que los celulares actualicen.
 
 PUBLICAR EN GITHUB PAGES
 Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).

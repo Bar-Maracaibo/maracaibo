@@ -173,6 +173,9 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 
 /* ---------- Encabezados de sección ---------- */
 .head{display:grid;gap:22px;margin-bottom:clamp(40px,5vw,68px)}
+/* Nuestras cervezas: la franja de logos está en tokens.css (la comparte la carta) */
+.cervezas{padding-bottom:var(--sec-sm)}
+.cervezas .head{margin-bottom:clamp(28px,3.5vw,44px)}
 .head-row{grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:28px 48px}
 
 /* ---------- Tarjetas y filas (ronda y reservas) ---------- */

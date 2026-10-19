@@ -133,6 +133,17 @@
       if (meta) meta.innerHTML = `${esc(it.cat.label)}${from != null ? ` · ${pre}<b>${money(from)}</b>` : ''}`;
     });
   }
+  /* ---------- Nuestras cervezas: viene escrito en el HTML (generar-seo.py); si config.js cambió después, se rehace ---------- */
+  const beers = $('cervezas');
+  if (beers && window.MARCAS) {
+    const list = window.MCB.cervezas();
+    if (beers.dataset.marcas !== list.join(',')) {
+      beers.querySelector('.marcas-track').innerHTML = window.MCB.marcasTrack(list);
+      beers.dataset.marcas = list.join(',');
+    }
+    beers.hidden = !list.length;
+  }
+
   const rail = $('rail'), prev = $('railPrev'), next = $('railNext');
   if (rail && prev && next) {
     const step = () => (rail.querySelector('li')?.offsetWidth || 300) + 20;

@@ -6,9 +6,10 @@ Para cada .jpg de la raíz crea img/<nombre>-<ancho>.avif, .webp y .jpg en 480, 
 (nunca más grande que la original) y escribe img/imagenes.json con los anchos de cada foto, que usan
 index.html (a mano) y la carta (carta.js) para armar los <picture>.
 También achica logo-maracaibo.png (el logo a color que usa el PDF).
-Las .jpg originales se quedan en la raíz: el PDF las usa a resolución completa."""
+Las .jpg originales se quedan en la raíz: el PDF las usa a resolución completa.
+Logos de cerveza: ver el final del archivo. Solo los logos (rápido):  python herramientas/optimizar-imagenes.py marcas"""
 from pathlib import Path
-import json
+import json, sys
 from PIL import Image, features
 
 try:                                    # Pillow viejo: el plugin agrega AVIF
@@ -23,8 +24,9 @@ AVIF = features.check('avif')
 if not AVIF:
     print('Aviso: este Pillow no tiene AVIF; se generan solo WebP y JPG.')
 
+SOLO_MARCAS = 'marcas' in sys.argv[1:]
 mapa = {}
-for f in sorted(root.glob('*.jpg')):
+for f in ([] if SOLO_MARCAS else sorted(root.glob('*.jpg'))):
     if f.stem.startswith('og-'): continue        # og-maracaibo.jpg es generada (generar-seo.py), no es una foto
     im = Image.open(f).convert('RGB')
     anchos = sorted({min(w, im.width) for w in ANCHOS})
@@ -39,9 +41,11 @@ for f in sorted(root.glob('*.jpg')):
     mapa[f.stem] = {'w': anchos, 'ratio': round(im.width / im.height, 4), 'avif': AVIF}
     print(f'{f.name}: {", ".join(map(str, anchos))} px')
 
-(out / 'imagenes.json').write_text(json.dumps(mapa, indent=1), encoding='utf-8')
-(out / 'imagenes.js').write_text('/* Generado por herramientas/optimizar-imagenes.py: anchos disponibles de cada foto. */\n'
-                                 'window.IMAGENES = ' + json.dumps(mapa) + ';\n', encoding='utf-8')
+if not SOLO_MARCAS:
+    (out / 'imagenes.json').write_text(json.dumps(mapa, indent=1), encoding='utf-8')
+    (out / 'imagenes.js').write_text('/* Generado por herramientas/optimizar-imagenes.py: anchos disponibles de cada foto. */\n'
+                                     'window.IMAGENES = ' + json.dumps(mapa) + ';\n', encoding='utf-8')
+    print('Listo:', len(mapa), 'fotos en img/')
 
 # Logo a color: 1206 px y 1 MB → 800 px, paleta optimizada (lo usa el PDF, que lo vuelve transparente)
 logo = root / 'logo-maracaibo.png'
@@ -50,4 +54,52 @@ if im.width > 800:
     im = im.resize((800, round(im.height * 800 / im.width)), Image.LANCZOS)
     im.quantize(colors=256, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).save(logo, optimize=True)
     print('logo-maracaibo.png optimizado:', logo.stat().st_size // 1024, 'KB')
-print('Listo:', len(mapa), 'fotos en img/')
+
+# ---------- Logos de cerveza (img/marcas/) ----------
+# Cada img/marcas/<marca>.png (fondo transparente) se recorta a lo que se ve, se achica a 240 px de ancho como máximo
+# y se le quita el blanco de adentro (letras de Pilsen, «Original» de Coors, líneas del águila de Imperial): en reposo
+# la página pinta el logo de un solo color y así esos detalles se siguen leyendo; al pasar el mouse vuelve a su color
+# sobre una placa hueso, que se ve por esos huecos igual que el blanco original. Se puede correr las veces que sea.
+# Escribe <marca>.png y .webp, y img/marcas/marcas.js con el nombre y el tamaño en pantalla de cada logo.
+NOMBRES = {'imperial': 'Imperial', 'pilsen': 'Pilsen', 'bavaria': 'Bavaria', 'heineken': 'Heineken',
+           'corona': 'Corona', 'sol': 'Sol', 'coors': 'Coors'}
+MAX_W = 240
+# tamaño en pantalla: misma superficie para todos (que ninguno grite más que otro), máximo 44 px de alto y 130 de ancho
+AREA, ALTO, ANCHO = 4400, 44, 130
+marcas = {}
+mdir = out / 'marcas'
+def blanco(r, g, b): return min(r, g, b) > 200 and max(r, g, b) - min(r, g, b) < 40   # blanco o casi, sin color
+def quitar_blanco(im):
+    """Vuelve transparente el blanco que queda encerrado por el logo (con tinta a los cuatro lados): las letras de
+    Pilsen, «Original» de Coors. El blanco que da hacia afuera (la P de Pilsen se sale del rectángulo) se queda."""
+    w, h = im.size; px = im.load()
+    tinta = [[px[x, y][3] > 128 and not blanco(*px[x, y][:3]) for x in range(w)] for y in range(h)]
+    def antes(seq):                      # ¿hay tinta antes de cada posición?
+        out, vista = [], False
+        for t in seq: out.append(vista); vista = vista or t
+        return out
+    izq = [antes(f) for f in tinta]; der = [antes(f[::-1])[::-1] for f in tinta]
+    cols = [[tinta[y][x] for y in range(h)] for x in range(w)]
+    arr = [antes(c) for c in cols]; aba = [antes(c[::-1])[::-1] for c in cols]
+    for y in range(h):
+        for x in range(w):
+            r, g, b, a = px[x, y]
+            if a and blanco(r, g, b) and izq[y][x] and der[y][x] and arr[x][y] and aba[x][y]:
+                px[x, y] = (r, g, b, min(a, round(255 * max(0, 1 - (min(r, g, b) - 200) / 40))))
+    return im
+for f in sorted(mdir.glob('*.png')):
+    im = Image.open(f).convert('RGBA')
+    im = im.crop(im.getchannel('A').getbbox())
+    if im.width > MAX_W:
+        im = im.resize((MAX_W, round(im.height * MAX_W / im.width)), Image.LANCZOS)
+    im = quitar_blanco(im)
+    im = im.crop(im.getchannel('A').getbbox())
+    im.save(f, 'PNG', optimize=True)
+    im.save(f.with_suffix('.webp'), 'WEBP', quality=90, method=6)
+    r = im.width / im.height
+    h = min(ALTO, (AREA / r) ** .5, ANCHO / r)
+    marcas[f.stem] = {'n': NOMBRES.get(f.stem, f.stem.capitalize()), 'w': round(h * r), 'h': round(h)}
+    print(f'marcas/{f.name}: {im.width}×{im.height} px, en pantalla {marcas[f.stem]["w"]}×{marcas[f.stem]["h"]}')
+if marcas:
+    (mdir / 'marcas.js').write_text('/* Generado por herramientas/optimizar-imagenes.py: logos de img/marcas/ (nombre y tamaño en pantalla). */\n'
+                                    'window.MARCAS = ' + json.dumps(marcas, ensure_ascii=False) + ';\n', encoding='utf-8')

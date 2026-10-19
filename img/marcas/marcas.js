@@ -1,0 +1,2 @@
+/* Generado por herramientas/optimizar-imagenes.py: logos de img/marcas/ (nombre y tamaño en pantalla). */
+window.MARCAS = {"bavaria": {"n": "Bavaria", "w": 115, "h": 38}, "coors": {"n": "Coors", "w": 67, "h": 44}, "corona": {"n": "Corona", "w": 81, "h": 44}, "heineken": {"n": "Heineken", "w": 130, "h": 18}, "imperial": {"n": "Imperial", "w": 118, "h": 37}, "pilsen": {"n": "Pilsen", "w": 64, "h": 44}, "sol": {"n": "Sol", "w": 44, "h": 44}};
