@@ -1,4 +1,4 @@
-/* Fuente única de la carta de Bar Maracaibo (index.html, menu.html, herramientas/generar-menu.py y generar-seo.py).
+/* Fuente única de la carta de Bar Maracaibo (index.html, menu.html, herramientas/generar-impreso.py y generar-seo.py).
    Transcrita de la carta física del bar (fotos del 18-10-2026) + cambios indicados por la dueña.
    Formato: JSON dentro de window.MENU; las líneas que empiezan con // son comentarios (los generadores las ignoran).
    Cada apartado: id, label (pestaña), title, img (foto; sin img = sin foto), note (opcional), items.

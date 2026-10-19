@@ -1,4 +1,4 @@
-/* Datos del negocio que usan index.html, menu.html y el PDF (herramientas/generar-menu.py).
+/* Datos del negocio que usan index.html, menu.html y el PDF (herramientas/generar-impreso.py).
    Formato: JSON dentro de window.CONFIG; las líneas que empiezan con // son comentarios.
    Lo que quede vacío ("" , null o []) no se muestra en la página. */
 window.CONFIG = {

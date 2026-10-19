@@ -1,0 +1,333 @@
+<!doctype html>
+<!-- Carta impresa de Bar Maracaibo: 4 páginas A4. La genera herramientas/generar-impreso.py (no se publica).
+     Lee la carta de ../menu-datos.js y los datos del negocio de ../config.js.
+     ?modo=a4        4 páginas A4 (menu-impreso.pdf)
+     ?modo=imprenta  4 páginas de 216 × 303 mm: 3 mm de sangrado y marcas de corte (menu-imprenta.pdf)
+     ?modo=a3        2 pliegos A3 horizontales para doblar, con sangrado y marcas (menu-folleto-a3.pdf):
+                     cara exterior página 4 | página 1, cara interior página 2 | página 3
+     Al terminar escribe en <html data-check="..."> cuántas páginas hay y si algo se sale del marco. -->
+<html lang="es"><head><meta charset="utf-8">
+<title>Bar Maracaibo · La carta</title>
+<script src="../config.js"></script>
+<script src="../menu-datos.js"></script>
+<script src="../img/imagenes.js"></script>
+<style>
+/* Archivo en sus versiones estáticas (fuentes-pdf/): así va incrustada como TrueType y no como Type 3 */
+@font-face{font-family:Arch;font-weight:300;src:url(fuentes-pdf/Archivo-Light.ttf)}
+@font-face{font-family:Arch;font-weight:400;src:url(fuentes-pdf/Archivo-Regular.ttf)}
+@font-face{font-family:Arch;font-weight:400;font-style:italic;src:url(fuentes-pdf/Archivo-Italic.ttf)}
+@font-face{font-family:Arch;font-weight:500 600;src:url(fuentes-pdf/Archivo-SemiBold.ttf)}
+@font-face{font-family:Arch;font-weight:700 900;src:url(fuentes-pdf/Archivo-Bold.ttf)}
+@font-face{font-family:ISerif;src:url(../fuentes/instrument-serif-latin.woff2) format("woff2")}
+@font-face{font-family:ISerif;src:url(../fuentes/instrument-serif-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:ISerif;font-style:italic;src:url(../fuentes/instrument-serif-italic-latin.woff2) format("woff2")}
+@font-face{font-family:ISerif;font-style:italic;src:url(../fuentes/instrument-serif-italic-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@page{size:A4;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+:root{--noche:#0e0f0c;--hueso:#f2efe6;--gris:#a29f93;--musgo:#a9bd7f;--musgo-o:#4c5f2e;--linea:rgba(242,239,230,.16)}
+body{background:#55534d;font-family:Arch,sans-serif;color:var(--hueso)}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;margin:0 auto 20px;page-break-after:always;
+ background:radial-gradient(120% 80% at 50% 0%,#1a1c17 0%,var(--noche) 60%);}
+/* textura de pizarra */
+.page:before{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:screen;pointer-events:none;
+ background-image:url(textura-pizarra.png);background-size:300px 300px}
+@media print{body{background:none}.page,.sheet{margin:0}}
+/* la página terminada (210 × 297 mm); en imprenta y A3 queda corrida 3 mm por el sangrado */
+.trim{position:absolute;top:0;left:0;width:210mm;height:297mm}
+/* marco doble */
+.frame{position:absolute;inset:7mm;border:.25mm solid var(--musgo)}
+.frame:after{content:"";position:absolute;inset:1.6mm;border:.2mm solid rgba(169,189,127,.45)}
+.corner{position:absolute;width:14mm;height:14mm;color:var(--musgo)}
+.corner svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.3}
+.c1{top:5mm;left:5mm}.c2{top:5mm;right:5mm;transform:scaleX(-1)}.c3{bottom:5mm;left:5mm;transform:scaleY(-1)}.c4{bottom:5mm;right:5mm;transform:scale(-1,-1)}
+.inner{position:absolute;inset:14mm 16mm;display:flex;flex-direction:column}
+/* dibujos de línea */
+.doodle{position:absolute;color:var(--hueso);opacity:.13;pointer-events:none}
+.doodle svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+/* cabecera */
+.head{text-align:center;position:relative}
+.head .tools{display:flex;justify-content:center;align-items:center;gap:7mm}
+.head .tools .ic{width:13mm;height:20mm;color:var(--musgo)}
+.head .tools .ic svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.head h1{font:400 50pt/1 ISerif;letter-spacing:.2em;padding-left:.2em;text-transform:uppercase}
+.head h1 .dot{color:var(--musgo);font-size:.5em;vertical-align:.35em;margin:0 .15em;letter-spacing:0}
+.head .sub{font:600 8.5pt/1 Arch;letter-spacing:.42em;text-transform:uppercase;color:var(--musgo);margin-top:2mm}
+.head .meta{font:italic 400 11pt/1 ISerif;color:var(--gris);margin-top:3mm}
+.rule{height:.3mm;background:var(--hueso);opacity:.85;width:118mm;margin:5mm auto 0}
+.rule.s{width:60mm;opacity:.4}
+/* secciones */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 10mm;margin-top:6mm}
+.sec{break-inside:avoid;margin-bottom:5.5mm}
+.sec-h{display:flex;align-items:center;gap:3mm}
+.sec-h h2{font:400 15pt/1 ISerif;letter-spacing:.16em;text-transform:uppercase}
+.sec-h .tag{margin-left:auto;font:700 7pt/1 Arch;letter-spacing:.08em;color:var(--noche);background:var(--musgo);padding:1.3mm 2.4mm}
+.sec-u{width:16mm;height:.35mm;background:var(--musgo);margin:2mm 0 1.6mm}
+.sec-n{font:italic 400 10pt/1.2 ISerif;color:var(--gris);margin-bottom:1mm}
+.it{display:flex;align-items:baseline;gap:1.6mm;font-size:8.9pt;line-height:1.25;padding:.9mm 0;text-transform:uppercase;letter-spacing:.03em}
+.it .nm{max-width:64mm}
+.it .nm.wrap{white-space:normal}
+.it .ld{flex:1;border-bottom:.35mm dotted rgba(242,239,230,.45);transform:translateY(-.9mm);min-width:4mm}
+.it .p{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.it .p .c{color:var(--musgo);margin-right:.6mm}
+.d{display:block;font:italic 400 9pt/1.15 ISerif;color:var(--gris);text-transform:none;letter-spacing:0;margin:-0.4mm 0 .6mm}
+.sz{color:var(--musgo)}
+/* fotos enmarcadas */
+.ph{position:relative;border:.3mm solid var(--hueso);padding:1.3mm;background:var(--noche)}
+.ph i{display:block;height:100%;background:center/cover}
+.ph figcaption{position:absolute;left:50%;bottom:-3.2mm;transform:translateX(-50%);background:var(--noche);padding:.8mm 3mm;font:600 6.8pt/1 Arch;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;color:var(--musgo)}
+.favs{display:grid;grid-template-columns:repeat(3,1fr);gap:7mm;padding-top:4mm;margin-bottom:3mm}
+.favs .ph{height:31mm}
+.favs-h{text-align:center;font:600 7.5pt/1 Arch;letter-spacing:.4em;text-transform:uppercase;color:var(--gris);display:flex;align-items:center;gap:4mm;margin-top:auto}
+.favs-h:before,.favs-h:after{content:"";flex:1;height:.2mm;background:var(--linea)}
+.sidephoto{height:30mm;margin:1mm 0 6mm}
+/* barra */
+.bar{display:grid;grid-template-columns:44mm 1fr 1fr;gap:7mm;align-items:center;border-top:.3mm solid var(--linea);border-bottom:.3mm solid var(--linea);padding:5mm 0;margin-top:auto}
+.bar .art{height:40mm;color:var(--hueso)}
+.bar .art svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.promo{border:.3mm solid var(--musgo);padding:3.5mm;text-align:center;position:relative}
+.promo:after{content:"";position:absolute;inset:1mm;border:.2mm solid rgba(169,189,127,.4)}
+.promo .k{font:600 7pt/1 Arch;letter-spacing:.32em;color:var(--musgo)}
+.promo b{display:block;font:400 26pt/1 ISerif;margin:2mm 0 1mm}
+.promo span{font:italic 400 10pt/1 ISerif;color:var(--gris)}
+.promo .cs{font-family:Arch;font-style:normal;font-weight:400;font-size:.82em}
+.foot{display:flex;align-items:center;gap:5mm;padding-top:5mm;margin-top:auto;border-top:.3mm solid var(--linea)}
+.barbox{border:.3mm solid var(--linea);padding:4mm 5mm 2mm;margin-top:1mm}
+.barbox .art{height:20mm;color:var(--hueso);opacity:.85;margin-bottom:4mm}
+.barbox .art svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round}
+.barbox .promo{margin-top:4mm}
+.qr{display:flex;align-items:center;gap:3mm}
+.qr img{width:19mm;height:19mm;background:var(--hueso);padding:1.2mm}
+.qr b{display:block;font:400 12pt/1.05 ISerif;max-width:28mm}
+.qr span{display:block;font-size:7pt;color:var(--gris);margin-top:1.2mm;line-height:1.35;max-width:27mm}
+.foot .end{margin-left:auto;text-align:right}
+.foot .end b{font:400 15pt/1 ISerif;letter-spacing:.14em;text-transform:uppercase}
+.foot .end span{display:block;font-size:7pt;color:var(--gris);margin-top:1.6mm;line-height:1.5;white-space:nowrap}
+.pg{position:absolute;left:0;right:0;bottom:9.4mm;text-align:center;font:600 6pt/1 Arch;letter-spacing:.3em;color:var(--gris);text-transform:uppercase}
+.pg span{background:var(--noche);padding:0 3mm}
+</style><style>
+.it{font-size:10pt;padding:1.35mm 0}
+.d{font-size:10pt}
+.sec-h h2{font-size:17pt}
+.sec{margin-bottom:7mm}
+.sec-n{font-size:11pt}
+.cols{gap:0 12mm;margin-top:8mm}
+.ph-sec{height:38mm;margin:0 0 5mm}
+/* portada */
+.cover .inner{align-items:center;text-align:center}
+.cover .shot{width:132mm;height:165mm;margin-top:7mm}
+.cover h1{font:400 64pt/1 ISerif;letter-spacing:.22em;padding-left:.22em;text-transform:uppercase;margin-top:11mm}
+.cover .sub{font:600 9pt/1 Arch;letter-spacing:.42em;text-transform:uppercase;color:var(--musgo);margin-top:3mm}
+.cover .rule{width:60mm;margin:6mm auto 0}
+.cover .info{display:flex;gap:14mm;justify-content:center;margin-top:8mm;font:italic 400 13pt/1.3 ISerif;color:var(--gris)}
+.cover .info b{display:block;font:600 7pt/1 Arch;letter-spacing:.3em;text-transform:uppercase;color:var(--musgo);font-style:normal;margin-bottom:2mm}
+.cover .tools{position:absolute;top:20mm;left:0;right:0;display:flex;justify-content:space-between;padding:0 4mm}
+.pghead{text-align:center}
+.pghead h1{font:400 34pt/1 ISerif;letter-spacing:.2em;padding-left:.2em;text-transform:uppercase}
+.pghead .sub{font:600 8pt/1 Arch;letter-spacing:.42em;text-transform:uppercase;color:var(--musgo);margin-top:2.5mm}
+.pghead .rule{width:60mm;opacity:.4;margin-top:5mm}
+.pgnum{position:absolute;left:0;right:0;bottom:5.2mm;text-align:center;font:600 6pt/1 Arch;letter-spacing:.3em;color:var(--musgo)}
+.pgnum span{background:var(--noche);padding:0 3mm}
+.favs .ph{height:52mm}
+.reserve{display:flex;align-items:center;gap:5mm;border:.3mm solid var(--musgo);padding:4mm 5mm;margin-top:auto;position:relative}
+.reserve:after{content:"";position:absolute;inset:1mm;border:.2mm solid rgba(169,189,127,.4);pointer-events:none}
+.reserve img{width:22mm;height:22mm;background:var(--hueso);padding:1.3mm}
+.reserve b{display:block;font:400 18pt/1 ISerif}
+.reserve span{display:block;font-size:8pt;color:var(--gris);margin-top:1.5mm;line-height:1.4}
+.reserve .end{margin-left:auto;text-align:right;font-size:8pt;color:var(--gris);line-height:1.6}
+.reserve .end span{display:inline;margin:0;font-size:inherit;line-height:inherit;color:inherit}
+.reserve .end strong{display:block;font:400 15pt/1 ISerif;letter-spacing:.14em;color:var(--hueso);margin-bottom:1.5mm}
+.barrow{display:grid;grid-template-columns:28mm 1fr 40mm 1.15fr;gap:6mm;align-items:center;padding:5mm 6mm;margin:0 0 6mm}
+.barrow .art{height:26mm;margin:0}
+.barrow .promo{margin:0}
+.barrow .promo b{font-size:21pt;white-space:nowrap}
+.barrow .it{font-size:9pt}
+.barrow{grid-template-columns:26mm 1.15fr 38mm 1fr!important}
+.barrow .sec{margin:0!important}
+</style><style>
+/* ---------- imprenta y folleto A3: sangrado de 3 mm y marcas de corte ---------- */
+.modo-imprenta .page{width:216mm;height:303mm}
+.modo-imprenta .trim{top:3mm;left:3mm}
+.sheet{position:relative;width:426mm;height:303mm;display:flex;overflow:hidden;margin:0 auto 20px;page-break-after:always}
+.sheet .page{width:213mm;height:303mm;margin:0;flex:none;page-break-after:auto}
+.sheet .trim{top:3mm}
+.sheet .page.l .trim{left:3mm}
+.sheet .page.r .trim{left:0}
+.marks{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
+</style></head><body>
+
+<!-- biblioteca de dibujos -->
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="maracas" viewBox="0 0 60 90"><ellipse cx="18" cy="20" rx="13" ry="16" transform="rotate(-18 18 20)"/><path d="M22 35 L34 82"/><path d="M14 12c4-2 9-2 12 1M10 22c5 1 10 0 14-3"/><ellipse cx="42" cy="20" rx="13" ry="16" transform="rotate(18 42 20)"/><path d="M38 35 L26 82"/><path d="M34 13c3-3 8-3 12-1M36 19c4 3 9 4 14 3"/></symbol>
+ <symbol id="botella" viewBox="0 0 30 90"><path d="M12 4h6v3h-6zM12 7v14c0 4-6 7-6 13v50c0 2 1 3 3 3h12c2 0 3-1 3-3V34c0-6-6-9-6-13V7"/><path d="M6 44h18M6 68h18"/><path d="M10 50h10M10 55h8"/></symbol>
+ <symbol id="jarra" viewBox="0 0 60 80"><path d="M8 14h34v58c0 3-2 5-5 5H13c-3 0-5-2-5-5z"/><path d="M42 24h7c4 0 6 3 6 6v20c0 3-2 6-6 6h-7"/><path d="M6 14c0-6 5-9 10-8 2-4 8-5 11-2 3-3 9-2 11 2 5 0 8 4 6 8"/><path d="M16 26v40M25 26v40M34 26v40"/></symbol>
+ <symbol id="cubiertos" viewBox="0 0 40 90"><path d="M8 4v20c0 4 3 6 5 6v56M13 4v18M18 4v20c0 4-3 6-5 6"/><path d="M30 86V44c-5 0-6-8-6-18 0-12 3-22 7-22v82"/></symbol>
+ <symbol id="copa" viewBox="0 0 50 90"><path d="M8 6h34L28 34v40h12M28 74H16M22 74V34L8 6"/><path d="M13 14h24"/><circle cx="38" cy="10" r="5"/><path d="M38 5v-3"/></symbol>
+ <symbol id="chile" viewBox="0 0 70 40"><path d="M10 14c12-2 30 2 42 12 6 5 12 6 16 4-4 7-14 9-24 5C30 30 16 26 8 22c-4-2-2-8 2-8z"/><path d="M10 14c-2-6 0-10 4-11M14 3c3 0 5 2 5 4"/></symbol>
+ <symbol id="balon" viewBox="0 0 60 60"><circle cx="30" cy="30" r="26"/><path d="M30 18l10 7-4 12H24l-4-12z"/><path d="M30 18V4M40 25l13-5M36 37l9 12M24 37l-9 12M20 25L7 20"/></symbol>
+ <symbol id="esquina" viewBox="0 0 40 40"><path d="M2 38V14C2 7 7 2 14 2h24"/><path d="M8 38V18c0-6 4-10 10-10h20"/><circle cx="14" cy="14" r="2.4"/><path d="M20 20c4 0 6 3 6 6"/></symbol>
+</svg>
+
+
+<!-- 1 · PORTADA -->
+<section class="page cover">
+ <div class="frame"></div>
+ <div class="corner c1"><svg><use href="#esquina"/></svg></div><div class="corner c2"><svg><use href="#esquina"/></svg></div>
+ <div class="corner c3"><svg><use href="#esquina"/></svg></div><div class="corner c4"><svg><use href="#esquina"/></svg></div>
+ <div class="doodle" style="left:15mm;top:200mm;width:16mm;height:26mm"><svg><use href="#botella"/></svg></div>
+ <div class="doodle" style="right:15mm;top:200mm;width:18mm;height:24mm"><svg><use href="#jarra"/></svg></div>
+ <div class="inner">
+  <div class="sub" style="margin-top:2mm">Bar de pueblo · San Lorenzo</div>
+  <figure class="ph shot"><i id="coverImg" style="background-position:center 10%"></i></figure>
+  <h1>Maracaibo</h1>
+  <div class="sub">Bocas · Cerveza fría · El partido</div>
+  <div class="rule"></div>
+  <div class="info"><div><b>Abierto</b>Todos los días<br><span id="horas">11 a.m. – 12 a.m.</span></div><div><b>Reservas</b>WhatsApp<br><span class="tel">6082-1465</span></div></div>
+ </div>
+ <div class="pgnum"><span>La carta</span></div>
+</section>
+
+<!-- 2 · PARA PICAR -->
+<section class="page">
+ <div class="frame"></div>
+ <div class="corner c1"><svg><use href="#esquina"/></svg></div><div class="corner c2"><svg><use href="#esquina"/></svg></div>
+ <div class="corner c3"><svg><use href="#esquina"/></svg></div><div class="corner c4"><svg><use href="#esquina"/></svg></div>
+ <div class="doodle" style="right:16mm;top:18mm;width:18mm;height:26mm"><svg><use href="#maracas"/></svg></div>
+ <div class="doodle" style="left:16mm;top:20mm;width:20mm;height:12mm;transform:rotate(-14deg)"><svg><use href="#chile"/></svg></div>
+ <div class="inner">
+  <header class="pghead"><h1>Para picar</h1><div class="sub">Boquitas · Super gusticos · Pollo</div><div class="rule"></div></header>
+  <div class="cols"><div id="p2a"></div><div id="p2b"></div></div>
+  <div class="favs-h">Lo que más se pide</div>
+  <div class="favs" id="favs"></div>
+ </div>
+ <div class="pgnum"><span>02</span></div>
+</section>
+
+<!-- 3 · LA COCINA -->
+<section class="page">
+ <div class="frame"></div>
+ <div class="corner c1"><svg><use href="#esquina"/></svg></div><div class="corner c2"><svg><use href="#esquina"/></svg></div>
+ <div class="corner c3"><svg><use href="#esquina"/></svg></div><div class="corner c4"><svg><use href="#esquina"/></svg></div>
+ <div class="doodle" style="left:17mm;top:18mm;width:12mm;height:26mm"><svg><use href="#cubiertos"/></svg></div>
+ <div class="doodle" style="right:16mm;top:18mm;width:16mm;height:16mm"><svg><use href="#balon"/></svg></div>
+ <div class="inner">
+  <header class="pghead"><h1>La cocina</h1><div class="sub">Fuertes · Casados · Arroces · Sopas · Cortes</div><div class="rule"></div></header>
+  <div class="cols"><div id="p3a"></div><div id="p3b"></div></div>
+ </div>
+ <div class="pgnum"><span>03</span></div>
+</section>
+
+<!-- 4 · CARNES, MARISCOS Y BARRA -->
+<section class="page">
+ <div class="frame"></div>
+ <div class="corner c1"><svg><use href="#esquina"/></svg></div><div class="corner c2"><svg><use href="#esquina"/></svg></div>
+ <div class="corner c3"><svg><use href="#esquina"/></svg></div><div class="corner c4"><svg><use href="#esquina"/></svg></div>
+ <div class="doodle" style="right:16mm;top:18mm;width:15mm;height:22mm"><svg><use href="#copa"/></svg></div>
+ <div class="doodle" style="left:16mm;top:18mm;width:16mm;height:26mm"><svg><use href="#botella"/></svg></div>
+ <div class="inner">
+  <header class="pghead"><h1>Del fuego y del mar</h1><div class="sub">Carnes · Mariscos · Barra</div><div class="rule"></div></header>
+  <div class="cols"><div id="p4a"></div><div id="p4b"></div></div>
+  <div id="p4bar"></div>
+  <!-- qr-reservas.svg lo genera generar-impreso.py (WhatsApp con el mensaje de reserva) -->
+  <div class="reserve"><img src="qr-reservas.svg" alt=""><div><b>Reservá tu mesa</b><span>Escaneá con la cámara: el mensaje de<br>WhatsApp queda listo para enviar.</span></div>
+   <div class="end"><strong>MARACAIBO</strong>WhatsApp <span class="tel">6082-1465</span><br><span id="fb">facebook.com/barmaracaibocr</span><br><span id="nota">Precios en colones</span></div></div>
+ </div>
+ <div class="pgnum"><span>04</span></div>
+</section>
+<script>
+const CFG=window.CONFIG||{};
+const IM=window.IMAGENES||{};
+const M=Object.fromEntries(MENU.map(c=>[c.id,c]));
+const n=v=>String(v).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+// fotos de img/: 800 px alcanzan para A4 (unos 240 ppp); la portada usa la más grande que haya
+const big=stem=>{const w=IM[stem]?IM[stem].w:[800];return `../img/${stem}-${w.includes(800)?800:Math.max(...w)}.jpg`};
+const biggest=stem=>`../img/${stem}-${IM[stem]?Math.max(...IM[stem].w):800}.jpg`;
+const price=p=>`<span class="p"><span class="c">₡</span>${n(p)}</span>`;
+function rows(it,noPrice){
+  if(it.sizes) return `<div class="it"><span class="nm">${esc(it.n)}</span><span class="ld"></span><span class="p">${it.sizes.map(s=>`<span class="c">₡</span>${n(s.p)}`).join(' <span class="sz">/</span> ')}</span></div><span class="d">${it.sizes.map(s=>esc(s.l)).join(' / ')}${it.d?' · '+esc(it.d):''}</span>`;
+  const p=it.p==null?'<span class="p" style="font:italic 400 10pt ISerif;color:var(--gris)">Consultar</span>':(noPrice?'':price(it.p));
+  return `<div class="it"><span class="nm">${esc(it.n)}</span>${noPrice&&it.p!=null?'':'<span class="ld"></span>'}${p}</div>${it.d?`<span class="d">${esc(it.d)}</span>`:''}`;
+}
+function sec(id,{tag,noPrice,note,photo}={}){
+  const c=M[id];const nt=note??c.note;
+  return `${photo?`<figure class="ph sidephoto"><i style="background-image:url(${big(photo)})"></i></figure>`:''}<div class="sec"><div class="sec-h"><h2>${esc(c.title)}</h2>${tag?`<span class="tag">${tag}</span>`:''}</div><div class="sec-u"></div>${nt?`<div class="sec-n">${esc(nt)}</div>`:''}${c.items.map(i=>rows(i,noPrice)).join('')}</div>`;
+}
+const photo=(img,h)=>`<figure class="ph ph-sec" ${h?`style="height:${h}mm"`:''}><i style="background-image:url(${big(img)})"></i></figure>`;
+
+/* datos del negocio (config.js) */
+const hora12=h=>{h=Math.floor(h)%24;return h===0?'12 a.m.':h===12?'12 m.d.':h<12?`${h} a.m.`:`${h-12} p.m.`};
+if(CFG.horario)document.getElementById('horas').textContent=`${hora12(CFG.horario.abre)} – ${hora12(CFG.horario.cierra)}`;
+if(CFG.telefono)document.querySelectorAll('.tel').forEach(e=>e.textContent=CFG.telefono);
+if(CFG.facebook)document.getElementById('fb').textContent=CFG.facebook.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'');else document.getElementById('fb').remove();
+if(CFG.notaPrecios)document.getElementById('nota').textContent=CFG.notaPrecios;
+document.getElementById('coverImg').style.backgroundImage=`url(${biggest('portada-rotulo')})`;
+
+/* la carta (menu-datos.js) */
+// precio de las boquitas: si todas cuestan lo mismo, va en la etiqueta del título
+const boq=[...new Set(M.boquitas.items.map(i=>i.p))];
+p2a.innerHTML=photo('patacones_frijol')+sec('boquitas',boq.length===1&&boq[0]!=null?{tag:`₡${n(boq[0])} C/U`,noPrice:true,note:'Para picar mientras empieza el partido.'}:{note:'Para picar mientras empieza el partido.'});
+p2b.innerHTML=sec('gusticos')+sec('pollo');
+const FAV=[['chicharrones_reales','Chicharrones'],['fb_alitas','Alitas'],['impreso_ceviche','Ceviche']];
+favs.innerHTML=FAV.map(([img,t])=>`<figure class="ph"><i style="background-image:url(${big(img)})"></i><figcaption>${t}</figcaption></figure>`).join('');
+p3a.innerHTML=photo('chifrijo')+sec('fuertes')+sec('casados');
+p3b.innerHTML=photo('arroz_camarones')+sec('arroces')+sec('sopas')+sec('cortes');
+p4a.innerHTML=photo('bistec_encebollado',32)+sec('carne');
+p4b.innerHTML=photo('ceviche',32)+sec('mariscos');
+// barra: las bebidas sin promoción van en la lista; la que tiene promo («2 por ₡1.500») va en el recuadro
+const beb=M.bebidas.items, promo=beb.find(i=>i.promo), lista=beb.filter(i=>i!==promo);
+const promoBox=promo?`<div class="promo"><div class="k">${esc(promo.n.toUpperCase())}</div><b>${promo.promo.n} × <span class="cs">₡</span>${n(promo.promo.p)}</b><span>o <span class="cs">₡</span>${n(promo.p)} cada uno</span></div>`:'<div></div>';
+// «Adicional de guacamole» → «Guacamole»
+const adic=(M.adicionales?M.adicionales.items:[]).map(i=>({...i,n:i.n.replace(/^adicional de\s+/i,'').replace(/^./,c=>c.toUpperCase()),d:null}));
+document.getElementById('p4bar').innerHTML=`<div class="barbox barrow"><div class="art"><svg viewBox="0 0 120 90"><use href="#jarra" x="0" y="8" width="60" height="80"/><use href="#botella" x="62" y="0" width="30" height="90"/><use href="#copa" x="88" y="20" width="32" height="68"/></svg></div><div class="sec" style="margin:0"><div class="sec-h"><h2>En la barra</h2></div><div class="sec-u"></div>${lista.map(i=>rows(i)).join('')}</div>${promoBox}<div class="sec" style="margin:4mm 0 0"><div class="sec-h"><h2>Adicionales</h2></div><div class="sec-u"></div>${adic.map(i=>rows(i)).join('')}</div></div>`;
+
+/* ---------- modo: a4, imprenta o a3 ---------- */
+const modo=new URLSearchParams(location.search).get('modo')||'a4';
+const pages=[...document.querySelectorAll('.page')];
+pages.forEach(p=>{const t=document.createElement('div');t.className='trim';t.append(...p.childNodes);p.append(t);});
+// marcas de corte: prolongan las líneas de corte dentro del sangrado (blanco debajo para verlas sobre el negro)
+const marks=(w,h,x0,y0,x1,y1,folds=[])=>{
+  const L=[];
+  for(const [x,sx] of [[x0,-1],[x1,1]])for(const [y,sy] of [[y0,-1],[y1,1]])
+    L.push(`M${x+sx*.6} ${y}H${x+sx*3}`,`M${x} ${y+sy*.6}V${y+sy*3}`);
+  const F=folds.map(x=>`M${x} 0V2.4M${x} ${h-2.4}V${h}`).join('');
+  return `<svg class="marks" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><g fill="none"><path d="${L.join('')}" stroke="#fff" stroke-width=".45"/><path d="${L.join('')}" stroke="#000" stroke-width=".12"/><path d="${F}" stroke="#fff" stroke-width=".45"/><path d="${F}" stroke="#000" stroke-width=".12" stroke-dasharray=".8 .5"/></g></svg>`;
+};
+const size=document.createElement('style');document.head.append(size);
+if(modo==='imprenta'){
+  document.body.classList.add('modo-imprenta');
+  size.textContent='@page{size:216mm 303mm;margin:0}';
+  pages.forEach(p=>p.insertAdjacentHTML('beforeend',marks(216,303,3,3,213,300)));
+}else if(modo==='a3'){
+  // pliego 1 (cara exterior): página 4 | página 1 · pliego 2 (cara interior): página 2 | página 3
+  size.textContent='@page{size:426mm 303mm;margin:0}';
+  for(const [a,b] of [[3,0],[1,2]]){
+    const s=document.createElement('div');s.className='sheet';
+    pages[a].classList.add('l');pages[b].classList.add('r');
+    s.append(pages[a],pages[b]);s.insertAdjacentHTML('beforeend',marks(426,303,3,3,423,300,[213]));
+    document.body.append(s);
+  }
+}
+
+/* ---------- validación: cuántas páginas y si algo se sale del marco ---------- */
+document.fonts.ready.then(()=>{
+  const out=[];
+  pages.forEach((p,k)=>{
+    const inner=p.querySelector('.inner'),R=inner.getBoundingClientRect(),kids=[...inner.children];
+    kids.forEach((c,j)=>{
+      const next=kids.slice(j+1).find(x=>x.getBoundingClientRect().height>0);
+      // se revisan los platos y los bloques (no cada letra): así el aviso dice qué plato o qué foto no entra
+      for(const el of [c,...c.querySelectorAll('.it,.d,.sec-h,.sec-n,figure,.promo,.reserve,.barbox,.favs-h,h1,.sub,.info')]){
+        const b=el.getBoundingClientRect();if(!b.width&&!b.height)continue;
+        const name=(el.querySelector&&el.querySelector('.nm,h2,figcaption')||el).textContent.trim().slice(0,40)||el.className;
+        if(b.left<R.left-1||b.right>R.right+1||b.top<R.top-1||b.bottom>R.bottom+1)out.push(`página ${k+1}: se sale del marco «${name}»`);
+        else if(next&&b.bottom>next.getBoundingClientRect().top+1)out.push(`página ${k+1}: se monta sobre lo de abajo «${name}»`);
+        if(el.classList&&el.classList.contains('it')&&el.scrollWidth>el.clientWidth+1)out.push(`página ${k+1}: no cabe a lo ancho «${name}»`);
+      }
+    });
+  });
+  const hojas=modo==='a3'?document.querySelectorAll('.sheet').length:pages.length;
+  document.documentElement.dataset.check=JSON.stringify({modo,hojas,paginas:pages.length,problemas:[...new Set(out)]});
+});
+</script>
+</body></html>

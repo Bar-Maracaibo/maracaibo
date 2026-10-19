@@ -64,19 +64,25 @@ Si la hoja falla o tarda más de 2 segundos, la página usa menu-datos.js y conf
 REGENERAR IMÁGENES, PDF Y DATOS PARA GOOGLE
 Desde esta carpeta, con Python 3 y Pillow 11 o más nuevo (y reportlab para el PDF):
   python herramientas/optimizar-imagenes.py   → img/ (después de agregar o cambiar fotos .jpg)
-  python herramientas/generar-menu.py          → menu-impreso.pdf y menu-imprenta.pdf
+  python herramientas/generar-impreso.py       → menu-impreso.pdf, menu-imprenta.pdf y menu-folleto-a3.pdf
+                                                 (necesita Microsoft Edge o Google Chrome instalado)
   python herramientas/generar-seo.py           → og-maracaibo.jpg, íconos y JSON-LD en las dos páginas
 Instalar lo necesario una vez:  pip install pillow reportlab
 
 MENÚ IMPRESO
-Una hoja A4 a doble cara (2 caras), 3 columnas: platos a 12 pt, descripciones a 9,5 pt, precios en negrita.
-Ningún apartado se parte entre columnas: el generador prueba todos los repartos (en el orden de la carta o moviendo
-un solo apartado, nunca Boquitas) y elige el que deja las columnas de cada cara más parejas. Hoy Pollo queda
-debajo de Boquitas. Si la carta crece, baja solo hasta 10,5 pt como mínimo; si ni así entra, usar dos hojas:
-python herramientas/generar-menu.py B (2 columnas, 4 caras). Adicionales va como nota al final de la última columna.
-- menu-impreso.pdf: para imprimir en casa, al 100 % (tamaño real), doble cara por el borde largo.
-- menu-imprenta.pdf: 216 × 303 mm (A4 + 3 mm de sangrado por lado) con marcas de corte, para la imprenta.
-La última cara tiene dos QR: la carta digital y la reserva por WhatsApp.
+Cuatro páginas A4 en negro pizarra con marco musgo: 1 portada (el rótulo), 2 Para picar (Boquitas, Super gusticos,
+Pollo y «Lo que más se pide»), 3 La cocina (Platos fuertes, Casados, Arroces, Sopas, Cortes), 4 Del fuego y del mar
+(Carne, Mariscos, la barra con la promo del chiliguaro, Adicionales y el QR para reservar por WhatsApp).
+El diseño está en herramientas/plantilla-impreso.html; los platos y precios salen de menu-datos.js y los datos del
+negocio de config.js. Qué apartado va en qué página está al final de la plantilla (p2a, p2b, p3a…).
+- menu-impreso.pdf: 4 páginas A4, para imprimir en casa al 100 % (tamaño real), doble cara. Es la que enlaza la web.
+- menu-imprenta.pdf: 4 páginas de 216 × 303 mm (A4 + 3 mm de sangrado por lado) con marcas de corte.
+- menu-folleto-a3.pdf: folleto para doblar. 2 pliegos A3 horizontales con sangrado (426 × 303 mm) y marcas de corte y
+  de doblez (en el centro). Imprimir a doble cara volteando por el borde corto:
+  cara exterior = página 4 | página 1 (portada), cara interior = página 2 | página 3. Doblar por la mitad.
+Antes de escribir los PDF, el generador comprueba que sean exactamente 4 páginas y que nada se salga del marco ni
+se monte sobre otra cosa. Si un plato nuevo no entra, avisa cuál y no escribe nada: hay que mover un apartado de
+página en la plantilla, achicar una foto (ph-sec) o acortar una nota.
 
 CARTA DIGITAL: MI PEDIDO Y MESAS
 Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se puede mostrar al salonero

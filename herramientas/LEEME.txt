@@ -1,8 +1,11 @@
 Herramientas (correr desde la carpeta del proyecto; ver ../LEEME.txt):
 - optimizar-imagenes.py: genera ../img/ (AVIF, WebP y JPG de 480/800/1200 px) y ../img/imagenes.js; achica logo-maracaibo.png.
-- generar-menu.py: genera ../menu-impreso.pdf (casa) y ../menu-imprenta.pdf (sangrado y marcas de corte) desde
-  ../menu-datos.js y ../config.js. Opción A (predeterminada): 1 hoja a doble cara, 3 columnas; opción B: 2 hojas, 2 columnas.
+- generar-impreso.py: imprime plantilla-impreso.html con Edge o Chrome sin ventana y genera ../menu-impreso.pdf (A4,
+  4 páginas), ../menu-imprenta.pdf (sangrado y marcas de corte) y ../menu-folleto-a3.pdf (2 pliegos A3 para doblar).
+  Valida que sean 4 páginas y que nada se salga del marco. También crea qr-reservas.svg y textura-pizarra.png.
+- plantilla-impreso.html: el diseño de la carta impresa (se puede abrir en el navegador para verla:
+  plantilla-impreso.html?modo=a4, ?modo=imprenta o ?modo=a3, servida desde la carpeta del proyecto).
 - generar-seo.py: genera ../og-maracaibo.jpg, ../icono-192.png, ../icono-512.png y los datos JSON-LD de index.html y menu.html.
-- tokens.json: colores del sistema de diseño (los mismos de ../tokens.css) para el PDF y la imagen para compartir.
-- fuentes-pdf/: instancias estáticas de Archivo e Instrument Serif (OFL) usadas en el PDF y la imagen para compartir.
+- tokens.json: colores del sistema de diseño (los mismos de ../tokens.css) para la imagen para compartir.
+- fuentes-pdf/: instancias estáticas de Archivo (OFL) usadas en el PDF (así va incrustada como TrueType) y la imagen para compartir.
 - prompts-imagenes.json y prompts-retoque.json: documentación de cómo se crearon o retocaron las fotos de comida.
