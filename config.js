@@ -25,7 +25,7 @@ window.CONFIG = {
  // TODO-DUEÑO: enlace de la hoja de Google con las pestañas "carta" y "partidos" (ver LEEME.txt).
  "sheetUrl": "",
  // Carrusel «Nuestras cervezas» (portada y carta): logos de img/marcas/, en este orden. [] = no aparece.
- // TODO-DUEÑO: confirmar cuáles venden.
+ // Confirmado 2026-10-18: las mismas que La Gallera.
  "cervezas": ["imperial","pilsen","bavaria","heineken","corona","sol","coors"],
  // TODO-DUEÑO: partidos que se van a pasar, por ejemplo
  // {"fecha": "2026-10-25", "hora": "19:00", "equipos": "Saprissa vs. Alajuelense", "torneo": "Primera División"}
