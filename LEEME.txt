@@ -117,11 +117,11 @@ PÁGINA PRINCIPAL
 3. Partidos de la semana (solo si hay datos): «Reservar para este partido» deja lista la reserva.
 4. La ronda: calculadora para el grupo con atajos; se divide entre cuántos van y se manda al grupo.
 5. Índice de la carta.   6. Reservas: personas, día, hora, nombre y partido; se envía por WhatsApp.
-7. Cómo llegar: dirección, foto del rótulo, código 2V53+FCP, Facebook, mapa (se carga al tocarlo), Google Maps y Waze.
+7. Cómo llegar: dirección, código 2V53+FCP, Facebook, mapa (se carga al tocarlo), Google Maps y Waze.
 
 FOTOGRAFÍAS
 - Página principal: portada-rotulo (portada), bar-ambiente-ancho (El bar), chicharrones_reales, imperial_real, fb_alitas,
-  impreso_ceviche, impreso_fajitas y fachada (pequeña, en Cómo llegar).
+  impreso_ceviche e impreso_fajitas. fachada.jpg ya no se usa.
   portada-rotulo.jpg y bar-ambiente-ancho.jpg vienen ya ajustadas: no editarlas. El rótulo publicado es la copia del chat
   (732 × 1568); TODO-DUEÑO: pasar el original de 952 × 2040 o uno más grande. Si llega una versión de
   mayor resolución del rótulo, reemplazar el archivo y correr optimizar-imagenes.py; si cambian los anchos, actualizar
