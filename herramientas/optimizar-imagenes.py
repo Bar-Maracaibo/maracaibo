@@ -25,6 +25,7 @@ if not AVIF:
 
 mapa = {}
 for f in sorted(root.glob('*.jpg')):
+    if f.stem.startswith('og-'): continue        # og-maracaibo.jpg es generada (generar-seo.py), no es una foto
     im = Image.open(f).convert('RGB')
     anchos = sorted({min(w, im.width) for w in ANCHOS})
     for w in anchos:

@@ -85,7 +85,7 @@ Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se
 
 SIN SEÑAL (service worker)
 La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
-subir el número de VERSION al inicio de sw.js (maracaibo-v1 → maracaibo-v2) para que los celulares actualicen.
+subir el número de VERSION al inicio de sw.js (hoy maracaibo-v2 → maracaibo-v3) para que los celulares actualicen.
 
 PUBLICAR EN GITHUB PAGES
 Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).
@@ -111,19 +111,26 @@ movimiento», «reducir transparencia» y «aumentar contraste» del sistema.
 Lighthouse en celular (última medición): portada 97/100/100/100, carta 92/100/100/100.
 
 PÁGINA PRINCIPAL
-1. Portada: la surtida y el indicador en vivo (abierto/cerrado con la hora de Costa Rica).
-2. El bar: la declaración y «Lo que más se pide» (carrusel con precios de la carta).
+1. Portada: el rótulo al atardecer y el indicador en vivo (abierto/cerrado con la hora de Costa Rica). La portada y la barra
+   de arriba (mientras está sobre la foto) van siempre en oscuro, aunque la página esté en clara.
+2. El bar: la declaración con la foto del bar lleno y «Lo que más se pide» (carrusel con precios de la carta).
 3. Partidos de la semana (solo si hay datos): «Reservar para este partido» deja lista la reserva.
 4. La ronda: calculadora para el grupo con atajos; se divide entre cuántos van y se manda al grupo.
 5. Índice de la carta.   6. Reservas: personas, día, hora, nombre y partido; se envía por WhatsApp.
 7. Cómo llegar: dirección, foto del rótulo, código 2V53+FCP, Facebook, mapa (se carga al tocarlo), Google Maps y Waze.
 
 FOTOGRAFÍAS
-- Página principal: portada_surtida, chicharrones_reales, imperial_real, fb_alitas, impreso_ceviche, impreso_fajitas
-  y fachada (pequeña, en Cómo llegar).
+- Página principal: portada-rotulo (portada), bar-ambiente-ancho (El bar), chicharrones_reales, imperial_real, fb_alitas,
+  impreso_ceviche, impreso_fajitas y fachada (pequeña, en Cómo llegar).
+  portada-rotulo.jpg y bar-ambiente-ancho.jpg vienen ya ajustadas: no editarlas. El rótulo publicado es la copia del chat
+  (732 × 1568); TODO-DUEÑO: pasar el original de 952 × 2040 o uno más grande. Si llega una versión de
+  mayor resolución del rótulo, reemplazar el archivo y correr optimizar-imagenes.py; si cambian los anchos, actualizar
+  también los <picture> de esas dos fotos y el preload en index.html. En computadora la foto del rótulo no pasa de
+  620 px de ancho para que no se pixele.
+  TODO-DUEÑO: la foto del bar lleno (bar-ambiente-ancho.jpg) tiene decoración de Halloween: cambiarla en noviembre.
 - Carta digital: patacones_frijol, surtida_real, chifrijo, bistec_encebollado, arroz_camarones, sopa_pollo, fb_alitas,
   impreso_fajitas, chicharrones_reales, ceviche, imperial_real (Adicionales va sin foto).
-- Menú impreso: portada_surtida.
+- Menú impreso e imagen para compartir (og-maracaibo.jpg): portada_surtida.
 barra.jpg e interior.jpg (de Facebook) ya no se usan porque no combinan con el resto. Cuando haya fotos nuevas del
 local de noche (rótulo encendido, barra con gente, cervezas en la mesa, el partido), tomadas en horizontal y con buena
 luz, se agregan a la raíz y se corre optimizar-imagenes.py.

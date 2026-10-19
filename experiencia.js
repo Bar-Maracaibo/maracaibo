@@ -36,6 +36,8 @@
     ticking = false;
     const y = scrollY, vh = innerHeight;
     nav.classList.toggle('scrolled', y > 8);
+    // sobre la portada la barra va de noche, como la foto; al bajar vuelve al tema elegido
+    nav.classList.toggle('tema-noche', hero.getBoundingClientRect().bottom > nav.offsetHeight && !nav.classList.contains('menu-open'));
     if (!reduce.matches) {
       const r = statement.getBoundingClientRect();
       const on = Math.round(clamp((vh * .85 - r.top) / (r.height + vh * .25)) * lit.length);
@@ -67,6 +69,7 @@
     menuBtn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
     root.style.overflow = open ? 'hidden' : '';
     nav.classList.toggle('menu-open', open);
+    frame();
     if (open) sheet.querySelector('a').focus();
   };
   menuBtn.addEventListener('click', () => setMenu(sheet.hidden));

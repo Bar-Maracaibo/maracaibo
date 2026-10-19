@@ -8,6 +8,15 @@
   "ratio": 0.6667,
   "avif": true
  },
+ "bar-ambiente-ancho": {
+  "w": [
+   480,
+   800,
+   1200
+  ],
+  "ratio": 1.3333,
+  "avif": true
+ },
  "barra": {
   "w": [
    480,
@@ -111,6 +120,14 @@
    1024
   ],
   "ratio": 0.6667,
+  "avif": true
+ },
+ "portada-rotulo": {
+  "w": [
+   480,
+   732
+  ],
+  "ratio": 0.4668,
   "avif": true
  },
  "portada_surtida": {

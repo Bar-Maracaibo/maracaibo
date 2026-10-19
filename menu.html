@@ -25,7 +25,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="fuentes/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
-<script>/* apariencia elegida antes de pintar */try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>/* apariencia elegida antes de pintar ; .js también antes de pintar: reserva el lugar de lo que arma JavaScript */document.documentElement.classList.add('js');try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="carta.css">
 <script src="config.js" defer></script>
@@ -65,7 +65,7 @@
       <div>
         <p class="kicker">Bar Maracaibo · San Lorenzo</p>
         <h1 id="titulo" class="display">La carta</h1>
-        <p class="price-note" data-cfg="notaPrecios"></p>
+        <p class="price-note" data-cfg="notaPrecios">Precios en colones</p>
       </div>
       <div class="intro-side">
         <p class="lede"><em>Algo para vos,</em> algo para toda la mesa. <span id="conteo">Once apartados y setenta y cinco antojos</span>, de la primera boca a la última fría.</p>

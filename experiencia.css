@@ -105,13 +105,17 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .sheet p a{color:var(--tinta);font-weight:600;text-decoration:none}
 
 /* ---------- 1 · Portada ---------- */
-.hero{position:relative;isolation:isolate;min-height:min(100svh,760px);display:flex;overflow:hidden}
-.hero-photo{position:absolute;z-index:-1;top:0;right:0;bottom:0;width:min(50%,760px)}
-.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 45%}
+/* La portada siempre va de noche (.tema-noche en tokens.css). La foto del rótulo es vertical y de 952 px:
+   en computadora no pasa de 620 px de ancho para que no se pixele; el rótulo queda siempre arriba. */
+.hero{position:relative;isolation:isolate;min-height:min(100svh,760px);display:flex;overflow:hidden;background:var(--fondo)}
+.hero-photo{position:absolute;z-index:-1;top:0;right:0;bottom:0;width:min(42%,620px)}
+.hero-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 0%}
 .hero-photo::after{content:'';position:absolute;inset:0;background:
-  linear-gradient(90deg,var(--fondo) 0%,color-mix(in srgb,var(--fondo) 50%,transparent) 20%,transparent 46%),
-  linear-gradient(0deg,var(--fondo) 0%,transparent 26%),
-  linear-gradient(180deg,color-mix(in srgb,var(--fondo) 88%,transparent) 0%,color-mix(in srgb,var(--fondo) 45%,transparent) 8%,transparent 18%)}
+  linear-gradient(90deg,var(--fondo) 0%,color-mix(in srgb,var(--fondo) 55%,transparent) 14%,transparent 35%),
+  linear-gradient(0deg,var(--fondo) 0%,color-mix(in srgb,var(--fondo) 50%,transparent) 12%,transparent 30%),
+  linear-gradient(180deg,color-mix(in srgb,var(--fondo) 85%,transparent) 0%,color-mix(in srgb,var(--fondo) 35%,transparent) 8%,transparent 14%)}
+/* «Ver la carta» sobre la foto: borde más marcado que el de una línea normal */
+.hero .btn-line{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tinta) 42%,transparent);background:color-mix(in srgb,var(--fondo) 30%,transparent)}
 .hero-inner{display:flex;flex-direction:column;justify-content:center;padding-top:104px;padding-bottom:56px}
 .hero-copy{display:grid;gap:26px;justify-items:start;max-width:640px}
 .hero-title{font-size:clamp(3.75rem,8.4vw,8rem);line-height:.92;letter-spacing:-.02em}
@@ -127,6 +131,8 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 /* ---------- Abierto / cerrado (hora de Costa Rica) ---------- */
 .status{display:inline-flex;align-items:center;gap:10px;min-height:36px;padding:0 16px 0 14px;border-radius:999px;background:color-mix(in srgb,var(--tinta) 6%,transparent);box-shadow:inset 0 0 0 1px var(--linea);font-size:.875rem;font-weight:500}
 .status[hidden]{display:none}
+/* en la portada el lugar del estado queda reservado (invisible) hasta que se calcula: así el texto no salta */
+.js .hero .status[hidden]{display:inline-flex!important;visibility:hidden}
 .status-dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--cerrado)}
 .status.open .status-dot{background:var(--abierto)}
 .status.open .status-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--abierto);opacity:0;animation:latido 2.4s var(--ease) infinite}
@@ -137,6 +143,15 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 .statement{padding-block:var(--sec-sm)}
 .statement .kicker{margin-bottom:36px}
 .statement-text{max-width:22ch;font-size:clamp(2.375rem,5vw,4.5rem);line-height:1.06;text-wrap:pretty}
+/* la foto del bar lleno: debajo del texto en celular y tableta, al lado en computadora */
+.statement-grid{display:grid;gap:40px}
+.statement-photo{aspect-ratio:16/11;border-radius:24px;overflow:hidden;border:1px solid var(--linea);background:var(--sup)}
+.statement-photo img{width:100%;height:100%;object-fit:cover;object-position:55% 30%}
+@media (min-width:901px){
+  .statement-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(40px,5vw,72px);align-items:center}
+  .statement-text{font-size:clamp(2.375rem,4.2vw,4rem)}
+  .statement-photo{aspect-ratio:5/4}
+}
 .js .statement-text .w{color:var(--apagado);transition:color .45s linear}
 .js .statement-text .w.on{color:var(--tinta)}
 .js .statement-text em .w.on{color:var(--musgo)}
@@ -312,7 +327,7 @@ label.row{cursor:pointer}
   .bulb{margin:0 0 0 auto}
   .nav-cta{margin-left:0}
   .nav-menu{display:grid}
-  .hero-photo{width:58%}
+  .hero-photo{width:min(58%,560px)}
   .split,.visit-grid{grid-template-columns:1fr}
   .ronda-copy{position:static}
   .head-row{grid-template-columns:1fr}
@@ -327,8 +342,9 @@ label.row{cursor:pointer}
   .nav-cta{min-height:36px;padding:0 16px}
   .hero{min-height:100svh}
   .hero-photo{width:100%}
-  .hero-photo img{object-position:50% 30%}
-  .hero-photo::after{background:linear-gradient(180deg,color-mix(in srgb,var(--fondo) 85%,transparent) 0%,color-mix(in srgb,var(--fondo) 40%,transparent) 9%,transparent 16%,transparent 30%,color-mix(in srgb,var(--fondo) 82%,transparent) 52%,var(--fondo) 74%)}
+  .hero-photo img{object-position:50% 0%}
+  /* arriba, oscuro para la barra; desde el 55 %, oscuro detrás del texto */
+  .hero-photo::after{background:linear-gradient(180deg,color-mix(in srgb,var(--fondo) 85%,transparent) 0%,color-mix(in srgb,var(--fondo) 35%,transparent) 7%,transparent 12%,transparent 40%,color-mix(in srgb,var(--fondo) 72%,transparent) 55%,var(--fondo) 76%)}
   .hero-inner{justify-content:flex-end;padding-bottom:calc(36px + env(safe-area-inset-bottom,0px))}
   .hero-copy{gap:18px}
   .hero-title{font-size:clamp(3.5rem,17vw,4.5rem)}

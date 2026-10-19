@@ -3,7 +3,7 @@
    - CSS, JS, fuentes e imágenes: stale-while-revalidate (sale al instante de la copia y se actualiza por detrás).
    - Sin señal, si falta una foto grande, se usa su versión de 480 px.
    Al publicar cambios grandes, subir VERSION para que los celulares descarten la copia vieja. */
-const VERSION = 'maracaibo-v1';
+const VERSION = 'maracaibo-v2';
 self.window = self;                       // img/imagenes.js escribe en window.IMAGENES
 importScripts('img/imagenes.js');
 
@@ -14,7 +14,12 @@ const BASE = ['./', 'index.html', 'menu.html', 'tokens.css', 'experiencia.css', 
   'logo-mono.png', 'favicon.png', 'icono-192.png', 'manifest.webmanifest'];
 // la versión más chica de cada foto, en AVIF y WebP (el navegador usa la que soporte)
 const FOTOS = Object.entries(self.IMAGENES || {}).flatMap(([stem, m]) =>
-  [m.avif && `img/${stem}-${m.w[0]}.avif`, `img/${stem}-${m.w[0]}.webp`].filter(Boolean));
+  [m.avif && `img/${stem}-${m.w[0]}.avif`, `img/${stem}-${m.w[0]}.webp`].filter(Boolean))
+  // la portada (el rótulo) y la foto del bar lleno también en el tamaño que bajan los celulares
+  .concat(['portada-rotulo', 'bar-ambiente-ancho'].flatMap(stem => {
+    const m = (self.IMAGENES || {})[stem]; const w = m && m.w[Math.min(1, m.w.length - 1)];
+    return m ? [m.avif && `img/${stem}-${w}.avif`, `img/${stem}-${w}.webp`].filter(Boolean) : [];
+  }));
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(BASE).then(() => Promise.allSettled(FOTOS.map(f => c.add(f))))).then(() => self.skipWaiting()));

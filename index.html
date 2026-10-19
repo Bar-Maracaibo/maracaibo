@@ -26,8 +26,8 @@
 <meta name="apple-mobile-web-app-title" content="Maracaibo">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preload" href="fuentes/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" as="image" type="image/avif" imagesrcset="img/portada_surtida-480.avif 480w, img/portada_surtida-800.avif 800w, img/portada_surtida-1024.avif 1024w" imagesizes="(max-width: 640px) 100vw, 50vw">
-<script>/* apariencia elegida antes de pintar, para que no parpadee */try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preload" as="image" type="image/avif" imagesrcset="img/portada-rotulo-480.avif 480w, img/portada-rotulo-732.avif 732w" imagesizes="(max-width: 640px) 100vw, min(42vw, 620px)">
+<script>/* apariencia elegida antes de pintar, para que no parpadee ; .js también antes de pintar: reserva el lugar de lo que arma JavaScript */document.documentElement.classList.add('js');try{var t=localStorage.getItem('maracaibo-apariencia');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="experiencia.css">
 <script src="config.js" defer></script>
@@ -41,7 +41,7 @@
 <body>
 <a class="skip" href="#contenido">Ir al contenido</a>
 
-<header class="nav" id="nav">
+<header class="nav tema-noche" id="nav">
   <div class="nav-inner">
     <a class="brand" href="#inicio" aria-label="Bar Maracaibo, inicio">
       <span class="brand-logo" aria-hidden="true"></span>
@@ -83,9 +83,9 @@
 <main id="contenido">
 
   <!-- 1 · Portada -->
-  <section class="hero" id="inicio" aria-labelledby="hero-title">
+  <section class="hero tema-noche" id="inicio" aria-labelledby="hero-title">
     <figure class="hero-photo">
-      <picture><source type="image/avif" srcset="img/portada_surtida-480.avif 480w, img/portada_surtida-800.avif 800w, img/portada_surtida-1024.avif 1024w" sizes="(max-width: 640px) 100vw, 50vw"><source type="image/webp" srcset="img/portada_surtida-480.webp 480w, img/portada_surtida-800.webp 800w, img/portada_surtida-1024.webp 1024w" sizes="(max-width: 640px) 100vw, 50vw"><img id="heroImg" src="img/portada_surtida-800.jpg" srcset="img/portada_surtida-480.jpg 480w, img/portada_surtida-800.jpg 800w, img/portada_surtida-1024.jpg 1024w" sizes="(max-width: 640px) 100vw, 50vw" alt="Surtida para compartir con chicharrón, chorizo, alitas, yuca y papas gajo, sobre una mesa de madera" width="1024" height="1536" fetchpriority="high"></picture>
+      <picture><source type="image/avif" srcset="img/portada-rotulo-480.avif 480w, img/portada-rotulo-732.avif 732w" sizes="(max-width: 640px) 100vw, min(42vw, 620px)"><source type="image/webp" srcset="img/portada-rotulo-480.webp 480w, img/portada-rotulo-732.webp 732w" sizes="(max-width: 640px) 100vw, min(42vw, 620px)"><img id="heroImg" src="img/portada-rotulo-732.jpg" srcset="img/portada-rotulo-480.jpg 480w, img/portada-rotulo-732.jpg 732w" sizes="(max-width: 640px) 100vw, min(42vw, 620px)" alt="El rótulo de Maracaibo&#39;s Bar encendido al atardecer" width="732" height="1568" fetchpriority="high"></picture>
     </figure>
     <div class="hero-inner frame">
       <div class="hero-copy">
@@ -103,10 +103,14 @@
 
   <!-- 2 · El bar: declaración y lo que más se pide -->
   <section class="statement" id="el-bar" aria-labelledby="statement-label">
-    <div class="frame">
+    <div class="frame statement-grid">
+      <div>
       <p class="kicker" id="statement-label">El bar</p>
       <!-- TODO-DUEÑO: confirmar este texto (punto de encuentro del barrio, partidos, atención). -->
       <p class="display statement-text" id="statement">El punto de encuentro de San Lorenzo. <em>Acá se grita el gol,</em> se celebra el cumpleaños y siempre aparece una silla más para el que llega tarde. <span class="soft">Te atendemos como en casa.</span></p>
+      </div>
+      <!-- TODO-DUEÑO: la foto tiene decoración de Halloween; cambiarla en noviembre. -->
+      <figure class="statement-photo"><picture><source type="image/avif" srcset="img/bar-ambiente-ancho-480.avif 480w, img/bar-ambiente-ancho-800.avif 800w, img/bar-ambiente-ancho-1200.avif 1200w" sizes="(max-width: 900px) calc(100vw - 40px), 480px"><source type="image/webp" srcset="img/bar-ambiente-ancho-480.webp 480w, img/bar-ambiente-ancho-800.webp 800w, img/bar-ambiente-ancho-1200.webp 1200w" sizes="(max-width: 900px) calc(100vw - 40px), 480px"><img loading="lazy" decoding="async" src="img/bar-ambiente-ancho-800.jpg" srcset="img/bar-ambiente-ancho-480.jpg 480w, img/bar-ambiente-ancho-800.jpg 800w, img/bar-ambiente-ancho-1200.jpg 1200w" sizes="(max-width: 900px) calc(100vw - 40px), 480px" alt="Bar Maracaibo lleno, gente en la barra viendo el partido" width="1600" height="1200"></picture></figure>
     </div>
 
     <div class="favs">
