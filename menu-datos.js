@@ -9,8 +9,6 @@
      verificar: true  → precio poco legible o dudoso en la foto; confirmar con la dueña (TODO-DUEÑO). No se muestra en la página.
      p: null → precio pendiente; mostrar «Consultar» (no cuenta para «desde ₡X»)
      promo  {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos)
-     img    "tacos.jpg" → foto del plato: miniatura en la carta digital que se abre en grande al tocarla
-            (la .jpg va en la raíz, 2:3; luego correr herramientas/optimizar-imagenes.py)
      tags   ["compartir"] (filtro Para compartir) y/o ["popular"] (Lo más pedido).
             TODO-DUEÑO: "popular" sin marcar hasta que la dueña diga cuáles son los más pedidos. */
 window.MENU = [
@@ -57,7 +55,7 @@ window.MENU = [
   "id": "fuertes",
   "label": "Platos fuertes",
   "title": "Platos fuertes",
-  "img": "chifrijo.jpg",
+  "img": "tacos.jpg",
   "items": [
    { "n": "Empanadas colombianas", "p": 5000, "sizes": [ { "l": "5 unid.", "p": 5000 }, { "l": "10 unid.", "p": 10000 } ], "tags": ["compartir"] },
    { "n": "Chifrijo", "p": 4000 },
@@ -71,7 +69,7 @@ window.MENU = [
    { "n": "Patacones con camarones y guacamole", "p": 5000 },
    { "n": "Canasta de patacones pequeña", "d": "3 unidades", "p": 2000, "tags": ["compartir"] },
    { "n": "Ravioles", "p": 3000 },
-   { "n": "Tacos", "p": 3500, "img": "tacos.jpg" },
+   { "n": "Tacos", "p": 3500 },
    { "n": "Yuca frita", "p": 2500 }
   ]
  },

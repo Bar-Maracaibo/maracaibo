@@ -3,7 +3,7 @@
    - CSS, JS, fuentes e imágenes: stale-while-revalidate (sale al instante de la copia y se actualiza por detrás).
    - Sin señal, si falta una foto grande, se usa su versión de 480 px.
    Al publicar cambios grandes, subir VERSION para que los celulares descarten la copia vieja. */
-const VERSION = 'maracaibo-v6';
+const VERSION = 'maracaibo-v7';
 self.window = self;                       // img/imagenes.js y img/marcas/marcas.js escriben en window
 importScripts('img/imagenes.js', 'img/marcas/marcas.js');
 
@@ -12,8 +12,7 @@ const BASE = ['./', 'index.html', 'menu.html', 'tokens.css', 'experiencia.css', 
   'fuentes/instrument-serif-latin.woff2', 'fuentes/instrument-serif-latin-ext.woff2',
   'fuentes/instrument-serif-italic-latin.woff2', 'fuentes/instrument-serif-italic-latin-ext.woff2',
   'logo-mono.png', 'favicon.png', 'icono-192.png', 'manifest.webmanifest', 'img/marcas/marcas.js'];
-// la versión más chica de cada foto, en AVIF y WebP (el navegador usa la que soporte); incluye las fotos de platos
-// ("img" en menu-datos.js, p. ej. tacos): la miniatura de la carta usa esa misma versión
+// la versión más chica de cada foto, en AVIF y WebP (el navegador usa la que soporte)
 const FOTOS = Object.entries(self.IMAGENES || {}).flatMap(([stem, m]) =>
   [m.avif && `img/${stem}-${m.w[0]}.avif`, `img/${stem}-${m.w[0]}.webp`].filter(Boolean))
   // la portada (el rótulo) y la foto del bar lleno también en el tamaño que bajan los celulares
