@@ -17,7 +17,7 @@ window.CONFIG = {
  "notaPrecios": "Precios en colones",
  // TODO-DUEÑO: no tienen Instagram por ahora; al abrirlo, poner el enlace aquí y aparece solo.
  "instagram": "",
- "facebook": "https://www.facebook.com/share/1M2NZmSJWM/",
+ "facebook": "https://www.facebook.com/barmaracaibocr",
  // Nombre de la página tal como aparece en redes (se muestra en el pie junto al enlace).
  "facebookNombre": "Maracaibo's Bar",
  // TODO-DUEÑO: calificación de Google, por ejemplo {"valor": 4.6, "resenas": 120, "url": "https://..."}.
