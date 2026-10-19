@@ -1,7 +1,7 @@
 /* Bar Maracaibo · carta digital. Datos en menu-datos.js; funciones compartidas en comun.js (window.MCB). */
 /* Espera la hoja de Google (máx. 2 s) para que los precios sean los últimos */
 window.MCB.ready.then(() => {
-  const { MENU, SECCIONES, extrasText, money, esc, normalize, reduce, catFrom, priceText, cost, wa, say, words, totalItems } = window.MCB;
+  const { MENU, SECCIONES, extrasText, money, esc, normalize, reduce, catFrom, priceText, sizesText, cost, wa, say, words, totalItems } = window.MCB;
   const $ = id => document.getElementById(id);
   const count = n => `${n} ${n === 1 ? 'opción' : 'opciones'}`;
   const cap = t => t[0].toUpperCase() + t.slice(1);
@@ -46,8 +46,10 @@ window.MCB.ready.then(() => {
     const sizes = it.sizes ? `<div class="sizes">${it.sizes.map((s, k) => s.p == null
       ? `<span class="size">${esc(s.l)} · Consultar</span>`
       : `<button type="button" class="size add" data-key="${cat.id}|${i}|${k}" data-label="${esc(`${it.n} (${s.l.toLowerCase()})`)}" data-vis="${esc(`${s.l} ${money(s.p)}`)}"><span class="size-text">${esc(s.l)} <b>${money(s.p)}</b></span>${PLUS}<span class="add-n"></span></button>`).join('')}</div>` : '';
-    return `<li class="dish${it.sizes ? ' has-sizes' : ''}" data-i="${i}">
-      <span class="dish-name"><span class="dn">${esc(it.n)}</span>${badge}</span>
+    // foto del plato ("img" en menu-datos.js): miniatura que abre la foto grande
+    const thumb = it.img ? `<button type="button" class="thumb" data-photo="${cat.id}|${i}" aria-haspopup="dialog" aria-label="Ver foto: ${esc(it.n)}">${window.MCB.pic(it.img, '56px', '', ' width="56" height="56" loading="lazy" decoding="async"')}</button>` : '';
+    return `<li class="dish${it.sizes ? ' has-sizes' : ''}${thumb ? ' has-thumb' : ''}" data-i="${i}">
+      ${thumb}<span class="dish-name"><span class="dn">${esc(it.n)}</span>${badge}</span>
       ${it.sizes ? '' : `<span class="dish-price">${priceText(it.p)}</span>${it.p != null ? addBtn(`${cat.id}|${i}|`, it.n) : '<span></span>'}`}
       ${it.d ? `<small>${esc(it.d)}</small>` : ''}${sizes}</li>`;
   };
@@ -181,6 +183,19 @@ window.MCB.ready.then(() => {
   };
   const paint = () => { save(); paintAdds(); paintBar(); if (dlg.open) paintList(); };
   const change = (key, d) => { order[key] = Math.max(0, Math.min(99, (order[key] || 0) + d)); if (!order[key]) delete order[key]; paint(); };
+
+  /* ---------- Foto del plato: hoja inferior con nombre y precio ---------- */
+  const photo = $('photoSheet');
+  sections.addEventListener('click', e => {
+    const t = e.target.closest('.thumb[data-photo]'); if (!t) return;
+    const [c, i] = t.dataset.photo.split('|'), cat = MENU.find(x => x.id === c), it = cat.items[+i];
+    $('photoName').textContent = it.n;
+    $('photoPrice').textContent = it.sizes ? sizesText(it) : priceText(it.p);
+    $('photoImg').innerHTML = window.MCB.pic(it.img, '(max-width: 560px) 100vw, 560px', it.n, ' width="1024" height="1536" decoding="async"');
+    photo.showModal();
+  });
+  $('photoClose').addEventListener('click', () => photo.close());
+  photo.addEventListener('click', e => { if (e.target === photo) photo.close(); });   // tocar fuera de la hoja la cierra; Escape la cierra solo
 
   sections.addEventListener('click', e => {
     const b = e.target.closest('.add[data-key]'); if (!b) return;

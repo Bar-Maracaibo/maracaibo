@@ -141,6 +141,14 @@
   <p class="waiter-total" id="waiterTotal"></p>
   <button type="button" class="btn btn-line" id="waiterClose">Volver al pedido</button>
 </dialog>
+<!-- Foto de un plato (los que tienen "img" en menu-datos.js) -->
+<dialog class="order-sheet photo-sheet" id="photoSheet" aria-labelledby="photoName">
+  <div class="os-head">
+    <div><h2 id="photoName" class="display"></h2><p class="ps-price" id="photoPrice"></p></div>
+    <button type="button" class="os-close" id="photoClose" aria-label="Cerrar"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6"/></svg></button>
+  </div>
+  <figure class="ps-photo" id="photoImg"></figure>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

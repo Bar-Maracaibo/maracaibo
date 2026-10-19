@@ -46,6 +46,11 @@ Cada plato: {"n": "Nombre", "d": "Descripción corta", "p": 3500}
   platos no aparecen: «Lo más pedido» sale cuando la dueña diga cuáles son (TODO-DUEÑO).
 - Promoción: "promo": {"n": 2, "p": 1500} = 2 por ₡1.500 (la ronda y Mi pedido la aplican solos; está en el chiliguaro).
 - Apartado sin "img" = sin foto. El apartado con "id": "adicionales" va como nota al final, no como apartado.
+- Foto de un plato: "img": "tacos.jpg" en el plato → en la carta digital sale una miniatura a la izquierda del
+  nombre y, al tocarla, la foto grande con el nombre y el precio. Para agregarla a otro plato: poner la foto .jpg
+  en la raíz (vertical 2:3, 1024 × 1536, mesa de nogal y plato blanco como las demás), correr
+  python herramientas/optimizar-imagenes.py, agregar "img": "archivo.jpg" al plato en menu-datos.js y subir la
+  VERSION de sw.js. El prompt de retoque de cada foto queda en herramientas/prompts-retoque.json.
 Los títulos con cantidades («Once apartados, setenta y cinco antojos») se calculan solos (sin contar Adicionales).
 Ojo: «La ronda» (lista RONDA en experiencia.js) y el carrusel (data-item en index.html) usan nombres de platos;
 los que tienen tamaños llevan uno concreto entre paréntesis, igual que en "sizes": «Alitas (6 unid.)», «Ceviche (grande)».
@@ -91,7 +96,7 @@ Cada plato tiene un botón +. El pedido se guarda en el celular del cliente y se
 
 SIN SEÑAL (service worker)
 La página y la carta quedan guardadas en el celular después de la primera visita. Al publicar cambios grandes,
-subir el número de VERSION al inicio de sw.js (hoy maracaibo-v2 → maracaibo-v3) para que los celulares actualicen.
+subir el número de VERSION al inicio de sw.js (hoy maracaibo-v3 → maracaibo-v4) para que los celulares actualicen.
 
 PUBLICAR EN GITHUB PAGES
 Repositorio: https://github.com/Bar-Maracaibo/maracaibo  (rama main, carpeta raíz; Settings → Pages).
